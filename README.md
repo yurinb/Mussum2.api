@@ -1,2 +1,17 @@
-# mussum2api
-API Restful Mussum 2.0 - Projeto Algoritmos e Programação III - SENAC-RS
+## Mussum 2.0 SERVER-SIDE
+
+## Integrantes  
+* Patrick Neves Porto 
+* Yuri Nunes Bento
+* Marcos Paulo da Motta 
+
+
+
+***
+
+ Disciplina: Algoritimos e Programação III.  
+ Professor: Angelo Gonçalves da Luz.   
+ Orientador: Angelo Gonçalves da Luz.    
+ 
+***
+
