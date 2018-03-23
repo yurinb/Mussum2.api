@@ -29,4 +29,4 @@ Este projeto está licenciado sob a [licença MIT](https://github.com/yurinb/Mus
 
 
 
-Para mais informações acesse a [wiki](https://github.com/tricknp/Mussum_2.0-API/wiki)
+Para mais informações acesse a [wiki](https://github.com/yurinb/Mussum_2.0-API/wiki)
