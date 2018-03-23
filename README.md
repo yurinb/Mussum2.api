@@ -1,4 +1,4 @@
-## Mussum 2.0 SERVER-SIDE
+## Mussum 2.0 SERVER
 
 ## Integrantes  
 * Patrick Neves Porto 
@@ -15,3 +15,9 @@
  
 ***
 
+### Pré-requisitos
+
+1. Ter um navegador
+1. Ter MySQL na maquina
+1. Clonar o projeto
+1. Ter uma IDE que compile projeto Spring Boot
