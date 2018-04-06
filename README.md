@@ -22,11 +22,13 @@
 1. Clonar o projeto
 1. Ter uma IDE que compile projeto Spring Boot
 
+***
 
 ## Licença 
 
 Este projeto está licenciado sob a [licença MIT](https://github.com/yurinb/Mussum_2.0-API/blob/master/LICENSE) - veja o arquivo LICENSE.md para obter detalhes
 
-
+Conheça o [Mussum 2.0-Client](https://github.com/tricknp/mussum-2.0-Client)
 
 Para mais informações acesse a [wiki](https://github.com/yurinb/Mussum_2.0-API/wiki)
+
