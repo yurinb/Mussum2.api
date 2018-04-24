@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/yurinb/Mussum_2.0-API.svg?branch=master)](https://travis-ci.org/yurinb/Mussum_2.0-API)
+
 ## Mussum 2.0 API
 
 ROTAS >>> DOCUMENTAÇÃO: https://documenter.getpostman.com/view/3654195/mussum/RW1XMMPj
