@@ -6,7 +6,11 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 public class FtpController {
-
+    
+    private String host = "localhost";
+    private String user = "mussum";
+    private String pass = "pass";
+    
     private FTPClient ftp = new FTPClient();
 
     public String[] getFilesNames(String dir) {
@@ -26,8 +30,8 @@ public class FtpController {
 
     public FtpController() {
 	try {
-	    this.ftp.connect("localhost");
-	    boolean loginSucess = this.ftp.login("mussum", "pass");
+	    this.ftp.connect(host);
+	    boolean loginSucess = this.ftp.login(user, pass);
 
 	    if (loginSucess) {
 
@@ -36,6 +40,8 @@ public class FtpController {
 		this.ftp.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
 		this.ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 
+	    }else {
+		System.out.println("ERROR: FTP.LOGIN");
 	    }
 	} catch (IOException e) {
 	    System.out.println(e);
