@@ -1,4 +1,6 @@
-## Mussum 2.0 SERVER
+## Mussum 2.0 API
+
+ROTAS >>> DOCUMENTAÇÃO: https://documenter.getpostman.com/view/3654195/mussum/RW1XMMPj
 
 ## Integrantes  
 * Patrick Neves Porto 
@@ -15,12 +17,10 @@
  
 ***
 
-### Pré-requisitos
+### Instalação da api localmente
 
-1. Ter um navegador
-1. Ter MySQL na maquina
-1. Clonar o projeto
-1. Ter uma IDE que compile projeto Spring Boot
+1. Descrever a url, usuario e senha de um banco MySQL no application.properties
+2. Descrever o host, usuario e senha do servidor FTP na classe "FtpController"
 
 ***
 
