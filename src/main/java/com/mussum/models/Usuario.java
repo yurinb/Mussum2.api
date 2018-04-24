@@ -18,7 +18,11 @@ public class Usuario {
 
     //@NotNull(message = "O campo senha não pode ser nulo")
     private String password;
-    
+
+    public Long getId() {
+	return id;
+    }
+
     public String getUsername() {
 	return username;
     }
