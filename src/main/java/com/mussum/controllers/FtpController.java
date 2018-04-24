@@ -1,69 +1,55 @@
 package com.mussum.controllers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
 public class FtpController {
 
-    public static void main(String args[]) {
+    private FTPClient ftp = new FTPClient();
+
+    public String[] getFilesNames(String dir) {
 	try {
-	    //Create a FTP Client
-	    FTPClient ftp = new FTPClient();
+	    return this.ftp.listNames();
+	} catch (IOException e) {
+	    return null;
+	}
+    }
 
-	    //Set Host Information
-	    ftp.connect("localhost");
-	    boolean login = ftp.login("mussum", "pass");
+    public void uploadFile(InputStream input, String dir, String fileName) throws Exception {
+	ftp.makeDirectory(dir);
+	this.ftp.storeFile(dir + fileName, input);
+	input.close();
+	System.out.println("salvo.");
+    }
 
-	    if (login) {
-		
-		//get File from the FTP location
-		System.out.println(ftp.printWorkingDirectory());
-		String fileNames[] = ftp.listNames();
-		List<String> fTPFileNameList = new ArrayList();
+    public FtpController() {
+	try {
+	    this.ftp.connect("localhost");
+	    boolean loginSucess = this.ftp.login("mussum", "pass");
 
-		//Iterate to get File Names
-		if (fileNames != null && fileNames.length > 0) {
-		    for (String fName : fileNames) {
-			fTPFileNameList.add((new File(fName)).getName());
-		    }
-		}
-		
-		for (int i = 0; i < fTPFileNameList.size(); i++) {
-		    System.out.println(fTPFileNameList.get(i));
-		}
+	    if (loginSucess) {
+
+		System.out.println("FTP Connected.");
+		//Set File Type "Specially for PDF's"
+		this.ftp.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
+		this.ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 
 	    }
+	} catch (IOException e) {
+	    System.out.println(e);
+	}
+    }
 
-	    //Set File Type "Specially for PDF's"
-	    ftp.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
-	    ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-
-	    //Change the current Directory to a desired one
-	    //ftp.changeWorkingDirectory(SOME_DIRECTORY);
-	    // Check the file is present on FTP
-//	    if (fileNames != null && fileNames.length > 0 && fTPFileNameList.contains(FILE_NAME)) {
-//		//File is present on FTP
-//	    } else {
-//		//File is not present on FTP
-//		String httpURL = "YourDesiredURL";
-//		InputStream fis;
-//		try {
-//		    fis = new URL(httpURL).openStream();
-//		} catch (FileNotFoundException e) {
-//		    //File is not present on the URL
-//		}
-//		ftp.storeFile(FILE_NAME, fis);
-//		fis.close();
-//	    }
-	    ftp.logout();
-	} catch (Exception e) {
-	    e.printStackTrace();
+    public void disconnect() {
+	if (this.ftp.isConnected()) {
+	    try {
+		this.ftp.logout();
+		this.ftp.disconnect();
+	    } catch (IOException f) {
+		// do nothing as file is already saved to server
+	    }
 	}
     }
 

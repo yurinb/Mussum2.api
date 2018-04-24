@@ -9,16 +9,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UploadModel {
 
-    private String extraField;
+    private String dir;
 
     private MultipartFile[] files;
 
-    public String getExtraField() {
-        return extraField;
+    public String getDir() {
+        return dir;
     }
 
-    public void setExtraField(String extraField) {
-        this.extraField = extraField;
+    public void setDir(String extraField) {
+        this.dir = extraField;
     }
 
     public MultipartFile[] getFiles() {
