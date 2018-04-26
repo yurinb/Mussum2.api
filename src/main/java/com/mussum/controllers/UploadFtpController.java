@@ -5,8 +5,6 @@
  */
 package com.mussum.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -22,16 +20,15 @@ import java.util.stream.Collectors;
 @RestController
 public class UploadFtpController {
 
-    private final Logger logger = LoggerFactory.getLogger(UploadFtpController.class);
-    private FtpController ftp = new FtpController();
+    private final FtpController ftp = new FtpController();
 
-    // 3.1.2 Multiple file upload
+    //Multiple file upload
     @PostMapping("ftp/upload")
     public ResponseEntity<?> getFiles(
 	    @RequestParam("dir") String dir,
 	    @RequestParam("files") MultipartFile[] uploadfiles) throws Exception {
 
-	// Get file name
+	//Get file name
 	String uploadedFileName = Arrays.stream(uploadfiles).map(x -> x.getOriginalFilename())
 		.filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
 

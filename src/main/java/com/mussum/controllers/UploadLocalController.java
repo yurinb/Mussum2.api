@@ -32,7 +32,7 @@ public class UploadLocalController {
     private final Logger logger = LoggerFactory.getLogger(UploadLocalController.class);
 
     //Save the uploaded file to this folder
-    private static String UPLOADED_FOLDER = "C://mussumFileRepository//";
+    private static final String UPLOADED_FOLDER = "C://mussumFileRepository//";
 
     // 3.1.1 Single file upload
     @PostMapping("/upload")
@@ -68,12 +68,12 @@ public class UploadLocalController {
 
 	System.out.println("ba");
 	// Get file name
-	
-	System.out.println(uploadfiles[0].getName()+ uploadfiles[1].getName());
-	
+
+	System.out.println(uploadfiles[0].getName() + uploadfiles[1].getName());
+
 	String uploadedFileName = Arrays.stream(uploadfiles).map(x -> x.getOriginalFilename())
 		.filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
-	
+
 	if (StringUtils.isEmpty(uploadedFileName)) {
 	    return new ResponseEntity("please select a file!", HttpStatus.OK);
 	}
@@ -120,12 +120,12 @@ public class UploadLocalController {
 
 	    byte[] bytes = file.getBytes();
 	    try {
-	    Path path = Paths.get(UPLOADED_FOLDER + dir + file.getOriginalFilename());
-	    if (!Files.isWritable(path)) {
-		System.out.println("puts");
-	    }
-	    Files.write(path, bytes);
-		
+		Path path = Paths.get(UPLOADED_FOLDER + dir + file.getOriginalFilename());
+		if (!Files.isWritable(path)) {
+		    System.out.println("puts");
+		}
+		Files.write(path, bytes);
+
 	    } catch (Exception e) {
 		System.out.println(e);
 	    }

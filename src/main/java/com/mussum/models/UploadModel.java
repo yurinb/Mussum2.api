@@ -14,19 +14,19 @@ public class UploadModel {
     private MultipartFile[] files;
 
     public String getDir() {
-        return dir;
+	return dir;
     }
 
     public void setDir(String extraField) {
-        this.dir = extraField;
+	this.dir = extraField;
     }
 
     public MultipartFile[] getFiles() {
-        return files;
+	return files;
     }
 
     public void setFiles(MultipartFile[] files) {
-        this.files = files;
+	this.files = files;
     }
 
 }

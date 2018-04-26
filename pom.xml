@@ -35,26 +35,44 @@
 	    <optional>true</optional>
 	</dependency>
 	<dependency>
-	    <groupId>mysql</groupId>
-	    <artifactId>mysql-connector-java</artifactId>
-	    <scope>runtime</scope>
-	</dependency>
-	<dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-test</artifactId>
 	    <scope>test</scope>
 	</dependency>
-	<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+	
+	<!-- db -->
+	<dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <scope>runtime</scope>
+	</dependency>
+	
+	<!-- migrations -->
 	<dependency>
 	    <groupId>org.flywaydb</groupId>
 	    <artifactId>flyway-core</artifactId>
 	</dependency>
 	
+	<!-- ftp -->
 	<dependency>
 	    <groupId>commons-net</groupId>
 	    <artifactId>commons-net</artifactId>
 	    <version>1.3.0</version>
 	</dependency>
+	
+	<!--security-->
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-security</artifactId>
+	</dependency>
+
+	<dependency>
+	    <groupId>io.jsonwebtoken</groupId>
+	    <artifactId>jjwt</artifactId>
+	    <version>0.7.0</version>
+	</dependency>
+
+	
     </dependencies>
     <build>
 	<plugins>
