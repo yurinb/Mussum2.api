@@ -27,6 +27,8 @@ public class LoginController {
 	System.out.println(usuario.getUsername());
 	System.out.println(usuario.getPassword());
 	
+	
+	
 	return "logado pra caralho";
 	
 	//procurar por um professor no banco que bata com os dados recebidos (username/pass)
