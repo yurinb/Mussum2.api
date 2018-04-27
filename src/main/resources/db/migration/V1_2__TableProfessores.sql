@@ -21,9 +21,7 @@ create table professor (
   COLLATE 'utf8_general_ci';
 
 
-INSERT INTO professor (nome, email) VALUES ("angelo", "angelo@gmail.com");
-INSERT INTO professor (nome, email) VALUES ("gladimir", "glad@gmail.com");
-INSERT INTO professor (nome, email) VALUES ("edecio", "edeciu@gmail.com");
-INSERT INTO professor (nome, email) VALUES ("cv", "cvalve@gmail.com");
-INSERT INTO professor (nome, email) VALUES ("luzzard", "luzz@gmail.com");
-INSERT INTO professor (nome, email) VALUES ("dartschannegger", "dart@gmail.com");
+INSERT INTO professor (username, password, nome, email) VALUES ("admin", "admin","ADMIN", "admin@gmail.com");
+INSERT INTO professor (username, password, nome, email) VALUES ("glad", "123","Gladimir Catarino", "gladimir@gmail.com");
+INSERT INTO professor (username, password, nome, email) VALUES ("angelo", "123","Angelo Luz", "angelo@gmail.com");
+INSERT INTO professor (username, password, nome, email) VALUES ("edecio", "123","Edecio Lepsen", "edecio@gmail.com");
