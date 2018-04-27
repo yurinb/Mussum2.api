@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mussum.controllers;
+package com.mussum.controllers.security;
 
 import com.mussum.models.Professor;
 import com.mussum.models.Usuario;
@@ -47,7 +47,7 @@ public class LoginController {
 
 	System.out.println("Usuário autenticado.");
 
-	String token = "Bearer " + Jwts.builder()
+	String token = Jwts.builder()
 		.setSubject(usuario.getUsername())
 		.signWith(SignatureAlgorithm.HS512, "mussum")
 		.setExpiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
