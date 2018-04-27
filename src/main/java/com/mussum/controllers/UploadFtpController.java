@@ -23,7 +23,7 @@ public class UploadFtpController {
     private final FtpController ftp = new FtpController();
 
     //Multiple file upload
-    @PostMapping("ftp/upload")
+    @PostMapping("/api/ftp/upload")
     public ResponseEntity<?> getFiles(
 	    @RequestParam("dir") String dir,
 	    @RequestParam("files") MultipartFile[] uploadfiles) throws Exception {

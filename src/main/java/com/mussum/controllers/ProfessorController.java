@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/professores")
+@RequestMapping("/api/professores")
 public class ProfessorController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class ProfessorController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Professor getProfessor(@PathVariable Long id) {
+    public Professor getProfessor(@PathVariable Integer id) {
 	return profRep.findById(id).get();
     }
 
@@ -42,7 +42,7 @@ public class ProfessorController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Professor putProfessor(@RequestBody Professor newProfwithOldId, @PathVariable Long id) {
+    public Professor putProfessor(@RequestBody Professor newProfwithOldId, @PathVariable Integer id) {
 	System.out.println("0");
 	Professor old = profRep.getOne(id);
 	System.out.println("1");
@@ -59,7 +59,7 @@ public class ProfessorController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Professor remover(@PathVariable Long id) {
+    public Professor remover(@PathVariable Integer id) {
 	Professor prof = profRep.findById(id).get();
 	profRep.delete(prof);
 	return prof;

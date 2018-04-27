@@ -11,7 +11,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     //@NotNull(message = "O campo nome não pode ser nulo")
     private String username;
@@ -19,7 +19,7 @@ public class Usuario {
     //@NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
-    public Long getId() {
+    public Integer getId() {
 	return id;
     }
 

@@ -3,6 +3,7 @@ package com.mussum.models;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -15,7 +16,7 @@ public class Professor extends Usuario implements Serializable {
 
     private String sobre;
     
-    
+    @OneToMany(mappedBy = "professor")
     private List<Aviso> avisos;
 
     public String getNome() {

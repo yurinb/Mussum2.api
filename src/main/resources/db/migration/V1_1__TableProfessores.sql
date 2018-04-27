@@ -10,7 +10,7 @@
 
 
 create table professor (
-    id BIGINT AUTO_INCREMENT,
+    id INTEGER AUTO_INCREMENT,
     username VARCHAR(30),
     password VARCHAR(30),
     nome VARCHAR(30),
