@@ -22,5 +22,6 @@ public class CustomAdapter
     protected void configure(HttpSecurity http) throws Exception {
 	http.addFilterAfter(
 		new AllowFilter(), BasicAuthenticationFilter.class);
+	http.authorizeRequests().anyRequest();
     }
 }
