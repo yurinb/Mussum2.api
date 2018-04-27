@@ -5,12 +5,12 @@
 ### Documentação e Rotas
 [Documentação e Rotas](https://documenter.getpostman.com/view/3654195/mussum/RW1XMMPj)
 
-## Integrantes  
+***
+
+### Integrantes  
 * Patrick Neves Porto 
 * Yuri Nunes Bento
 * Marcos Paulo da Motta 
-
-
 
 ***
 
@@ -27,7 +27,7 @@
 
 ***
 
-## Licença 
+### Licença 
 
 Este projeto está licenciado sob a [licença MIT](https://github.com/yurinb/Mussum_2.0-API/blob/master/LICENSE) - veja o arquivo LICENSE.md para obter detalhes
 
