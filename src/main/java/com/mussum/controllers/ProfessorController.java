@@ -29,16 +29,19 @@ public class ProfessorController {
     }
 
     @GetMapping("/{id}")
+    @ResponseBody
     public Professor getProfessor(@PathVariable Long id) {
 	return profRep.findById(id).get();
     }
 
     @PostMapping()
+    @ResponseBody
     public Professor novoProfessor(@RequestBody @Valid Professor prof) {
 	return profRep.save(prof);
     }
 
     @PutMapping("/{id}")
+    @ResponseBody
     public Professor putProfessor(@RequestBody Professor newProfwithOldId, @PathVariable Long id) {
 	System.out.println("0");
 	Professor old = profRep.getOne(id);
@@ -55,6 +58,7 @@ public class ProfessorController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseBody
     public Professor remover(@PathVariable Long id) {
 	Professor prof = profRep.findById(id).get();
 	profRep.delete(prof);
