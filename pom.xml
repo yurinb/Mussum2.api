@@ -60,11 +60,11 @@
 	    <version>1.3.0</version>
 	</dependency>
 	
-	<!--security-->
+	<!--security
 	<dependency>
 	    <groupId>org.springframework.boot</groupId>
 	    <artifactId>spring-boot-starter-security</artifactId>
-	</dependency>
+	</dependency>-->
 
 	<dependency>
 	    <groupId>io.jsonwebtoken</groupId>
