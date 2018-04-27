@@ -11,6 +11,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -25,8 +26,9 @@ public class AllowFilter extends GenericFilterBean {
 	System.out.println("Passando pelo filtro...");
 
 	HttpServletResponse httpResp = (HttpServletResponse) sr1;
+	HttpServletRequest httpReq = (HttpServletRequest) sr;
 
-	String header = httpResp.getHeader("Authorization");
+	String header = httpReq.getHeader("Authorization");
 
 	if (header == null || !header.startsWith("Bearer ")) {
 	    throw new ServletException("Token inexistente ou inválido");

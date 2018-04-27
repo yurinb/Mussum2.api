@@ -1,6 +1,7 @@
 package com.mussum.models;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
@@ -13,6 +14,9 @@ public class Professor extends Usuario implements Serializable {
     private String email;
 
     private String sobre;
+    
+    
+    private List<Aviso> avisos;
 
     public String getNome() {
 	return nome;

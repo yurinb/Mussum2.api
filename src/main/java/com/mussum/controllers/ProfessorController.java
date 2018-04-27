@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("admin/professores")
+@RequestMapping("api/professores")
 public class ProfessorController {
 
     @Autowired
