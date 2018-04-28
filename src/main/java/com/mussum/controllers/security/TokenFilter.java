@@ -23,18 +23,33 @@ import org.springframework.web.filter.GenericFilterBean;
  *
  * @author yurin
  */
-public class AllowFilter extends GenericFilterBean {
+public class TokenFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
-	System.out.println("Liberando acesso da API *...");
+	System.out.println("Verificando TOKEN da requisição...");
 
-	HttpServletResponse httpResp = (HttpServletResponse) sr1;
+	HttpServletRequest httpReq = (HttpServletRequest) sr;
 
-	httpResp.setHeader("Access-Control-Allow-Origin", "*");
+	String header = httpReq.getHeader("Authorization");
+
+	if (header == null || !header.startsWith("Bearer ")) {
+	    throw new ServletException("Token inexistente ou inválido");
+	}
+
+	System.out.println("Header recebido: " + header);
+
+	String token = header.substring(7);
+
+	try {
+	    Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
+	} catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
+	    if (e instanceof ExpiredJwtException) {
+		throw new ServletException("Token expirado!");
+	    }
+	    throw new ServletException("Token inválido");
+	}
 
 	fc.doFilter(sr, sr1);
-
     }
-
 }

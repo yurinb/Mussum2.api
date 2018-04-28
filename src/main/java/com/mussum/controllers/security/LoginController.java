@@ -28,7 +28,7 @@ public class LoginController {
     @PostMapping()
     public TokenResponse autenticar(@RequestBody Usuario usuario) throws ServletException {
 
-	System.out.println("Request token...");
+	System.out.println("Request TOKEN...");
 	System.out.println("username: " + usuario.getUsername());
 	System.out.println("password: " + usuario.getPassword());
 	if (usuario.getUsername() == null || usuario.getPassword() == null) {

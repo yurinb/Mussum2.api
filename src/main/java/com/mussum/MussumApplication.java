@@ -1,6 +1,7 @@
 package com.mussum;
 
 import com.mussum.controllers.security.AllowFilter;
+import com.mussum.controllers.security.TokenFilter;
 import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.SpringApplication;
@@ -13,12 +14,18 @@ import org.springframework.context.annotation.Profile;
 public class MussumApplication {
 
     @Bean
+    public FilterRegistrationBean getFiltroAllowOrigin() {
+	FilterRegistrationBean frb = new FilterRegistrationBean();
+	frb.setFilter(new AllowFilter());
+	frb.addUrlPatterns("/*");
+	return frb;
+    }
+
+    @Bean
     public FilterRegistrationBean getFiltroJWT() {
 	FilterRegistrationBean frb = new FilterRegistrationBean();
-
-	frb.setFilter(new AllowFilter());
+	frb.setFilter(new TokenFilter());
 	frb.addUrlPatterns("/api/*");
-
 	return frb;
     }
 
