@@ -5,7 +5,11 @@
  */
 package com.mussum.controllers.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -33,13 +37,17 @@ public class AllowFilter extends GenericFilterBean {
 	if (header == null || !header.startsWith("Bearer ")) {
 	    throw new ServletException("Token inexistente ou inválido");
 	}
-	System.out.println(header);
+
+	System.out.println("Header recebido: " + header);
 
 	String token = header.substring(7);
 
 	try {
 	    Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
-	} catch (Exception e) {
+	} catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
+	    if (e instanceof ExpiredJwtException) {
+		throw new ServletException("Token expirado!");
+	    }
 	    throw new ServletException("Token inválido");
 	}
 

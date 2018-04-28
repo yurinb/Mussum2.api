@@ -15,7 +15,7 @@ public class Professor extends Usuario implements Serializable {
     private String email;
 
     private String sobre;
-    
+
     @OneToMany(mappedBy = "professor")
     private List<Aviso> avisos;
 
@@ -41,6 +41,10 @@ public class Professor extends Usuario implements Serializable {
 
     public void setSobre(String sobre) {
 	this.sobre = sobre;
+    }
+
+    public List<Aviso> getAvisos() {
+	return avisos;
     }
 
 }

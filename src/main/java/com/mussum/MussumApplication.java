@@ -17,7 +17,7 @@ public class MussumApplication {
 	FilterRegistrationBean frb = new FilterRegistrationBean();
 
 	frb.setFilter(new AllowFilter());
-	frb.addUrlPatterns("/admin/*");
+	frb.addUrlPatterns("/api/*");
 
 	return frb;
     }
