@@ -5,11 +5,6 @@
  */
 package com.mussum.controllers.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -29,9 +24,12 @@ public class AllowFilter extends GenericFilterBean {
     public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
 	System.out.println("Liberando acesso da API *...");
 
+	HttpServletRequest httpReq = (HttpServletRequest) sr;
+	
 	HttpServletResponse httpResp = (HttpServletResponse) sr1;
 
 	httpResp.setHeader("Access-Control-Allow-Origin", "*");
+	httpResp.setHeader("Access-Control-Allow-Headers", "*");
 
 	fc.doFilter(sr, sr1);
 
