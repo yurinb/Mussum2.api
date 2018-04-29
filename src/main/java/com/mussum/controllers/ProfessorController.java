@@ -24,7 +24,7 @@ public class ProfessorController {
 
     @GetMapping(produces = "application/json")
     @ResponseBody
-    public List<Professor> listaProfessores() {
+    public List<Professor> getProfessores() {
 	return profRep.findAll();
     }
 
@@ -36,7 +36,7 @@ public class ProfessorController {
 
     @PostMapping()
     @ResponseBody
-    public Professor novoProfessor(@RequestBody @Valid Professor prof) {
+    public Professor postProfessor(@RequestBody @Valid Professor prof) {
 	return profRep.save(prof);
     }
 
@@ -59,7 +59,7 @@ public class ProfessorController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Professor remover(@PathVariable Integer id) {
+    public Professor deleteProfessor(@PathVariable Integer id) {
 	Professor prof = profRep.findById(id).get();
 	profRep.delete(prof);
 	return prof;

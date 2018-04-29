@@ -5,7 +5,11 @@
  */
 package com.mussum.controllers.security;
 
+import com.mussum.repository.ProfessorRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtHandlerAdapter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -17,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
@@ -25,11 +30,15 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 public class TokenFilter extends GenericFilterBean {
 
+    @Autowired
+    private ProfessorRepository rep;
+
     @Override
     public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
 	System.out.println("Verificando TOKEN da requisição...");
 
 	HttpServletRequest httpReq = (HttpServletRequest) sr;
+	HttpServletResponse httpResp = (HttpServletResponse) sr1;
 
 	String header = httpReq.getHeader("Authorization");
 
@@ -43,9 +52,19 @@ public class TokenFilter extends GenericFilterBean {
 
 	try {
 	    Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
+	    String usuarioToken = Jwts.parser().setSigningKey("mussm")
+		    .parse(token, new JwtHandlerAdapter<String>() {
+			@Override
+			public String onClaimsJws(Jws<Claims> jws) {
+			    return jws.getBody().getSubject();
+			}
+		    });
+
+	    System.out.println("Request by " + usuarioToken);
 	} catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
 	    if (e instanceof ExpiredJwtException) {
-		throw new ServletException("Token expirado!");
+		httpResp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		//throw new ServletException("Token expirado!");
 	    }
 	    throw new ServletException("Token inválido");
 	}
