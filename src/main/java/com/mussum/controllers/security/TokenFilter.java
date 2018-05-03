@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.mussum.controllers.security;
 
 import com.mussum.repository.ProfessorRepository;
@@ -24,10 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.GenericFilterBean;
 
-/**
- *
- * @author yurin
- */
 public class TokenFilter extends GenericFilterBean {
 
     @Autowired
