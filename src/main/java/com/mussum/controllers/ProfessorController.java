@@ -1,6 +1,6 @@
 package com.mussum.controllers;
 
-import com.mussum.models.Professor;
+import com.mussum.models.db.Professor;
 import com.mussum.repository.ProfessorRepository;
 import java.util.List;
 import javax.validation.Valid;

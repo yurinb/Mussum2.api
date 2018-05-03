@@ -1,7 +1,7 @@
 package com.mussum.controllers.security;
 
-import com.mussum.models.Professor;
-import com.mussum.models.Usuario;
+import com.mussum.models.db.Professor;
+import com.mussum.models.db.Usuario;
 import com.mussum.repository.ProfessorRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

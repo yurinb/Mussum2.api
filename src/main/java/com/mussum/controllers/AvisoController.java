@@ -1,6 +1,6 @@
 package com.mussum.controllers;
 
-import com.mussum.models.Aviso;
+import com.mussum.models.db.Professor_Aviso;
 import com.mussum.repository.AvisoRepository;
 import java.util.List;
 import javax.validation.Valid;
@@ -24,34 +24,34 @@ public class AvisoController {
 
     @GetMapping(produces = "application/json")
     @ResponseBody
-    public List<Aviso> getAvisos() {
+    public List<Professor_Aviso> getAvisos() {
 	return aviRep.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Aviso getAviso(@PathVariable Integer id) {
+    public Professor_Aviso getAviso(@PathVariable Integer id) {
 	return aviRep.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
-    public Aviso postAviso(@RequestBody @Valid Aviso aviso) {
+    public Professor_Aviso postAviso(@RequestBody @Valid Professor_Aviso aviso) {
 	return aviRep.save(aviso);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Aviso putAviso(@RequestBody Aviso newAviso, @PathVariable Integer id) {
-	Aviso old = aviRep.getOne(id);
+    public Professor_Aviso putAviso(@RequestBody Professor_Aviso newAviso, @PathVariable Integer id) {
+	Professor_Aviso old = aviRep.getOne(id);
 	aviRep.save(old);
 	return old;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Aviso deleteAviso(@PathVariable Integer id) {
-	Aviso aviso = aviRep.findById(id).get();
+    public Professor_Aviso deleteAviso(@PathVariable Integer id) {
+	Professor_Aviso aviso = aviRep.findById(id).get();
 	aviRep.delete(aviso);
 	return aviso;
     }

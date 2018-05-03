@@ -1,16 +1,10 @@
-package com.mussum.models;
+package com.mussum.models.db;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.mussum.models.MussumObject;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class Usuario {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Usuario extends MussumObject {
 
     //@NotNull(message = "O campo nome não pode ser nulo")
     private String username;
@@ -18,24 +12,20 @@ public class Usuario {
     //@NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
-    public Integer getId() {
-	return id;
-    }
-
     public String getUsername() {
-	return username;
+        return username;
     }
 
     public void setUsername(String username) {
-	this.username = username;
+        this.username = username;
     }
 
     public String getPassword() {
-	return password;
+        return password;
     }
 
     public void setPassword(String password) {
-	this.password = password;
+        this.password = password;
     }
 
 }

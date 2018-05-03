@@ -1,6 +1,6 @@
 package com.mussum.repository;
 
-import com.mussum.models.Professor;
+import com.mussum.models.db.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
