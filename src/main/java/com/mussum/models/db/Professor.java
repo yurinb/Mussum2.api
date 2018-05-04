@@ -1,14 +1,16 @@
 package com.mussum.models.db;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-public class Professor extends Usuario implements Serializable {
+@Table(name = "professor")
+public class Professor extends Usuario {
 
     @NotBlank
     private String nome;
@@ -17,18 +19,14 @@ public class Professor extends Usuario implements Serializable {
 
     private String sobre;
 
-    @OneToMany
-    @JoinColumn(name = "professor_id")
-    private List<Professor_Aviso> avisos;
-
-    @OneToMany
-    @JoinColumn(name = "professor_id")
-    private List<Professor_Link> links;
-
-    @OneToMany
-    @JoinColumn(name = "professor_id")
-    private List<Feed> feeds;
-
+//    @OneToMany(mappedBy = "professor_id")
+//    private List<Professor_Aviso> avisos;
+//
+//    @OneToMany(mappedBy = "professor_id")
+//    private List<Professor_Link> links;
+//
+//    @OneToMany(mappedBy = "professor_id")
+//    private List<Feed> feeds;
     public String getNome() {
         return nome;
     }
@@ -51,26 +49,6 @@ public class Professor extends Usuario implements Serializable {
 
     public void setSobre(String sobre) {
         this.sobre = sobre;
-    }
-
-    public List<Professor_Aviso> getAvisos() {
-        return avisos;
-    }
-
-    public List<Professor_Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Professor_Link> links) {
-        this.links = links;
-    }
-
-    public List<Feed> getFeeds() {
-        return feeds;
-    }
-
-    public void setFeeds(List<Feed> feeds) {
-        this.feeds = feeds;
     }
 
 }

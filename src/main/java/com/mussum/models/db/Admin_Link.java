@@ -3,9 +3,11 @@ package com.mussum.models.db;
 import com.mussum.models.MussumObject;
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
-public class Admin_Link extends MussumObject implements Serializable {
+@Table(name = "admin_link")
+public class Admin_Link extends MussumObject {
 
     private String titulo;
 

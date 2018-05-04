@@ -5,9 +5,11 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-public class Professor_Link extends MussumObject implements Serializable {
+@Table(name = "professor_link")
+public class Professor_Link extends MussumObject {
 
     private String titulo;
 

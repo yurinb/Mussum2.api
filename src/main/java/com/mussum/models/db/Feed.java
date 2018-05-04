@@ -6,9 +6,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
-public class Feed extends MussumObject implements Serializable {
+@Table(name = "feed")
+public class Feed extends MussumObject {
 
     @ManyToOne
     @JoinColumn(name = "professor_id")

@@ -5,9 +5,11 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
-public class Admin extends MussumObject implements Serializable {
+@Table(name = "admin")
+public class Admin extends MussumObject {
 
     @OneToMany(mappedBy = "id")
     private List<Professor> professores;

@@ -1,7 +1,9 @@
 package com.mussum.controllers;
 
+import com.mussum.models.db.Professor;
 import com.mussum.models.db.Professor_Aviso;
 import com.mussum.repository.AvisoRepository;
+import com.mussum.repository.ProfessorRepository;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,38 +24,47 @@ public class AvisoController {
     @Autowired
     private AvisoRepository aviRep;
 
+    @Autowired
+    private ProfessorRepository profRep;
+
     @GetMapping(produces = "application/json")
     @ResponseBody
     public List<Professor_Aviso> getAvisos() {
-	return aviRep.findAll();
+        return aviRep.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public Professor_Aviso getAviso(@PathVariable Integer id) {
-	return aviRep.findById(id).get();
+        return aviRep.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
     public Professor_Aviso postAviso(@RequestBody @Valid Professor_Aviso aviso) {
-	return aviRep.save(aviso);
+        return aviRep.save(aviso);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
     public Professor_Aviso putAviso(@RequestBody Professor_Aviso newAviso, @PathVariable Integer id) {
-	Professor_Aviso old = aviRep.getOne(id);
-	aviRep.save(old);
-	return old;
+        Professor_Aviso old = aviRep.getOne(id);
+        aviRep.save(old);
+        return old;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public Professor_Aviso deleteAviso(@PathVariable Integer id) {
-	Professor_Aviso aviso = aviRep.findById(id).get();
-	aviRep.delete(aviso);
-	return aviso;
+        Professor_Aviso aviso = aviRep.findById(id).get();
+        aviRep.delete(aviso);
+        return aviso;
+    }
+
+    @GetMapping("/professor/{id}")
+    @ResponseBody
+    public List<Professor_Aviso> avisosByProfessorID(@PathVariable Integer id) {
+        return aviRep.findByProfessor(profRep.findById(id).get());
     }
 
 }
