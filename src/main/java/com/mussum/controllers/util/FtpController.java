@@ -1,4 +1,4 @@
-package com.mussum.controllers;
+package com.mussum.controllers.util;
 
 import java.io.IOException;
 import java.io.InputStream;
