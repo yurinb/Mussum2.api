@@ -1,18 +1,21 @@
 package com.mussum.models.db;
 
 import com.mussum.models.MussumObject;
-import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "feed")
 public class Feed extends MussumObject {
 
-    @ManyToOne
+    @ManyToOne()
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "professor_id")
     private Professor professor;
 

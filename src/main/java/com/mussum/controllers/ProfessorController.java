@@ -47,7 +47,7 @@ public class ProfessorController {
     @ResponseBody
     public Professor putProfessor(@RequestBody Professor newProfwithOldId, @PathVariable Integer id) {
 	System.out.println("0");
-	Professor old = profRep.getOne(id);
+	Professor old = profRep.findById(id).get();
 	System.out.println("1");
 	old.setNome(newProfwithOldId.getNome());
 	old.setEmail(newProfwithOldId.getEmail());
