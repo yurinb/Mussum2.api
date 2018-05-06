@@ -12,20 +12,30 @@ public class Usuario extends MussumObject {
     //@NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
+    private String roles = "user"; // or "user, admin" if its a super user
+
     public String getUsername() {
-        return username;
+	return username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+	this.username = username;
     }
 
     public String getPassword() {
-        return password;
+	return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+	this.password = password;
+    }
+
+    public String getRoles() {
+	return roles;
+    }
+
+    public void setRoles(String roles) {
+	this.roles = roles;
     }
 
 }
