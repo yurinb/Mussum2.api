@@ -17,8 +17,6 @@ public class Recado extends MussumObject {
 
     private String data = LocalDateTime.now().toString();
 
-    private String url;
-
     @ManyToOne()
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "professor_id")
@@ -48,14 +46,6 @@ public class Recado extends MussumObject {
 	this.data = data;
     }
 
-    public String getUrl() {
-	return url;
-    }
-
-    public void setUrl(String url) {
-	this.url = url;
-    }
-
     public Professor getProfessor() {
 	return professor;
     }
@@ -63,6 +53,5 @@ public class Recado extends MussumObject {
     public void setProfessor(Professor professor) {
 	this.professor = professor;
     }
-
 
 }

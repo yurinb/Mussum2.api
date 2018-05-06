@@ -14,6 +14,16 @@ public class Professor extends Usuario implements Serializable {
 
     private String sobre;
 
+    private String fotolink = "http://franquia.globalmedclinica.com.br/wp-content/uploads/2016/01/investidores-img-02-01.png";
+
+    public String getFotoUrl() {
+	return fotolink;
+    }
+
+    public void setFotoUrl(String fotoUrl) {
+	this.fotolink = fotoUrl;
+    }
+
     public String getNome() {
 	return nome;
     }

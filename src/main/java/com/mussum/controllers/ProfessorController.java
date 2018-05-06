@@ -25,10 +25,9 @@ public class ProfessorController {
 
     @GetMapping()
     @ResponseBody
-    @JsonIgnore
+    //@JsonIgnore
     public List<Professor> getProfessores() {
 	return profRep.findAll();
-        
     }
 
     @GetMapping("/{id}")
