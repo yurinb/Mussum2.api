@@ -38,4 +38,25 @@ public class Usuario extends MussumObject {
 	this.roles = roles;
     }
 
+    public void addRole(String role) {
+	this.roles += "," + role;
+    }
+
+    public void removeRole(String role) {
+	String[] currentRoles = this.roles.split(",");
+	String newRoles = "";
+	int count = 0;
+	for (String rol : currentRoles) {
+	    count++;
+	    if (!rol.equalsIgnoreCase(role)) {
+		if (count == currentRoles.length) {
+		    newRoles += rol;
+		} else {
+		    newRoles += rol + ",";
+		}
+	    }
+	}
+	this.roles = newRoles;
+    }
+
 }
