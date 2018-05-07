@@ -12,7 +12,7 @@ public class Usuario extends MussumObject {
     //@NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
-    private String roles = "user"; // or "user, admin" if its a super user
+    private String role = "user"; // or "user, admin" if its a super user
 
     public String getUsername() {
 	return username;
@@ -30,20 +30,20 @@ public class Usuario extends MussumObject {
 	this.password = password;
     }
 
-    public String getRoles() {
-	return roles;
+    public String getRole() {
+	return role;
     }
 
-    public void setRoles(String roles) {
-	this.roles = roles;
+    public void setRole(String roles) {
+	this.role = roles;
     }
 
     public void addRole(String role) {
-	this.roles += "," + role;
+	this.role += "," + role;
     }
 
     public void removeRole(String role) {
-	String[] currentRoles = this.roles.split(",");
+	String[] currentRoles = this.role.split(",");
 	String newRoles = "";
 	int count = 0;
 	for (String rol : currentRoles) {
@@ -56,7 +56,7 @@ public class Usuario extends MussumObject {
 		}
 	    }
 	}
-	this.roles = newRoles;
+	this.role = newRoles;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.mussum.controllers.util;
+package com.mussum.controllers.ftp;
 
 import java.io.IOException;
 import java.io.InputStream;

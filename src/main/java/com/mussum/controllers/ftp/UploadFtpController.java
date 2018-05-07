@@ -1,6 +1,6 @@
-package com.mussum.controllers;
+package com.mussum.controllers.ftp;
 
-import com.mussum.controllers.util.FtpController;
+import com.mussum.controllers.ftp.FtpController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
