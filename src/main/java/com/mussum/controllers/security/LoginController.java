@@ -48,15 +48,18 @@ public class LoginController {
 		.setExpiration(new Date(System.currentTimeMillis() + (10 * 60 * 1000)))
 		.compact();
 
-	return new TokenResponse(token);
+	return new TokenResponse(token, usuarioEncontrado.getRole());
     }
 
     private class TokenResponse {
 
 	public String token;
+	
+	public String role;
 
-	public TokenResponse(String token) {
+	public TokenResponse(String token, String role) {
 	    this.token = token;
+	    this.role = role;
 	}
     }
 

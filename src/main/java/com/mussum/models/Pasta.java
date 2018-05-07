@@ -3,7 +3,7 @@ package com.mussum.models;
 import com.mussum.models.db.Usuario;
 import java.util.List;
 
-public class Pasta extends MussumObject {
+public class Pasta extends SuperEntity {
 
     private Usuario proprietario;
 

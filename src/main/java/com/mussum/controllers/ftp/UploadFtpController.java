@@ -53,7 +53,12 @@ public class UploadFtpController {
 	    if (file.isEmpty()) {
 		continue; //next pls
 	    }
-	    ftp.uploadFile(file.getInputStream(), dir, file.getOriginalFilename());
+	    try {
+		ftp.uploadFile(file.getInputStream(), dir, file.getOriginalFilename());
+
+	    } catch (Exception e) {
+		System.out.println(e);
+	    }
 	    System.out.println("arquivo baixado");
 	}
 

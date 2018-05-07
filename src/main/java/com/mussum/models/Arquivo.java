@@ -3,7 +3,7 @@ package com.mussum.models;
 import com.mussum.models.db.Usuario;
 import java.time.LocalDate;
 
-public class Arquivo extends MussumObject {
+public class Arquivo extends SuperEntity {
 
     private Usuario proprietario;
 

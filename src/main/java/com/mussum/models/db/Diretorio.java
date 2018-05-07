@@ -1,10 +1,10 @@
 package com.mussum.models.db;
 
-import com.mussum.models.MussumObject;
+import com.mussum.models.SuperEntity;
 import javax.persistence.Entity;
 
 @Entity
-public class Diretorio extends MussumObject {
+public class Diretorio extends SuperEntity {
 
     private String titulo;
 

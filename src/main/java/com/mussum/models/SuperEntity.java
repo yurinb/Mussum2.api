@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class MussumObject {
+public class SuperEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

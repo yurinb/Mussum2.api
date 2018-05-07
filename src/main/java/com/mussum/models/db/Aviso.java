@@ -1,11 +1,11 @@
 package com.mussum.models.db;
 
-import com.mussum.models.MussumObject;
+import com.mussum.models.SuperEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
 @Entity
-public class Aviso extends MussumObject {
+public class Aviso extends SuperEntity {
 
     private String titulo;
 

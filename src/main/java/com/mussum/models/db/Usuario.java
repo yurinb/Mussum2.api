@@ -1,10 +1,10 @@
 package com.mussum.models.db;
 
-import com.mussum.models.MussumObject;
+import com.mussum.models.SuperEntity;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class Usuario extends MussumObject {
+public class Usuario extends SuperEntity {
 
     //@NotNull(message = "O campo nome não pode ser nulo")
     private String username;
