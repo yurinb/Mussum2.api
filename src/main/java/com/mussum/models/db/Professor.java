@@ -18,6 +18,8 @@ public class Professor extends Usuario implements Serializable {
 
     private String sobre;
 
+    private String descricao;
+
     private String fotolink = "http://franquia.globalmedclinica.com.br/wp-content/uploads/2016/01/investidores-img-02-01.png";
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.REMOVE)
@@ -25,6 +27,14 @@ public class Professor extends Usuario implements Serializable {
 
     public String getFotolink() {
 	return fotolink;
+    }
+
+    public String getDescricao() {
+	return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+	this.descricao = descricao;
     }
 
     public void setFotolink(String fotolink) {
