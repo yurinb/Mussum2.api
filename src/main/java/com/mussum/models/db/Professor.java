@@ -1,7 +1,11 @@
 package com.mussum.models.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -16,8 +20,24 @@ public class Professor extends Usuario implements Serializable {
 
     private String fotolink = "http://franquia.globalmedclinica.com.br/wp-content/uploads/2016/01/investidores-img-02-01.png";
 
-    public String getFotoUrl() {
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.REMOVE)
+    private Set<Recado> recados;
+
+    public String getFotolink() {
 	return fotolink;
+    }
+
+    public void setFotolink(String fotolink) {
+	this.fotolink = fotolink;
+    }
+
+    @JsonIgnore
+    public Set<Recado> getRecados() {
+	return recados;
+    }
+
+    public void setRecados(Set<Recado> recados) {
+	this.recados = recados;
     }
 
     public void setFotoUrl(String fotoUrl) {
