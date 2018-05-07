@@ -1,8 +1,8 @@
 package com.mussum.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mussum.models.db.Professor;
-import com.mussum.repository.ProfessorRepository;
+import com.mussum.models.db.Curso;
+import com.mussum.models.db.Diretorio;
+import com.mussum.repository.DiretorioRepository;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,45 +17,45 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/professores")
-public class ProfessorController {
+@RequestMapping("/api/diretorios")
+public class DiretorioController {
 
     @Autowired
-    private ProfessorRepository profRep;
+    private DiretorioRepository direRep;
 
     @GetMapping()
     @ResponseBody
     //@JsonIgnore
-    public List<Professor> getProfessores() {
-	return profRep.findAll();
+    public List<Diretorio> getDiretorios() {
+	return direRep.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Professor getProfessor(@PathVariable Integer id) {
-	return profRep.findById(id).get();
+    public Diretorio getDiretorio(@PathVariable Integer id) {
+	return direRep.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
-    public Professor postProfessor(@RequestBody @Valid Professor prof) {
-	return profRep.save(prof);
+    public Diretorio postDiretorio(@RequestBody @Valid Diretorio dire) {
+	return direRep.save(dire);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Professor putProfessor(@RequestBody Professor newProfessor, @PathVariable Integer id) {
-	newProfessor.setId(profRep.findById(id).get().getId());
-	profRep.save(newProfessor);
-	return newProfessor;
+    public Diretorio putDiretorio(@RequestBody Diretorio newDire, @PathVariable Integer id) {
+	newDire.setId(direRep.findById(id).get().getId());
+	direRep.save(newDire);
+	return newDire;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Professor deleteProfessor(@PathVariable Integer id) {
-	Professor prof = profRep.findById(id).get();
-	profRep.delete(prof);
-	return prof;
+    public Diretorio deleteCurso(@PathVariable Integer id) {
+	Diretorio dire = direRep.findById(id).get();
+	direRep.delete(dire);
+	return dire;
     }
 
 }

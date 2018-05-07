@@ -1,8 +1,7 @@
 package com.mussum.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mussum.models.db.Professor;
-import com.mussum.repository.ProfessorRepository;
+import com.mussum.models.db.Curso;
+import com.mussum.repository.CursoRepository;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,45 +16,45 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/professores")
-public class ProfessorController {
+@RequestMapping("/api/cursos")
+public class CursoController {
 
     @Autowired
-    private ProfessorRepository profRep;
+    private CursoRepository cursoRep;
 
     @GetMapping()
     @ResponseBody
     //@JsonIgnore
-    public List<Professor> getProfessores() {
-	return profRep.findAll();
+    public List<Curso> getCursos() {
+	return cursoRep.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Professor getProfessor(@PathVariable Integer id) {
-	return profRep.findById(id).get();
+    public Curso getCurso(@PathVariable Integer id) {
+	return cursoRep.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
-    public Professor postProfessor(@RequestBody @Valid Professor prof) {
-	return profRep.save(prof);
+    public Curso postCurso(@RequestBody @Valid Curso curso) {
+	return cursoRep.save(curso);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Professor putProfessor(@RequestBody Professor newProfessor, @PathVariable Integer id) {
-	newProfessor.setId(profRep.findById(id).get().getId());
-	profRep.save(newProfessor);
-	return newProfessor;
+    public Curso putCurso(@RequestBody Curso newCurso, @PathVariable Integer id) {
+	newCurso.setId(cursoRep.findById(id).get().getId());
+	cursoRep.save(newCurso);
+	return newCurso;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Professor deleteProfessor(@PathVariable Integer id) {
-	Professor prof = profRep.findById(id).get();
-	profRep.delete(prof);
-	return prof;
+    public Curso deleteCurso(@PathVariable Integer id) {
+	Curso curso = cursoRep.findById(id).get();
+	cursoRep.delete(curso);
+	return curso;
     }
 
 }
