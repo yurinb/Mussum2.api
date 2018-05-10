@@ -1,7 +1,7 @@
 create table wiki (
     id INTEGER AUTO_INCREMENT,
-    titulo VARCHAR(100),
-    url VARCHAR(500),
+    titulo VARCHAR(100) NOT NULL,
+    url VARCHAR(500) NOT NULL,
     primary key(id)
 ) CHARACTER SET 'utf8' 
   COLLATE 'utf8_general_ci';

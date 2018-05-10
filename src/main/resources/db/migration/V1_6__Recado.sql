@@ -1,6 +1,6 @@
 create table recado (
     id INTEGER AUTO_INCREMENT,
-    titulo VARCHAR(100),
+    titulo VARCHAR(100) NOT NULL,
     descricao VARCHAR(300),
     data VARCHAR(100),
     professor_id INTEGER,

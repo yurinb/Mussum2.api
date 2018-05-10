@@ -2,12 +2,15 @@ package com.mussum.models.db;
 
 import com.mussum.models.SuperEntity;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Diretorio extends SuperEntity {
 
+    @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;
 
+    @NotBlank(message = "O campo url não pode ser nulo")
     private String url;
 
     public String getTitulo() {

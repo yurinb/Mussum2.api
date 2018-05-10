@@ -45,7 +45,7 @@ public class LoginController {
 	String token = Jwts.builder()
 		.setSubject(usuario.getUsername())
 		.signWith(SignatureAlgorithm.HS512, "mussum")
-		.setExpiration(new Date(System.currentTimeMillis() + (10 * 60 * 1000)))
+		.setExpiration(new Date(System.currentTimeMillis() + (30 * 60 * 1000)))
 		.compact();
 
 	return new TokenResponse(token, usuarioEncontrado.getRole());

@@ -11,8 +11,11 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Professor extends Usuario implements Serializable {
 
-    @NotBlank
+    @NotBlank(message = "O campo nome não pode ser nulo")
     private String nome;
+
+    @NotBlank(message = "O campo sobrenome não pode ser nulo")
+    private String sobrenome;
 
     private String email;
 
@@ -26,56 +29,64 @@ public class Professor extends Usuario implements Serializable {
     private Set<Recado> recados;
 
     public String getFotolink() {
-	return fotolink;
+        return fotolink;
     }
 
     public String getDescricao() {
-	return descricao;
+        return descricao;
     }
 
     public void setDescricao(String descricao) {
-	this.descricao = descricao;
+        this.descricao = descricao;
     }
 
     public void setFotolink(String fotolink) {
-	this.fotolink = fotolink;
+        this.fotolink = fotolink;
     }
 
     @JsonIgnore
     public Set<Recado> getRecados() {
-	return recados;
+        return recados;
     }
 
     public void setRecados(Set<Recado> recados) {
-	this.recados = recados;
+        this.recados = recados;
     }
 
     public void setFotoUrl(String fotoUrl) {
-	this.fotolink = fotoUrl;
+        this.fotolink = fotoUrl;
     }
 
     public String getNome() {
-	return nome;
+        return nome;
     }
 
     public void setNome(String nome) {
-	this.nome = nome;
+        this.nome = nome;
     }
 
     public String getEmail() {
-	return email;
+        return email;
     }
 
     public void setEmail(String email) {
-	this.email = email;
+        this.email = email;
     }
 
     public String getSobre() {
-	return sobre;
+        return sobre;
     }
 
     public void setSobre(String sobre) {
-	this.sobre = sobre;
+        this.sobre = sobre;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public void setSobrenome(String sobrenome) {
+        this.sobrenome = sobrenome;
     }
 
 }

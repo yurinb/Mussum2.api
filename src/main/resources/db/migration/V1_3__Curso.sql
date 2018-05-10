@@ -1,6 +1,6 @@
 create table curso (
     id INTEGER AUTO_INCREMENT,
-    titulo VARCHAR(100),
+    titulo VARCHAR(100) NOT NULL,
     primary key(id)
 ) CHARACTER SET 'utf8' 
   COLLATE 'utf8_general_ci';

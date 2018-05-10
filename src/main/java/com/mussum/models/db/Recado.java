@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 public class Recado extends SuperEntity {
 
+    @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;
 
     private String descricao;
@@ -23,35 +25,35 @@ public class Recado extends SuperEntity {
     private Professor professor;
 
     public String getTitulo() {
-	return titulo;
+        return titulo;
     }
 
     public void setTitulo(String titulo) {
-	this.titulo = titulo;
+        this.titulo = titulo;
     }
 
     public String getDescricao() {
-	return descricao;
+        return descricao;
     }
 
     public void setDescricao(String descricao) {
-	this.descricao = descricao;
+        this.descricao = descricao;
     }
 
     public String getData() {
-	return data;
+        return data;
     }
 
     public void setData(String data) {
-	this.data = data;
+        this.data = data;
     }
 
     public Professor getProfessor() {
-	return professor;
+        return professor;
     }
 
     public void setProfessor(Professor professor) {
-	this.professor = professor;
+        this.professor = professor;
     }
 
 }

@@ -1,6 +1,5 @@
 package com.mussum.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mussum.models.db.Professor;
 import com.mussum.repository.ProfessorRepository;
 import java.util.List;
@@ -25,7 +24,6 @@ public class ProfessorController {
 
     @GetMapping()
     @ResponseBody
-    //@JsonIgnore
     public List<Professor> getProfessores() {
 	return profRep.findAll();
     }

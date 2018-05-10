@@ -3,10 +3,12 @@ package com.mussum.models.db;
 import com.mussum.models.SuperEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Aviso extends SuperEntity {
 
+    @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;
 
     private String descricao;
@@ -16,35 +18,35 @@ public class Aviso extends SuperEntity {
     private String url;
 
     public String getTitulo() {
-	return titulo;
+        return titulo;
     }
 
     public void setTitulo(String titulo) {
-	this.titulo = titulo;
+        this.titulo = titulo;
     }
 
     public String getDescricao() {
-	return descricao;
+        return descricao;
     }
 
     public void setDescricao(String descricao) {
-	this.descricao = descricao;
+        this.descricao = descricao;
     }
 
     public String getData() {
-	return data;
+        return data;
     }
 
     public void setData(String data) {
-	this.data = data;
+        this.data = data;
     }
 
     public String getUrl() {
-	return url;
+        return url;
     }
 
     public void setUrl(String url) {
-	this.url = url;
+        this.url = url;
     }
 
 }
