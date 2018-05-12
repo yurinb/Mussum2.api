@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -69,106 +72,58 @@ public class UploadFtpController {
 
     @GetMapping("/api/repository")
     @ResponseBody
-    public Pasta getRepository(@RequestHeader("username") String username) {
+    public Pasta getRepository(
+            @RequestHeader("username") String username,
+            @RequestHeader("dir") String dir) {
 
-        //List<FtpTempRepository> repos = ftp.getProfFtpRepoList();
         Pasta userRepository = new Pasta(username);
 
-        userRepository.getPastas().addAll(getPastasFromDir(username));
-        userRepository.getArquivos().addAll(getArquivosFromDir(username));
-
-        List<String> diretoriosVerificados = new ArrayList();
-        List<Pasta> pastasDoScopo = new ArrayList();
-
-        pastasDoScopo.addAll(userRepository.getPastas());
-        int scopoIndex = 0;
-        int maxScopeIndex = 0;
-
-        while (true) {
-            if (estasPastasForamVerificadas(userRepository.getPastas(), diretoriosVerificados)) {
-                break;
-            }
-
-            Pasta pastaAtual = pastasDoScopo.get(scopoIndex);
-            String scopeDir = pastaAtual.getDir();
-
-            if (pastaAtual.getPastas().isEmpty()) {
-                //se nao houver pastas na pasta scopo ou se elas ja foram verificadas:
-                System.out.println(pastaAtual.getDir() + " > VAZIO");
-                diretoriosVerificados.add(scopeDir);
-                if (scopoIndex < maxScopeIndex) {
-                    scopoIndex++;
-                    continue;
-                } else {
-                    scopoIndex = 0;
-
-                }
-            }
-
-            if (estasPastasForamVerificadas(pastasDoScopo, diretoriosVerificados)) {
-                System.out.println(pastaAtual.getDir() + " > JA VERIFICADO");
-                if (scopoIndex < maxScopeIndex) {
-                    scopoIndex++;
-                    continue;
-                } else {
-                    scopoIndex = 0;
-                    pastaAtual;
-                }
-            }
-            pastaAtual = pastaAtual.getPastas().maxScopeIndex = pastaAtual.getPastas().size();
-
-            if (diretoriosVerificados.contains(scopeDir)) {
-                //se o diretorio da pasta ja foi verificado:
-                if (scopoIndex < maxScopeIndex) {
-                    scopoIndex++;
-                    continue;
-                } else {
-
-                }
-
-            } else {
-                //se o diretorio da pasta ainda nao foi verificado:
-                pastaAtual.getPastas().addAll(getPastasFromDir(scopeDir));
-                if (scopoIndex < maxScopeIndex) {
-                    scopoIndex++;
-                }
-
-            }
-
+        try {
+            userRepository.getArquivos().addAll(getArquivosFromDir(dir));
+            userRepository.getPastas().addAll(getPastasFromDir(dir));
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
         return userRepository;
     }
 
     private List<Pasta> getPastasFromDir(String dir) {
-        String[] scopeContent = ftp.getContentFrom(dir);
-        List<Pasta> scopeFolder = new ArrayList();
+        List<Pasta> pastas = new ArrayList();
+        try {
 
-        for (String item : scopeContent) {
-            int splitSize = item.split(".").length; //verificando se existe extensao no nome do item
+            FTPFile[] files = ftp.getFtp().listFiles(dir);
 
-            if (splitSize == 0) { //pasta
-                Pasta folder = new Pasta(item);
-                scopeFolder.add(folder);
+            for (FTPFile item : files) {
+
+                if (item.isDirectory()) { //pasta
+                    Pasta folder = new Pasta(dir);
+                    pastas.add(folder);
+                }
             }
-
+        } catch (IOException ex) {
+            System.out.println("ERRO: Pau na listagem de pastas do ftp: " + ex);
         }
-        return scopeFolder;
+        return pastas;
     }
 
     private List<Arquivo> getArquivosFromDir(String dir) {
-        String[] scopeContent = ftp.getContentFrom(dir);
         List<Arquivo> arquivos = new ArrayList();
+        try {
+            FTPFile[] files = ftp.getFtp().listFiles(dir);
 
-        for (String item : scopeContent) {
+            for (FTPFile item : files) {
+                String fileName = item.getName();
 
-            int splitSize = item.split(".").length; //verificando se existe extensao no nome do item
-
-            if (splitSize >= 1) { //arquivo
-                Arquivo file = new Arquivo(item);
-                arquivos.add(file);
-
+                if (item.isFile()) { //arquivo
+                    Arquivo file = new Arquivo(fileName);
+                    file.setDir(dir);
+                    file.setBytes(item.getSize());
+                    arquivos.add(file);
+                }
             }
+        } catch (IOException ex) {
+            System.out.println("ERRO: Pau na listagem de arquivos do ftp: " + ex);
         }
         return arquivos;
     }

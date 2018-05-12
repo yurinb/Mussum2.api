@@ -1,13 +1,14 @@
 package com.mussum.models.ftp;
 
-import com.mussum.models.SuperEntity;
 import java.time.LocalDate;
 
-public class Arquivo extends SuperEntity {
+public class Arquivo {
 
     private String nome;
 
-    private double tamanho;
+    private String dir;
+
+    private long bytes;
 
     private LocalDate dataCriacao;
 
@@ -23,12 +24,20 @@ public class Arquivo extends SuperEntity {
         this.nome = nome;
     }
 
-    public double getTamanho() {
-        return tamanho;
+    public String getDir() {
+        return dir;
     }
 
-    public void setTamanho(double tamanho) {
-        this.tamanho = tamanho;
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+
+    public long getBytes() {
+        return bytes;
+    }
+
+    public void setBytes(long tamanho) {
+        this.bytes = tamanho;
     }
 
     public LocalDate getDataCriacao() {

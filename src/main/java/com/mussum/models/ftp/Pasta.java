@@ -11,7 +11,7 @@ public class Pasta {
 
     private final List<Arquivo> files = new ArrayList();
 
-    private boolean visivel;
+    private boolean visivel = true;
 
     public Pasta(String nome) {
         this.dir = nome;
