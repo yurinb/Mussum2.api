@@ -15,33 +15,34 @@ public class MussumApplication {
 
     @Bean
     public FilterRegistrationBean getFiltroAllowOrigin() {
-	FilterRegistrationBean frb = new FilterRegistrationBean();
-	frb.setFilter(new AllowFilter());
-	frb.addUrlPatterns("/*");
-	return frb;
+        FilterRegistrationBean frb = new FilterRegistrationBean();
+        frb.setFilter(new AllowFilter());
+        frb.addUrlPatterns("/*");
+        return frb;
     }
 
     @Bean
     public FilterRegistrationBean getFiltroJWT() {
-	FilterRegistrationBean frb = new FilterRegistrationBean();
-	frb.setFilter(new TokenFilter());
-	frb.addUrlPatterns("/api/*");
-	return frb;
+        FilterRegistrationBean frb = new FilterRegistrationBean();
+        frb.setFilter(new TokenFilter());
+        frb.addUrlPatterns("/api/*");
+        return frb;
     }
 
     @Bean
     @Profile("test")
     public Flyway flyway(DataSource theDataSource) {
-	Flyway flyway = new Flyway();
-	flyway.setDataSource(theDataSource);
-	flyway.setLocations("classpath:db/migration");
-	flyway.clean();
-	flyway.migrate();
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(theDataSource);
+        flyway.setLocations("classpath:db/migration");
+        flyway.clean();
+        flyway.migrate();
 
-	return flyway;
+        return flyway;
     }
 
     public static void main(String[] args) {
-	SpringApplication.run(MussumApplication.class, args);
+        SpringApplication.run(MussumApplication.class, args);
     }
+
 }
