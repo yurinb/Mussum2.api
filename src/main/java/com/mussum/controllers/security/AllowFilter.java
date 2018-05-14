@@ -13,7 +13,7 @@ public class AllowFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
-	System.out.println("Liberando acesso da API *...");
+	//System.out.println("Liberando acesso da API ...");
 
 	HttpServletRequest httpReq = (HttpServletRequest) sr;
 	

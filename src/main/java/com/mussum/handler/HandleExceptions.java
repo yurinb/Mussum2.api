@@ -58,7 +58,7 @@ public class HandleExceptions extends ResponseEntityExceptionHandler {
 	List<Erro> erros = Arrays.asList(new Erro(mensagemClienteUsuario, mensagemClienteDesenvolvedor));
 	return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
-
+    
     private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 	List<Erro> erros = new ArrayList<>();
 
@@ -73,20 +73,20 @@ public class HandleExceptions extends ResponseEntityExceptionHandler {
 
     public static class Erro {
 
-	private String mensagemClienteUsuario;
-	private String mensagemClienteDesenvolvedor;
+	private final String msgUser;
+	private final String msgDev;
 
-	public Erro(String mensagemClienteUsuario, String mensagemClienteDesenvolvedor) {
-	    this.mensagemClienteUsuario = mensagemClienteUsuario;
-	    this.mensagemClienteDesenvolvedor = mensagemClienteDesenvolvedor;
+	public Erro(String msgUser, String msgDev) {
+	    this.msgUser = msgUser;
+	    this.msgDev = msgDev;
 	}
 
-	public String getMensagemClienteUsuario() {
-	    return mensagemClienteUsuario;
+	public String getUserMsg() {
+	    return msgUser;
 	}
 
-	public String getMensagemClienteDesenvolvedor() {
-	    return mensagemClienteDesenvolvedor;
+	public String getDevMsg() {
+	    return msgDev;
 	}
 
     }
