@@ -27,43 +27,43 @@ public class TokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
         
-        //IGNORANDO TOKEN ((TESTE))
-        fc.doFilter(sr, sr1);
-
-//        System.out.println("Verificando TOKEN da requisição...");
-//
-//        HttpServletRequest httpReq = (HttpServletRequest) sr;
-//        HttpServletResponse httpResp = (HttpServletResponse) sr1;
-//
-//        String header = httpReq.getHeader("Authorization");
-//
-//        if (header == null || !header.startsWith("Bearer ")) {
-//            throw new ServletException("Token inexistente ou inválido");
-//        }
-//
-//        System.out.println("Header recebido: " + header);
-//
-//        String token = header.substring(7);
-//
-//        try {
-//            Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
-//            String usuarioToken = Jwts.parser().setSigningKey("mussm")
-//                    .parse(token, new JwtHandlerAdapter<String>() {
-//                        @Override
-//                        public String onClaimsJws(Jws<Claims> jws) {
-//                            return jws.getBody().getSubject();
-//                        }
-//                    });
-//
-//            System.out.println("Request by " + usuarioToken);
-//        } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
-//            if (e instanceof ExpiredJwtException) {
-//                httpResp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//                //throw new ServletException("Token expirado!");
-//            }
-//            throw new ServletException("Token inválido");
-//        }
-//
+//        //IGNORANDO TOKEN ((TESTE))
 //        fc.doFilter(sr, sr1);
+
+        System.out.println("Verificando TOKEN da requisição...");
+
+        HttpServletRequest httpReq = (HttpServletRequest) sr;
+        HttpServletResponse httpResp = (HttpServletResponse) sr1;
+
+        String header = httpReq.getHeader("Authorization");
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            throw new ServletException("Token inexistente ou inválido");
+        }
+
+        System.out.println("Header recebido: " + header);
+
+        String token = header.substring(7);
+
+        try {
+            Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
+            String usuarioToken = Jwts.parser().setSigningKey("mussm")
+                    .parse(token, new JwtHandlerAdapter<String>() {
+                        @Override
+                        public String onClaimsJws(Jws<Claims> jws) {
+                            return jws.getBody().getSubject();
+                        }
+                    });
+
+            System.out.println("Request by " + usuarioToken);
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
+            if (e instanceof ExpiredJwtException) {
+                httpResp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                //throw new ServletException("Token expirado!");
+            }
+            throw new ServletException("Token inválido");
+        }
+
+        fc.doFilter(sr, sr1);
     }
 }
