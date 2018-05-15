@@ -22,14 +22,14 @@ public class LoginController {
     private ProfessorRepository rep;
 
     @PostMapping()
-    public ResponseEntity<TokenResponse> autenticar(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> autenticar(@RequestBody Usuario usuario) {
 
 	System.out.println("Request TOKEN...");
 	System.out.println("username: " + usuario.getUsername());
 	System.out.println("password: " + usuario.getPassword());
 	if (usuario.getUsername() == null || usuario.getPassword() == null) {
 	    System.out.println("usuario e senha obrigatório.");
-	    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	    return new ResponseEntity<>("manda essa merda de usuario e senha direito",HttpStatus.UNAUTHORIZED);
 
 	}
 	System.out.println("Autenticando usuario...");
@@ -37,12 +37,12 @@ public class LoginController {
 	Professor usuarioEncontrado = rep.getByUsername(usuario.getUsername());
 	if (usuarioEncontrado == null) {
 	    System.out.println("usuario inválido ou inexistente.");
-	    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	    return new ResponseEntity<>("tas viajando...",HttpStatus.UNAUTHORIZED);
 	}
 
 	if (!usuarioEncontrado.getPassword().equals(usuario.getPassword())) {
 	    System.out.println("senha inválida.");
-	    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	    return new ResponseEntity<>("daonde tu tirou essa senha? ta errado isso aí o mongolão",HttpStatus.UNAUTHORIZED);
 	}
 
 	System.out.println("Usuário autenticado.");

@@ -25,25 +25,25 @@ public class TokenFilter extends GenericFilterBean {
     private ProfessorRepository rep;
 
     @Override
-    public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
+    public void doFilter(ServletRequest sReq, ServletResponse sRes, FilterChain fc) throws IOException, ServletException {
 
 //        //IGNORANDO TOKEN ((TESTE))
 //        fc.doFilter(sr, sr1);
-	HttpServletRequest httpReq = (HttpServletRequest) sr;
-	HttpServletResponse httpResp = (HttpServletResponse) sr1;
+	HttpServletRequest hReq = (HttpServletRequest) sReq;
+	HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-	if (httpReq.getMethod().equals("GET")) {
+	if (hReq.getMethod().equals("GET")) {
 	    System.out.println("GET request liberado.");
-	    fc.doFilter(sr, sr1);
+	    fc.doFilter(sReq, sRes);
 
 	} else {
 
 	    System.out.println("Verificando TOKEN da requisição...");
 
-	    String header = httpReq.getHeader("Authorization");
+	    String header = hReq.getHeader("Authorization");
 
 	    if (header == null || !header.startsWith("Bearer ")) {
-		httpResp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
+		hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
 	    }
 
 	    System.out.println("Header recebido: " + header);
@@ -63,14 +63,14 @@ public class TokenFilter extends GenericFilterBean {
 		System.out.println("Request by " + usuarioToken);
 	    } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
 		if (e instanceof ExpiredJwtException) {
-		    httpResp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado!");
-		    System.out.println("Token expirado!");
+		    System.out.println("Token expirado!"+e);
+		    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado!");
 		} else {
-		    httpResp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido!");
+		    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido!");
 		}
 	    }
 
-	    fc.doFilter(sr, sr1);
+	    fc.doFilter(sReq, sRes);
 	}
     }
 }
