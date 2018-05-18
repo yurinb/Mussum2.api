@@ -1,8 +1,10 @@
 package com.mussum.controllers;
 
 import com.mussum.models.db.Recado;
+import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.RecadoRepository;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,12 +23,22 @@ public class RecadoController {
 
     @Autowired
     private RecadoRepository recadoRep;
+    @Autowired
+    private ProfessorRepository profRep;
+
+    @Autowired
+    private HttpServletRequest context;
 
     @GetMapping()
     @ResponseBody
     //@JsonIgnore
     public List<Recado> getRecados() {
-	return recadoRep.findAll();
+	if (context.getAttribute("requestUser").equals("null")) {
+	    return recadoRep.findAll();
+	}
+	
+	return recadoRep.findByProfessor(profRep.getByUsername((String) context.getAttribute("requestUser")));
+
     }
 
     @GetMapping("/{id}")

@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +42,6 @@ public class UploadFtpController {
         }
 
         try {
-
             save(Arrays.asList(uploadfiles), "/" + username + "/" + reqDir + "/");
         } catch (IOException e) {
             System.out.println("Upload FAIL: " + e);

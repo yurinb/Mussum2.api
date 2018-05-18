@@ -33,23 +33,23 @@ public class UploadLocalController {
     //@ResponseBody
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile uploadfile) {
 
-        if (uploadfile.isEmpty()) {
-            System.out.println("Nenhum 'file' encontrado na requisição!");
-            return new ResponseEntity("Nenhum 'file' encontrado na requisição!", HttpStatus.OK);
-        }
+	if (uploadfile.isEmpty()) {
+	    System.out.println("Nenhum 'file' encontrado na requisição!");
+	    return new ResponseEntity("Nenhum 'file' encontrado na requisição!", HttpStatus.BAD_REQUEST);
+	}
 
-        System.out.println("recebendo arquivo...");
-        try {
-            saveUploadedFiles(Arrays.asList(uploadfile), "");
-            System.out.println("recebido!");
+	System.out.println("recebendo arquivo...");
+	try {
+	    saveUploadedFiles(Arrays.asList(uploadfile), "");
+	    System.out.println("recebido!");
 
-        } catch (IOException e) {
-            System.out.println("fail..." + e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+	} catch (IOException e) {
+	    System.out.println("fail..." + e);
+	    return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+	}
 
-        return new ResponseEntity("Sucess - "
-                + uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
+	return new ResponseEntity("Sucess - "
+		+ uploadfile.getOriginalFilename(), new HttpHeaders(), HttpStatus.OK);
 
     }
 
@@ -57,29 +57,29 @@ public class UploadLocalController {
     @PostMapping("/upload/multi")
     public ResponseEntity<?> uploadFileMulti(@RequestParam("dir") String dir, @RequestParam("files") MultipartFile[] uploadfiles) {
 
-        System.out.println("ba");
-        // Get file name
+	System.out.println("ba");
+	// Get file name
 
-        System.out.println(uploadfiles[0].getName() + uploadfiles[1].getName());
+	System.out.println(uploadfiles[0].getName() + uploadfiles[1].getName());
 
-        String uploadedFileName = Arrays.stream(uploadfiles).map(x -> x.getOriginalFilename())
-                .filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
+	String uploadedFileName = Arrays.stream(uploadfiles).map(x -> x.getOriginalFilename())
+		.filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
 
-        if (StringUtils.isEmpty(uploadedFileName)) {
-            return new ResponseEntity("please select a file!", HttpStatus.OK);
-        }
+	if (StringUtils.isEmpty(uploadedFileName)) {
+	    return new ResponseEntity("please select a file!", HttpStatus.BAD_REQUEST);
+	}
 
-        try {
+	try {
 
-            saveUploadedFiles(Arrays.asList(uploadfiles), dir);
+	    saveUploadedFiles(Arrays.asList(uploadfiles), dir);
 
-        } catch (IOException e) {
-            System.out.println(e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+	} catch (IOException e) {
+	    System.out.println(e);
+	    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 
-        return new ResponseEntity("Sucess - "
-                + uploadedFileName, HttpStatus.OK);
+	return new ResponseEntity("Sucess - "
+		+ uploadedFileName, HttpStatus.OK);
 
     }
 
@@ -96,28 +96,28 @@ public class UploadLocalController {
 //
 //    }
 
-    //save file
+//save file
     private void saveUploadedFiles(List<MultipartFile> files, String dir) throws IOException {
 
-        for (MultipartFile file : files) {
+	for (MultipartFile file : files) {
 
-            if (file.isEmpty()) {
-                continue; //next pls
-            }
+	    if (file.isEmpty()) {
+		continue; //next pls
+	    }
 
-            byte[] bytes = file.getBytes();
-            try {
-                Path path = Paths.get(UPLOADED_FOLDER + dir + file.getOriginalFilename());
-                if (!Files.isWritable(path)) {
-                    System.out.println("puts");
-                }
-                Files.write(path, bytes);
+	    byte[] bytes = file.getBytes();
+	    try {
+		Path path = Paths.get(UPLOADED_FOLDER + dir + file.getOriginalFilename());
+		if (!Files.isWritable(path)) {
+		    System.out.println("puts");
+		}
+		Files.write(path, bytes);
 
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+	    } catch (IOException e) {
+		System.out.println(e);
+	    }
 
-        }
+	}
 
     }
 }

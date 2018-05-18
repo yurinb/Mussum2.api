@@ -29,7 +29,7 @@ public class LoginController {
 	System.out.println("password: " + usuario.getPassword());
 	if (usuario.getUsername() == null || usuario.getPassword() == null) {
 	    System.out.println("usuario e senha obrigatório.");
-	    return new ResponseEntity<>("manda essa merda de usuario e senha direito",HttpStatus.UNAUTHORIZED);
+	    return new ResponseEntity<>("usuario e senha obrigatório!",HttpStatus.UNAUTHORIZED);
 
 	}
 	System.out.println("Autenticando usuario...");
@@ -37,12 +37,12 @@ public class LoginController {
 	Professor usuarioEncontrado = rep.getByUsername(usuario.getUsername());
 	if (usuarioEncontrado == null) {
 	    System.out.println("usuario inválido ou inexistente.");
-	    return new ResponseEntity<>("tas viajando...",HttpStatus.UNAUTHORIZED);
+	    return new ResponseEntity<>("usuario inválido ou inexistente.",HttpStatus.UNAUTHORIZED);
 	}
 
 	if (!usuarioEncontrado.getPassword().equals(usuario.getPassword())) {
 	    System.out.println("senha inválida.");
-	    return new ResponseEntity<>("daonde tu tirou essa senha? ta errado isso aí o mongolão",HttpStatus.UNAUTHORIZED);
+	    return new ResponseEntity<>("senha inválida",HttpStatus.UNAUTHORIZED);
 	}
 
 	System.out.println("Usuário autenticado.");
