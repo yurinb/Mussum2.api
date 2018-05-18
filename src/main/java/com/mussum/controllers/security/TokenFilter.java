@@ -27,19 +27,24 @@ public class TokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest sReq, ServletResponse sRes, FilterChain fc) throws IOException, ServletException {
 
-//        //IGNORANDO TOKEN ((TESTE))
-//        fc.doFilter(sr, sr1);
+//        fc.doFilter(sr, sr1); //IGNORANDO TOKEN ((TESTE))
 	HttpServletRequest hReq = (HttpServletRequest) sReq;
 	HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-	if (hReq.getMethod().equals("GET") || hReq.getMethod().equals("OPTIONS")) {
-	    System.out.println(hReq.getRequestURI());
+	System.out.println(hReq.getRequestURI());
+
+	if (hReq.getMethod().equals("GET")) {
 	    if (!hReq.getRequestURI().equals("/api/recados")) {
-		System.out.println("GET/OPTIONS liberado.");
+		System.out.println("GET liberado.");
 		fc.doFilter(sReq, sRes);
 		return;
 	    }
+	}
 
+	if (hReq.getMethod().equals("OPTIONS")) {
+	    System.out.println("OPTIONS liberado.");
+	    fc.doFilter(sReq, sRes);
+	    return;
 	}
 
 	System.out.println("Verificando TOKEN da requisição...");
@@ -49,9 +54,16 @@ public class TokenFilter extends GenericFilterBean {
 	if (header == null || !header.startsWith("Bearer ")) {
 	    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
 	}
-	System.out.println("HEADER: "+header);
+
+	System.out.println("HEADER: " + header);
+
+	String token = null;
 	
-	String token = header.substring(7);
+	try {
+	    token = header.split(" ")[1];
+	} catch (Exception e) {
+	    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
+	}
 
 	String usuarioToken = null;
 
@@ -67,9 +79,6 @@ public class TokenFilter extends GenericFilterBean {
 
 	    System.out.println("Request by " + usuarioToken);
 
-	    try {System.out.println("aaaaaaaaa " + rep.getByUsername(usuarioToken).getNome());
-	    } catch (Exception e) {System.out.println(e);}
-	    
 	} catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
 	    if (e instanceof ExpiredJwtException) {
 		System.out.println("Token expirado!" + e);
