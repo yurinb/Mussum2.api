@@ -32,10 +32,10 @@ public class TokenFilter extends GenericFilterBean {
 	HttpServletRequest hReq = (HttpServletRequest) sReq;
 	HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-	if (hReq.getMethod().equals("GET")) {
+	if (hReq.getMethod().equals("GET") || hReq.getMethod().equals("OPTIONS")) {
 	    System.out.println(hReq.getRequestURI());
 	    if (!hReq.getRequestURI().equals("/api/recados")) {
-		System.out.println("GET request liberado.");
+		System.out.println("GET/OPTIONS liberado.");
 		fc.doFilter(sReq, sRes);
 		return;
 	    }
