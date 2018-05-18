@@ -49,9 +49,12 @@ public class TokenFilter extends GenericFilterBean {
 	if (header == null || !header.startsWith("Bearer ")) {
 	    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
 	}
-
+	System.out.println("HEADER: "+header);
+	
 	String token = header.substring(7);
+
 	String usuarioToken = null;
+
 	try {
 	    Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
 	    usuarioToken = Jwts.parser().setSigningKey("mussm")
