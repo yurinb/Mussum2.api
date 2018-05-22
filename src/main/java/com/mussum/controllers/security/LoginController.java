@@ -52,8 +52,10 @@ public class LoginController {
 		.signWith(SignatureAlgorithm.HS512, "mussum")
 		.setExpiration(new Date(System.currentTimeMillis() + (30 * 60 * 1000)))
 		.compact();
+	
+	String professorName = rep.getByUsername(usuarioEncontrado.getUsername()).getNome();
 
-	return new ResponseEntity<>(new TokenResponse(token, usuarioEncontrado.getRole()), HttpStatus.OK);
+	return new ResponseEntity<>(new TokenResponse(token, usuarioEncontrado.getRole(), professorName), HttpStatus.OK);
     }
 
     private class TokenResponse {
@@ -61,10 +63,13 @@ public class LoginController {
 	public String token;
 
 	public String role;
+	
+	public String nome;
 
-	public TokenResponse(String token, String role) {
+	public TokenResponse(String token, String role, String nome) {
 	    this.token = token;
 	    this.role = role;
+	    this.nome = nome;
 	}
     }
 
