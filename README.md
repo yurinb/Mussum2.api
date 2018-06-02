@@ -3,7 +3,7 @@
 ## Mussum 2.0 API
 
 ### Documentação e Rotas
-[Documentação e Rotas](https://documenter.getpostman.com/view/3654195/mussum/RW1XMMPj)
+[Documentação e Rotas](https://documenter.getpostman.com/view/3654195/mussum-20-server-api/RW8FEm7Z)
 
 ***
 
