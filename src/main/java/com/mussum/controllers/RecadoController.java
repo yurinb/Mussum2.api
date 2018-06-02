@@ -33,40 +33,42 @@ public class RecadoController {
     @ResponseBody
     //@JsonIgnore
     public List<Recado> getRecados() {
-	if (context.getAttribute("requestUser").equals("null")) {
-	    return recadoRep.findAll();
-	}
-	
-	return recadoRep.findByProfessor(profRep.getByUsername((String) context.getAttribute("requestUser")));
+        return recadoRep.findAll();
+
+//        if (context.getAttribute("requestUser").equals("null")) {
+//            return recadoRep.findAll();
+//        }
+//
+//        return recadoRep.findByProfessor(profRep.getByUsername((String) context.getAttribute("requestUser")));
 
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public Recado getRecado(@PathVariable Integer id) {
-	return recadoRep.findById(id).get();
+        return recadoRep.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
     public Recado postRecado(@RequestBody @Valid Recado recado) {
-	return recadoRep.save(recado);
+        return recadoRep.save(recado);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
     public Recado putRecado(@RequestBody Recado newRecado, @PathVariable Integer id) {
-	newRecado.setId(recadoRep.findById(id).get().getId());
-	recadoRep.save(newRecado);
-	return newRecado;
+        newRecado.setId(recadoRep.findById(id).get().getId());
+        recadoRep.save(newRecado);
+        return newRecado;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public Recado deleteRecado(@PathVariable Integer id) {
-	Recado recado = recadoRep.findById(id).get();
-	recadoRep.delete(recado);
-	return recado;
+        Recado recado = recadoRep.findById(id).get();
+        recadoRep.delete(recado);
+        return recado;
     }
 
 }

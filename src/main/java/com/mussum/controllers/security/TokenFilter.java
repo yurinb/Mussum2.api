@@ -10,6 +10,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
+import java.util.Arrays;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -28,69 +29,71 @@ public class TokenFilter extends GenericFilterBean {
     public void doFilter(ServletRequest sReq, ServletResponse sRes, FilterChain fc) throws IOException, ServletException {
 
 //        fc.doFilter(sr, sr1); //IGNORANDO TOKEN ((TESTE))
-	HttpServletRequest hReq = (HttpServletRequest) sReq;
-	HttpServletResponse hRes = (HttpServletResponse) sRes;
+        HttpServletRequest hReq = (HttpServletRequest) sReq;
+        HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-	System.out.println(hReq.getRequestURI());
+        System.out.println(hReq.getRequestURI());
 
-	if (hReq.getMethod().equals("GET")) {
-	    if (!hReq.getRequestURI().equals("/api/recados")) {
-		System.out.println("GET liberado.");
-		fc.doFilter(sReq, sRes);
-		return;
-	    }
-	}
+        final String[] GET_BLOQUEADOS = {};
+        
+        if (hReq.getMethod().equals("GET")) {
+            if (!Arrays.asList(GET_BLOQUEADOS).contains(hReq.getRequestURI())) {
+                System.out.println("GET liberado.");
+                fc.doFilter(sReq, sRes);
+                return;
+            }
+        }
 
-	if (hReq.getMethod().equals("OPTIONS")) {
-	    System.out.println("OPTIONS liberado.");
-	    fc.doFilter(sReq, sRes);
-	    return;
-	}
+        if (hReq.getMethod().equals("OPTIONS")) {
+            System.out.println("OPTIONS liberado.");
+            fc.doFilter(sReq, sRes);
+            return;
+        }
 
-	System.out.println("Verificando TOKEN da requisição...");
+        System.out.println("Verificando TOKEN da requisição...");
 
-	String header = hReq.getHeader("Authorization");
+        String header = hReq.getHeader("Authorization");
 
-	if (header == null || !header.startsWith("Bearer ")) {
-	    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
-	}
+        if (header == null || !header.startsWith("Bearer ")) {
+            hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
+        }
 
-	System.out.println("HEADER: " + header);
+        System.out.println("HEADER: " + header);
 
-	String token = null;
-	
-	try {
-	    token = header.split(" ")[1];
-	} catch (Exception e) {
-	    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
-	}
+        String token = null;
 
-	String usuarioToken = null;
+        try {
+            token = header.split(" ")[1];
+        } catch (Exception e) {
+            hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
+        }
 
-	try {
-	    Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
-	    usuarioToken = Jwts.parser().setSigningKey("mussm")
-		    .parse(token, new JwtHandlerAdapter<String>() {
-			@Override
-			public String onClaimsJws(Jws<Claims> jws) {
-			    return jws.getBody().getSubject();
-			}
-		    });
+        String usuarioToken = null;
 
-	    System.out.println("Request by " + usuarioToken);
+        try {
+            Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
+            usuarioToken = Jwts.parser().setSigningKey("mussm")
+                    .parse(token, new JwtHandlerAdapter<String>() {
+                        @Override
+                        public String onClaimsJws(Jws<Claims> jws) {
+                            return jws.getBody().getSubject();
+                        }
+                    });
 
-	} catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
-	    if (e instanceof ExpiredJwtException) {
-		System.out.println("Token expirado!" + e);
-		hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado!");
-	    } else {
-		hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido!");
-	    }
-	}
+            System.out.println("Request by " + usuarioToken);
 
-	hReq.setAttribute("requestUser", usuarioToken);
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
+            if (e instanceof ExpiredJwtException) {
+                System.out.println("Token expirado!" + e);
+                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado!");
+            } else {
+                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido!");
+            }
+        }
 
-	fc.doFilter(sReq, sRes);
+        hReq.setAttribute("requestUser", usuarioToken);
+
+        fc.doFilter(sReq, sRes);
 
     }
 }

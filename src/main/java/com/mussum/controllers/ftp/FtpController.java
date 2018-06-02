@@ -28,6 +28,10 @@ public class FtpController {
     }
 
     public FtpController() {
+        connect();
+    }
+
+    public void connect() {
         try {
             this.ftp.connect(host);
             boolean loginSucess = this.ftp.login(user, pass);
