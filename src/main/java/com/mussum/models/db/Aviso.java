@@ -1,12 +1,12 @@
 package com.mussum.models.db;
 
-import com.mussum.models.SuperEntity;
+import com.mussum.models.MussumEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-public class Aviso extends SuperEntity {
+public class Aviso extends MussumEntity {
 
     @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;

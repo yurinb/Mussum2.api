@@ -5,7 +5,7 @@ import java.io.InputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-public class FtpController {
+public class ControllerFTP {
 
     private String host = "localhost";
     private String user = "mussum";
@@ -27,9 +27,9 @@ public class FtpController {
         input.close();
     }
 
-    public FtpController() {
-        connect();
-    }
+//    public ControllerFTP() {
+//        connect();
+//    }
 
     public void connect() {
         try {
@@ -38,7 +38,7 @@ public class FtpController {
 
             if (loginSucess) {
 
-                System.out.println("FTP Connected.");
+                //System.out.println("FTP Connected.");
                 //Set File Type "Specially for PDF's"
                 this.ftp.setFileType(FTP.BINARY_FILE_TYPE, FTP.BINARY_FILE_TYPE);
                 this.ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);

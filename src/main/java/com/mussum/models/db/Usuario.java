@@ -1,11 +1,11 @@
 package com.mussum.models.db;
 
-import com.mussum.models.SuperEntity;
+import com.mussum.models.MussumEntity;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
-public class Usuario extends SuperEntity {
+public class Usuario extends MussumEntity {
 
     @NotNull(message = "O campo nome não pode ser nulo")
     private String username;
@@ -13,7 +13,7 @@ public class Usuario extends SuperEntity {
     @NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
-    private String role = ""; // or "user, admin" if its a super user
+    private String role = "professor"; // or "user, admin" if its a super user
 
     public String getUsername() {
         return username;

@@ -1,6 +1,6 @@
 package com.mussum.models.db;
 
-import com.mussum.models.SuperEntity;
+import com.mussum.models.MussumEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -10,7 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-public class Recado extends SuperEntity {
+public class Recado extends MussumEntity {
 
     @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;

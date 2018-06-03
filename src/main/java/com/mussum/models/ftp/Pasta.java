@@ -1,20 +1,32 @@
 package com.mussum.models.ftp;
 
+import com.mussum.models.MussumEntity;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
-public class Pasta {
+@Entity
+public class Pasta extends MussumEntity {
 
     private String dir;
 
-    private final List<Pasta> folders = new ArrayList();
-
-    private final List<Arquivo> files = new ArrayList();
+    private String nome;
 
     private boolean visivel = true;
 
-    public Pasta(String nome) {
-        this.dir = nome;
+    @OneToMany
+    private final List<Pasta> folders = new ArrayList();
+
+    @OneToMany
+    private final List<Arquivo> files = new ArrayList();
+
+    public Pasta() {
+    }
+
+    public Pasta(String dir, String nome) {
+        this.dir = dir;
+        this.nome = nome;
     }
 
     public String getDir() {
@@ -39,6 +51,14 @@ public class Pasta {
 
     public void setVisivel(boolean visivel) {
         this.visivel = visivel;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
 }

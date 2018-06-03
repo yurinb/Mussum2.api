@@ -11,6 +11,7 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -32,10 +33,10 @@ public class TokenFilter extends GenericFilterBean {
         HttpServletRequest hReq = (HttpServletRequest) sReq;
         HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-        System.out.println(hReq.getRequestURI());
+        System.out.println(hReq.getMethod() + " - " + new Date() + " - " + hReq.getRequestURI());
 
         final String[] GET_BLOQUEADOS = {};
-        
+
         if (hReq.getMethod().equals("GET")) {
             if (!Arrays.asList(GET_BLOQUEADOS).contains(hReq.getRequestURI())) {
                 System.out.println("GET liberado.");

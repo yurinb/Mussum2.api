@@ -1,16 +1,20 @@
 package com.mussum.models.ftp;
 
+import com.mussum.models.MussumEntity;
 import java.time.LocalDate;
+import javax.persistence.Entity;
 
-public class Arquivo {
+@Entity
+public class Arquivo extends MussumEntity {
 
     private String nome;
 
     private String dir;
 
-    private long bytes;
-
     private LocalDate dataCriacao;
+
+    public Arquivo() {
+    }
 
     public Arquivo(String nome) {
         this.nome = nome;
@@ -30,14 +34,6 @@ public class Arquivo {
 
     public void setDir(String dir) {
         this.dir = dir;
-    }
-
-    public long getBytes() {
-        return bytes;
-    }
-
-    public void setBytes(long tamanho) {
-        this.bytes = tamanho;
     }
 
     public LocalDate getDataCriacao() {
