@@ -1,10 +1,10 @@
 package com.mussum.controllers.ftp;
 
-import java.io.ByteArrayOutputStream;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.InputStream;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -19,36 +19,27 @@ public class DownloadFTP {
             @RequestHeader("dir") String dir,
             @RequestHeader("fileName") String fileName) {
         try {
+
+            System.out.println("GETTING File: " + prof + dir + fileName);
+
             ftp.connect();
-
-            System.out.println("GETTING File from: " + prof);
-            System.out.println("GETTING File: " + dir);
-            InputStream file = ftp.getFile(prof + dir, fileName);
-            if (file == null) {
-                System.out.println("GETTING FILE NOT FOUND");
-                return new ResponseEntity("Erro: arquivo do " + prof + " não encontrado.", HttpStatus.NOT_FOUND);
-            }
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
-            byte[] data = new byte[16384];
-
-            while ((nRead = file.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-
-            buffer.flush();
+            InputStream file = ftp.getFile("/" + prof + dir + "/", fileName);
             ftp.getFtp().completePendingCommand();
             ftp.disconnect();
+            if (file == null) {
+                System.out.println("FILE NOT FOUND");
+                return new ResponseEntity("Erro: arquivo do " + prof + " não encontrado.", HttpStatus.NOT_FOUND);
+            }
 
-            System.out.println("GETTING FILE: SUCCESS!");
-            return new ResponseEntity(buffer.toByteArray(), HttpStatus.OK);
+            System.out.println("GETTING FILE" + fileName + ": SUCCESS!");
+            return new ResponseEntity(StreamUtils.copyToByteArray(file), HttpStatus.OK);
         } catch (Exception ex) {
             ftp.disconnect();
             return new ResponseEntity("Erro: " + ex, HttpStatus.BAD_REQUEST);
         }
 
     }
-    
+
     @GetMapping("/api/photo")
     public ResponseEntity getProfessorPhoto(@RequestHeader("professor") String prof) {
 
@@ -57,24 +48,16 @@ public class DownloadFTP {
 
             System.out.println("GETTING User photo: " + prof);
             InputStream img = ftp.getFile("\\_res\\perfil_img\\", prof + ".png");
+            ftp.getFtp().completePendingCommand();
+            ftp.disconnect();
+
             if (img == null) {
                 System.out.println("GETTING User photo: getFile returns NULL");
                 return new ResponseEntity("Erro: img do professor " + prof + " não encontrada.", HttpStatus.NOT_FOUND);
             }
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int nRead;
-            byte[] data = new byte[16384];
-
-            while ((nRead = img.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-
-            buffer.flush();
-            ftp.getFtp().completePendingCommand();
-            ftp.disconnect();
 
             System.out.println("GETTING User photo: SUCCESS!");
-            return new ResponseEntity(buffer.toByteArray(), HttpStatus.OK);
+            return new ResponseEntity(StreamUtils.copyToByteArray(img), HttpStatus.OK);
         } catch (Exception ex) {
             ftp.disconnect();
             return new ResponseEntity("Erro: " + ex, HttpStatus.BAD_REQUEST);

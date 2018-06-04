@@ -16,8 +16,9 @@ public class Arquivo extends MussumEntity {
     public Arquivo() {
     }
 
-    public Arquivo(String nome) {
+    public Arquivo(String nome, String dir) {
         this.nome = nome;
+        this.dir = dir;
     }
 
     public String getNome() {

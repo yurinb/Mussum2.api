@@ -60,7 +60,7 @@ public class RepositoryFTP {
         Pasta requestDirectory = new Pasta(dir, username);
         try {
             ftp.connect();
-            requestDirectory.getArquivos().addAll(getArquivosFromDir(username + "/" + dir));
+            requestDirectory.getArquivos().addAll(getArquivosFromDir(username, dir));
             requestDirectory.getPastas().addAll(getPastasFromDir(username, dir));
             ftp.disconnect();
         } catch (Exception e) {
@@ -75,13 +75,14 @@ public class RepositoryFTP {
         try {
             ftp.connect();
 
+            System.out.println("LIST FOLDERS ON? " + dir);
             FTPFile[] files = ftp.getFtp().listFiles(username + "/" + dir);
             ftp.disconnect();
 
             for (FTPFile item : files) {
-                System.out.println("GETTING PASTAS: " + item);
                 if (item.isDirectory()) { //pasta
-                    Pasta folder = new Pasta(dir + "/" + item.getName(), item.getName());
+                    System.out.println("RETORNANDO PASTA: " + item);
+                    Pasta folder = new Pasta(dir, item.getName());
                     pastas.add(folder);
                 }
             }
@@ -93,22 +94,22 @@ public class RepositoryFTP {
         return pastas;
     }
 
-    private List<Arquivo> getArquivosFromDir(String dir) {
+    private List<Arquivo> getArquivosFromDir(String username, String dir) {
         List<Arquivo> arquivos = new ArrayList();
         try {
             ftp.connect();
-
-            FTPFile[] files = ftp.getFtp().listFiles(dir);
+            System.out.println("LIST FILES ON? " + dir);
+            FTPFile[] files = ftp.getFtp().listFiles(username + "/" + dir);
             ftp.disconnect();
 
             for (FTPFile item : files) {
                 String fileName = item.getName();
-
+                System.out.println("ITEM NAME>" + item.getName());
                 if (item.isFile()) { //arquivo
-                    Arquivo file = new Arquivo(fileName);
-                    file.setDir(dir);
-                    //file.setBytes(item.getSize());
+                    System.out.println("RETORNANDO ARQUIVO: " + item);
+                    Arquivo file = new Arquivo(fileName, dir);
                     arquivos.add(file);
+                    System.out.println("Retornando arquivo? " + file.getDir() + file.getNome());
                 }
             }
         } catch (IOException ex) {

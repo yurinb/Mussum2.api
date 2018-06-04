@@ -1,6 +1,5 @@
 package com.mussum.controllers.security;
 
-import com.mussum.repository.ProfessorRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -18,13 +17,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.GenericFilterBean;
 
 public class TokenFilter extends GenericFilterBean {
-
-    @Autowired
-    private ProfessorRepository rep;
 
     @Override
     public void doFilter(ServletRequest sReq, ServletResponse sRes, FilterChain fc) throws IOException, ServletException {
@@ -33,7 +28,7 @@ public class TokenFilter extends GenericFilterBean {
         HttpServletRequest hReq = (HttpServletRequest) sReq;
         HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-        System.out.println(hReq.getMethod() + " - " + new Date() + " - " + hReq.getRequestURI());
+        System.out.println(hReq.getMethod() + " - " + " - " + hReq.getRequestURI() + new Date());
 
         final String[] GET_BLOQUEADOS = {};
 
