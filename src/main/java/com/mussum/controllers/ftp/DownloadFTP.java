@@ -23,16 +23,19 @@ public class DownloadFTP {
             System.out.println("GETTING File: " + prof + dir + fileName);
 
             ftp.connect();
+            ftp.getFtp().setSoTimeout(3000);
             InputStream file = ftp.getFile("/" + prof + dir + "/", fileName);
-            ftp.getFtp().completePendingCommand();
+            //ftp.getFtp().completePendingCommand();
             ftp.disconnect();
+            byte[] bytes = StreamUtils.copyToByteArray(file);
+            //file.close();
             if (file == null) {
                 System.out.println("FILE NOT FOUND");
                 return new ResponseEntity("Erro: arquivo do " + prof + " não encontrado.", HttpStatus.NOT_FOUND);
             }
 
             System.out.println("GETTING FILE" + fileName + ": SUCCESS!");
-            return new ResponseEntity(StreamUtils.copyToByteArray(file), HttpStatus.OK);
+            return new ResponseEntity(bytes, HttpStatus.OK);
         } catch (Exception ex) {
             ftp.disconnect();
             return new ResponseEntity("Erro: " + ex, HttpStatus.BAD_REQUEST);
@@ -44,11 +47,13 @@ public class DownloadFTP {
     public ResponseEntity getProfessorPhoto(@RequestHeader("professor") String prof) {
 
         try {
-            ftp.connect();
-
             System.out.println("GETTING User photo: " + prof);
+
+            ftp.connect();
+            ftp.getFtp().setSoTimeout(60);
+
             InputStream img = ftp.getFile("\\_res\\perfil_img\\", prof + ".png");
-            ftp.getFtp().completePendingCommand();
+            //ftp.getFtp().completePendingCommand();
             ftp.disconnect();
 
             if (img == null) {

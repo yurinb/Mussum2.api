@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 public class UploadFTP {
@@ -25,11 +26,14 @@ public class UploadFTP {
     //Multiple file upload
     @PostMapping("/api/upload")
     public ResponseEntity postFiles(
-            @RequestParam("dir") String reqDir,
+            @RequestHeader("dir") String reqDir,
+            @RequestHeader("fileName") String fileName,
             @RequestParam("files") MultipartFile[] uploadfiles) throws Exception {
 
         String professor = (String) context.getAttribute("requestUser");
         System.out.println("User upload: " + professor);
+        System.out.println("Upload fileName: " + fileName);
+        System.out.println("Upload dir: " + reqDir);
 
         if (professor == null || professor.equals("")) {
             return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
@@ -43,14 +47,14 @@ public class UploadFTP {
             return new ResponseEntity("Nenhum arquivo recebido!", HttpStatus.BAD_REQUEST);
         }
 
-        save(Arrays.asList(uploadfiles), "/" + professor + "/" + reqDir + "/");
+        save(Arrays.asList(uploadfiles), "/" + professor + "/" + reqDir + "/", fileName);
 
         return new ResponseEntity("Successfully uploaded - "
                 + uploadedFiles, HttpStatus.OK);
     }
 
     //save file
-    private void save(List<MultipartFile> files, String dir) {
+    private void save(List<MultipartFile> files, String dir, String fileName) {
         for (MultipartFile file : files) {
             System.out.println("recebendo arquivo...");
             if (file.isEmpty()) {
@@ -58,7 +62,7 @@ public class UploadFTP {
             }
             try {
                 ftp.connect();
-                ftp.uploadFile(file.getInputStream(), dir, file.getOriginalFilename());
+                ftp.uploadFile(file.getInputStream(), dir, fileName);
                 ftp.disconnect();
                 System.out.println("arquivo salvo.");
             } catch (Exception e) {
