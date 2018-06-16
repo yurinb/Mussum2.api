@@ -35,10 +35,13 @@ public class RepositoryFTP {
     @PostMapping("/api/repository")
     @ResponseBody
     public ResponseEntity postRepository(
-            @RequestHeader("dir") String dir) {
+            @RequestHeader("dir") String dir,
+            @RequestHeader("visible") boolean visible) {
 
         String professor = (String) context.getAttribute("requestUser");
         System.out.println("User make directory " + professor);
+        System.out.println("Visible directory " + visible);
+        System.out.println("Dir of new directory: " + dir);
 
         if (professor == null || professor.equals("")) {
             return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
@@ -47,11 +50,17 @@ public class RepositoryFTP {
         try {
 
             ftp.connect();
-
-            ftp.getFtp().makeDirectory(professor + "/" + dir);
-            System.out.println("Diretorio criado.");
-
+            ftp.getFtp().makeDirectory(dir);
             ftp.disconnect();
+            String name = dir.split("/")[dir.split("/").length - 1];
+            dir = dir.replace("/" + name, "");
+            Pasta pasta = new Pasta(dir, name);
+            System.out.println("new pasta...");
+            pasta.setVisivel(visible);
+            ftp.connect();
+            pastaRep.save(pasta);
+
+            System.out.println("Diretorio criado.");
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (IOException ex) {
             ftp.disconnect();
@@ -92,12 +101,13 @@ public class RepositoryFTP {
                     Pasta folder = null;
                     if (pastaRep.findByDirInAndNomeIn(dir, item.getName()).size() > 0) {
                         folder = pastaRep.findByDirInAndNomeIn(dir, item.getName()).get(0);
+
                     } else {
                         folder = new Pasta(dir, item.getName());
                         pastaRep.save(folder);
                     }
                     pastas.add(folder);
-                    System.out.println("Retornando pasta: " + folder.getDir() + folder.getNome());
+                    System.out.println("Retornando pasta: " + folder.getDir() + "/" + folder.getNome());
                 }
             }
 
@@ -127,7 +137,7 @@ public class RepositoryFTP {
                         arquivoRep.save(file);
                     }
                     arquivos.add(file);
-                    System.out.println("Retornando arquivo: " + file.getDir() + file.getNome());
+                    System.out.println("Retornando arquivo: " + file.getDir() + "/" + file.getNome());
                 }
             }
         } catch (IOException ex) {
