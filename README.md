@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/yurinb/Mussum_2.0-API.svg?branch=master)](https://travis-ci.org/yurinb/Mussum_2.0-API)
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/yurinb/Mussum_2.0-API/blob/master/LICENSE)
 ## Mussum 2.0 API
 
 ### Documentação e Rotas
