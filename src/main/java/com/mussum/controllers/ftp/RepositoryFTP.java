@@ -84,12 +84,11 @@ public class RepositoryFTP {
             ftp.connect();
 
             System.out.println("LIST FOLDERS ON? " + dir);
-            FTPFile[] files = ftp.getFtp().listFiles(username + "/" + dir);
+            FTPFile[] files = ftp.getFtp().listFiles(dir);
             ftp.disconnect();
 
             for (FTPFile item : files) {
                 if (item.isDirectory()) { //pasta
-                    System.out.println("RETORNANDO PASTA: " + item);
                     Pasta folder = null;
                     if (pastaRep.findByDirInAndNomeIn(dir, item.getName()).size() > 0) {
                         folder = pastaRep.findByDirInAndNomeIn(dir, item.getName()).get(0);
@@ -98,6 +97,7 @@ public class RepositoryFTP {
                         pastaRep.save(folder);
                     }
                     pastas.add(folder);
+                    System.out.println("Retornando pasta: " + folder.getDir() + folder.getNome());
                 }
             }
 
@@ -113,14 +113,12 @@ public class RepositoryFTP {
         try {
             ftp.connect();
             System.out.println("LIST FILES ON? " + dir);
-            FTPFile[] files = ftp.getFtp().listFiles(username + "/" + dir);
+            FTPFile[] files = ftp.getFtp().listFiles(dir);
             ftp.disconnect();
 
             for (FTPFile item : files) {
                 String fileName = item.getName();
-                System.out.println("ITEM NAME>" + item.getName());
                 if (item.isFile()) { //arquivo
-                    System.out.println("RETORNANDO ARQUIVO: " + item);
                     Arquivo file = null;
                     if (arquivoRep.findByDirInAndNomeIn(dir, item.getName()).size() > 0) {
                         file = arquivoRep.findByDirInAndNomeIn(dir, item.getName()).get(0);
@@ -129,7 +127,7 @@ public class RepositoryFTP {
                         arquivoRep.save(file);
                     }
                     arquivos.add(file);
-                    System.out.println("Retornando arquivo? " + file.getDir() + file.getNome());
+                    System.out.println("Retornando arquivo: " + file.getDir() + file.getNome());
                 }
             }
         } catch (IOException ex) {

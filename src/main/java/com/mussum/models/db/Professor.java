@@ -1,18 +1,16 @@
 package com.mussum.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.NotBlank;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Professor extends Usuario implements Serializable {
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Professor extends Usuario {
 
     private String nome;
 

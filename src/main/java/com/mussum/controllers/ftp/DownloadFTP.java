@@ -20,11 +20,11 @@ public class DownloadFTP {
             @RequestHeader("fileName") String fileName) {
         try {
 
-            System.out.println("GETTING File: " + prof + dir + fileName);
+            System.out.println("GETTING File: " + dir + fileName);
 
             ftp.connect();
             ftp.getFtp().setSoTimeout(3000);
-            InputStream file = ftp.getFile("/" + prof + dir + "/", fileName);
+            InputStream file = ftp.getFile(dir + "/", fileName);
             //ftp.getFtp().completePendingCommand();
             ftp.disconnect();
             byte[] bytes = StreamUtils.copyToByteArray(file);

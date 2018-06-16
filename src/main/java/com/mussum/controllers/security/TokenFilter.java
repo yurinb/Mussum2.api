@@ -28,7 +28,7 @@ public class TokenFilter extends GenericFilterBean {
         HttpServletRequest hReq = (HttpServletRequest) sReq;
         HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-        System.out.println(hReq.getMethod() + " - " + hReq.getRequestURI() + new Date() + " - ");
+        System.out.println(hReq.getMethod() + " - " + hReq.getRequestURI() + " - " + new Date() + " - ");
 
         final String[] GET_BLOQUEADOS = {};
 

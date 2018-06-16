@@ -44,8 +44,8 @@ public class ToggleVisibleFTP {
 
             ftp.connect();
             ftp.getFtp().setSoTimeout(3000);
-            boolean fileExist = ftp.checkFileExists("/" + prof.getUsername() + dir + "/" + fileName);
-            boolean dirExists = ftp.checkDirectoryExists("/" + prof.getUsername() + dir + "/");
+            boolean fileExist = ftp.checkFileExists(dir + "/" + fileName);
+            boolean dirExists = ftp.checkDirectoryExists(dir + "/");
             //ftp.getFtp().completePendingCommand();
             ftp.disconnect();
             //file.close();

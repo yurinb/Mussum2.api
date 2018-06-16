@@ -24,7 +24,9 @@ public class ControllerFTP {
 
     public void uploadFile(InputStream input, Arquivo arquivo) throws Exception {
         ftp.makeDirectory(arquivo.getDir());
-        this.ftp.storeFile(arquivo.getDir() + arquivo.getNome(), input);
+        System.out.println("DIRRRRRRRRRRRRRRRRRRRR");
+        System.out.println(arquivo.getDir());
+        this.ftp.storeFile(arquivo.getDir() + "/" + arquivo.getNome(), input);
         input.close();
     }
 
