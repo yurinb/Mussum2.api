@@ -1,5 +1,6 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.models.ftp.Arquivo;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.net.ftp.FTP;
@@ -21,16 +22,15 @@ public class ControllerFTP {
         }
     }
 
-    public void uploadFile(InputStream input, String dir, String fileName) throws Exception {
-        ftp.makeDirectory(dir);
-        this.ftp.storeFile(dir + fileName, input);
+    public void uploadFile(InputStream input, Arquivo arquivo) throws Exception {
+        ftp.makeDirectory(arquivo.getDir());
+        this.ftp.storeFile(arquivo.getDir() + arquivo.getNome(), input);
         input.close();
     }
 
 //    public ControllerFTP() {
 //        connect();
 //    }
-
     public void connect() {
         try {
             this.ftp.connect(host);
@@ -68,6 +68,24 @@ public class ControllerFTP {
 
     public FTPClient getFtp() {
         return ftp;
+    }
+
+    public boolean checkDirectoryExists(String dirPath) throws IOException {
+        ftp.changeWorkingDirectory(dirPath);
+        int returnCode = ftp.getReplyCode();
+        if (returnCode == 550) {
+            return false;
+        }
+        return true;
+    }
+
+    boolean checkFileExists(String filePath) throws IOException {
+        InputStream inputStream = ftp.retrieveFileStream(filePath);
+        int returnCode = ftp.getReplyCode();
+        if (inputStream == null || returnCode == 550) {
+            return false;
+        }
+        return true;
     }
 
 }

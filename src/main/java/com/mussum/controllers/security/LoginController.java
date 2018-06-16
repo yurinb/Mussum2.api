@@ -34,7 +34,7 @@ public class LoginController {
 	}
 	System.out.println("Autenticando usuario...");
 
-	Professor usuarioEncontrado = rep.getByUsername(usuario.getUsername());
+	Professor usuarioEncontrado = rep.findByUsername(usuario.getUsername());
 	if (usuarioEncontrado == null) {
 	    System.out.println("usuario inválido ou inexistente.");
 	    return new ResponseEntity<>("usuario inválido ou inexistente.",HttpStatus.UNAUTHORIZED);
@@ -53,7 +53,7 @@ public class LoginController {
 		.setExpiration(new Date(System.currentTimeMillis() + (30 * 60 * 1000)))
 		.compact();
 	
-	String professorName = rep.getByUsername(usuarioEncontrado.getUsername()).getNome();
+	String professorName = rep.findByUsername(usuarioEncontrado.getUsername()).getNome();
 
 	return new ResponseEntity<>(new TokenResponse(token, usuarioEncontrado.getRole(), professorName), HttpStatus.OK);
     }

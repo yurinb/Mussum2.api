@@ -7,18 +7,25 @@ import javax.persistence.Entity;
 @Entity
 public class Arquivo extends MussumEntity {
 
+    private String dir;
+
     private String nome;
 
-    private String dir;
+    private boolean visivel;
+
+    private String comentario;
 
     private LocalDate dataCriacao;
 
     public Arquivo() {
     }
 
-    public Arquivo(String nome, String dir) {
+    public Arquivo(String dir, String nome) {
         this.nome = nome;
         this.dir = dir;
+        this.comentario = "";
+        this.dataCriacao = LocalDate.now();
+        this.visivel = true;
     }
 
     public String getNome() {
@@ -43,6 +50,22 @@ public class Arquivo extends MussumEntity {
 
     public void setDataCriacao(LocalDate dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public boolean isVisivel() {
+        return visivel;
+    }
+
+    public void setVisivel(boolean visivel) {
+        this.visivel = visivel;
     }
 
 }

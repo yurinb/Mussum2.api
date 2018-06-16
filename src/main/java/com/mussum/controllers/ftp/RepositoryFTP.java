@@ -2,6 +2,8 @@ package com.mussum.controllers.ftp;
 
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.models.ftp.Pasta;
+import com.mussum.repository.ArquivoRepository;
+import com.mussum.repository.PastaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,12 @@ public class RepositoryFTP {
 
     @Autowired
     private HttpServletRequest context;
+
+    @Autowired
+    private PastaRepository pastaRep;
+
+    @Autowired
+    private ArquivoRepository arquivoRep;
 
     private final ControllerFTP ftp = new ControllerFTP();
 
@@ -82,7 +90,13 @@ public class RepositoryFTP {
             for (FTPFile item : files) {
                 if (item.isDirectory()) { //pasta
                     System.out.println("RETORNANDO PASTA: " + item);
-                    Pasta folder = new Pasta(dir, item.getName());
+                    Pasta folder = null;
+                    if (pastaRep.findByDirInAndNomeIn(dir, item.getName()).size() > 0) {
+                        folder = pastaRep.findByDirInAndNomeIn(dir, item.getName()).get(0);
+                    } else {
+                        folder = new Pasta(dir, item.getName());
+                        pastaRep.save(folder);
+                    }
                     pastas.add(folder);
                 }
             }
@@ -107,7 +121,13 @@ public class RepositoryFTP {
                 System.out.println("ITEM NAME>" + item.getName());
                 if (item.isFile()) { //arquivo
                     System.out.println("RETORNANDO ARQUIVO: " + item);
-                    Arquivo file = new Arquivo(fileName, dir);
+                    Arquivo file = null;
+                    if (arquivoRep.findByDirInAndNomeIn(dir, item.getName()).size() > 0) {
+                        file = arquivoRep.findByDirInAndNomeIn(dir, item.getName()).get(0);
+                    } else {
+                        file = new Arquivo(dir, item.getName());
+                        arquivoRep.save(file);
+                    }
                     arquivos.add(file);
                     System.out.println("Retornando arquivo? " + file.getDir() + file.getNome());
                 }

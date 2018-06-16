@@ -1,5 +1,8 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.models.db.Feed;
+import com.mussum.models.ftp.Arquivo;
+import com.mussum.repository.FeedRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -21,6 +24,9 @@ public class UploadFTP {
     @Autowired
     private HttpServletRequest context;
 
+    @Autowired
+    private FeedRepository feedRep;
+
     private final ControllerFTP ftp = new ControllerFTP();
 
     //Multiple file upload
@@ -28,6 +34,7 @@ public class UploadFTP {
     public ResponseEntity postFiles(
             @RequestHeader("dir") String reqDir,
             @RequestHeader("fileName") String fileName,
+            @RequestHeader("comment") String comment,
             @RequestParam("files") MultipartFile[] uploadfiles) throws Exception {
 
         String professor = (String) context.getAttribute("requestUser");
@@ -47,14 +54,13 @@ public class UploadFTP {
             return new ResponseEntity("Nenhum arquivo recebido!", HttpStatus.BAD_REQUEST);
         }
 
-        save(Arrays.asList(uploadfiles), "/" + professor + "/" + reqDir + "/", fileName);
-
+        save(Arrays.asList(uploadfiles), "/" + professor + "/" + reqDir + "/", fileName, professor, comment);
         return new ResponseEntity("Successfully uploaded - "
                 + uploadedFiles, HttpStatus.OK);
     }
 
     //save file
-    private void save(List<MultipartFile> files, String dir, String fileName) {
+    private void save(List<MultipartFile> files, String dir, String fileName, String professor, String comment) {
         for (MultipartFile file : files) {
             System.out.println("recebendo arquivo...");
             if (file.isEmpty()) {
@@ -62,8 +68,11 @@ public class UploadFTP {
             }
             try {
                 ftp.connect();
-                ftp.uploadFile(file.getInputStream(), dir, fileName);
+                Arquivo arquivo = new Arquivo(fileName, dir);
+                arquivo.setComentario(comment);
+                ftp.uploadFile(file.getInputStream(), arquivo);
                 ftp.disconnect();
+                feedRep.save(new Feed(arquivo, professor));
                 System.out.println("arquivo salvo.");
             } catch (Exception e) {
                 ftp.disconnect();
@@ -90,7 +99,8 @@ public class UploadFTP {
 
             try {
                 ftp.connect();
-                ftp.uploadFile(file.getInputStream(), "\\_res\\perfil_img\\", professor + ".png");
+                Arquivo arquivo = new Arquivo(professor + ".png", "\\_res\\perfil_img\\");
+                ftp.uploadFile(file.getInputStream(), arquivo);
                 ftp.getFtp().completePendingCommand();
                 ftp.disconnect();
                 return new ResponseEntity("Foto de perfil recebida. ", HttpStatus.CREATED);
@@ -103,5 +113,4 @@ public class UploadFTP {
         }
     }
 
-    
 }

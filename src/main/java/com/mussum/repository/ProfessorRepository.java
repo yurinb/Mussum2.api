@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
 
     @Query(value = "select p from Professor p where p.username=:pusername")
-    public Professor getByUsername(@Param("pusername") String username);
+    public Professor findByUsername(@Param("pusername") String username);
     
 }

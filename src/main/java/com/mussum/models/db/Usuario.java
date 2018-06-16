@@ -13,7 +13,7 @@ public class Usuario extends MussumEntity {
     @NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
-    private String role = "professor"; // or "user, admin" if its a super user
+    private String role = "professor"; // "professor" ou "admin" if its a super user
 
     public String getUsername() {
         return username;

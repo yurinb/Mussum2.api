@@ -24,6 +24,15 @@ public class Recado extends MussumEntity {
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
+    public Recado() {
+    }
+
+    public Recado(String titulo, String descricao, Professor professor) {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.professor = professor;
+    }
+
     public String getTitulo() {
         return titulo;
     }

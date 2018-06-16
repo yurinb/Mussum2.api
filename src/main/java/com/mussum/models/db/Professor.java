@@ -1,6 +1,7 @@
 package com.mussum.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
@@ -10,12 +11,11 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Professor extends Usuario implements Serializable {
 
-    @NotBlank(message = "O campo nome não pode ser nulo")
     private String nome;
 
-    @NotBlank(message = "O campo sobrenome não pode ser nulo")
     private String sobrenome;
 
     private String email;
