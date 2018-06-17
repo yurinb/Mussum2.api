@@ -1,10 +1,14 @@
 package com.mussum.controllers.ftp;
 
 import com.mussum.models.db.Feed;
-import com.mussum.models.db.Professor;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.FeedRepository;
+import com.mussum.repository.ProfessorRepository;
+import com.mussum.util.S;
+import com.mussum.util.TxtWritter;
+import java.io.IOException;
+import java.io.InputStream;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +40,9 @@ public class UploadFTP {
     @Autowired
     private ArquivoRepository arqRep;
 
+    @Autowired
+    private ProfessorRepository profRep;
+
     private final ControllerFTP ftp = new ControllerFTP();
 
     //Multiple file upload
@@ -43,14 +51,11 @@ public class UploadFTP {
             @RequestHeader("dir") String reqDir,
             @RequestHeader("fileName") String fileName,
             @RequestHeader("comment") String comment,
+            @RequestHeader("link") String link,
             @RequestHeader("visible") Boolean visivel,
             @RequestParam("files") MultipartFile[] uploadfiles) throws Exception {
 
-        String professor = (String) context.getAttribute("requestUser");
-        System.out.println("User upload: " + professor);
-        System.out.println("Upload fileName: " + fileName);
-        System.out.println("Upload dir: " + reqDir);
-        System.out.println("Upload VISIBLE: " + visivel);
+        String professor = profRep.findByUsername((String) context.getAttribute("requestUser")).getNome();
 
         if (professor == null || professor.equals("")) {
             return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
@@ -60,11 +65,29 @@ public class UploadFTP {
         String uploadedFiles = Arrays.stream(uploadfiles).map(x -> x.getOriginalFilename())
                 .filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
 
+//        if (StringUtils.isEmpty(uploadedFiles)) {
+//            return new ResponseEntity("Nenhum arquivo recebido!", HttpStatus.BAD_REQUEST);
+//        }
         if (StringUtils.isEmpty(uploadedFiles)) {
-            return new ResponseEntity("Nenhum arquivo recebido!", HttpStatus.BAD_REQUEST);
+            S.out("uploading a link...", this);
+            TxtWritter wr = new TxtWritter();
+            ftp.connect();
+            Arquivo arquivo = new Arquivo(reqDir, fileName + ".link");
+            InputStream input = wr.writeNewTxt(professor, fileName, link);
+            ftp.uploadFile(input, arquivo);
+            ftp.disconnect();
+            arquivo.setComentario(comment);
+            arquivo.setVisivel(visivel);
+            if (!link.startsWith("http://")) {
+                link = "http://" + link;
+            }
+            arquivo.setLink(link);
+            arqRep.save(arquivo);
+            feedRep.save(new Feed(arquivo, professor));
+        } else {
+            save(Arrays.asList(uploadfiles), reqDir, fileName, professor, comment, visivel, link);
         }
-
-        save(Arrays.asList(uploadfiles), reqDir, fileName, professor, comment, visivel);
+        S.out("upload complete.", this);
         return new ResponseEntity("Successfully uploaded - "
                 + uploadedFiles, HttpStatus.OK);
     }
@@ -95,28 +118,30 @@ public class UploadFTP {
     }
 
     //save file
-    private void save(List<MultipartFile> files, String dir, String fileName, String professor, String comment, Boolean visivel) {
+    private void save(List<MultipartFile> files, String dir, String fileName, String professor, String comment, Boolean visivel, String link) {
+
         for (MultipartFile file : files) {
-            System.out.println("recebendo arquivo...");
+            S.out("recebendo arquivo...", this);
             if (file.isEmpty()) {
-                System.out.println("file empty");
+                S.out("empty file", this);
                 continue; //next pls
             }
             try {
                 Arquivo arquivo = new Arquivo(dir, fileName);
-                System.out.println("new arquivo...");
+                S.out("new arquivo...", this);
                 arquivo.setComentario(comment);
                 arquivo.setVisivel(visivel);
+                arquivo.setLink(link);
                 ftp.connect();
                 ftp.uploadFile(file.getInputStream(), arquivo);
-                System.out.println("upload ok...");
                 ftp.disconnect();
+                S.out("upload file", this);
                 arqRep.save(arquivo);
                 feedRep.save(new Feed(arquivo, professor));
-                System.out.println("arquivo salvo.");
+                S.out("arquivo salvo.", this);
             } catch (Exception e) {
                 ftp.disconnect();
-                System.out.println(e);
+                S.out(e.getMessage(), this);
             }
         }
 
@@ -125,14 +150,15 @@ public class UploadFTP {
     @PostMapping("/api/photo")
     public ResponseEntity setProfessorPhoto(@RequestParam("img") MultipartFile file) {
         String professor = (String) context.getAttribute("requestUser");
-        System.out.println("POSTING User photo " + professor);
+        S.out("POSTING User photo " + professor, this);
 
         for (String key : Collections.list(context.getHeaders("Content-Type"))) {
-            System.out.println(key);
+            S.out(key, this);
         }
 
         if (professor == null || professor.equals("")) {
-            return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
+            S.out("ERRO: user not logged/found", this);
+            return new ResponseEntity("ERRO: user not logged/found", HttpStatus.BAD_REQUEST);
         }
 
         if (file.getOriginalFilename().endsWith(".png")) {
@@ -151,6 +177,24 @@ public class UploadFTP {
         } else {
             return new ResponseEntity("Erro: SOMENTE PNG POR ENQUANTO", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteArquivo(
+            @RequestHeader("dir") String dir,
+            @RequestHeader("name") String name) {
+        try {
+            ftp.connect();
+            S.out("DELETE", this);
+            S.out(dir, this);
+            S.out(name, this);
+            boolean removeu = ftp.getFtp().deleteFile(dir + "/" + name);
+            ftp.disconnect();
+            return ResponseEntity.ok(dir + " removeu? " + removeu);
+        } catch (IOException ex) {
+            return ResponseEntity.badRequest().body(" falha ao remover diretorio: " + dir);
+        }
+
     }
 
 }

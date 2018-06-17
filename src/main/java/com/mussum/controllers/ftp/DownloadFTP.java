@@ -1,5 +1,6 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.util.S;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,7 @@ public class DownloadFTP {
             @RequestHeader("fileName") String fileName) {
         try {
 
-            System.out.println("GETTING File: " + dir + fileName);
+            S.out("requesting FILE: " + dir + fileName, this);
 
             ftp.connect();
             ftp.getFtp().setSoTimeout(3000);
@@ -30,15 +31,16 @@ public class DownloadFTP {
             byte[] bytes = StreamUtils.copyToByteArray(file);
             //file.close();
             if (file == null) {
-                System.out.println("FILE NOT FOUND");
-                return new ResponseEntity("Erro: arquivo do " + prof + " não encontrado.", HttpStatus.NOT_FOUND);
+                S.out("ERRO: File not found", this);
+                return new ResponseEntity("ERRO: File not found", HttpStatus.NOT_FOUND);
             }
 
-            System.out.println("GETTING FILE" + fileName + ": SUCCESS!");
+            S.out("file served.", this);
             return new ResponseEntity(bytes, HttpStatus.OK);
         } catch (Exception ex) {
             ftp.disconnect();
-            return new ResponseEntity("Erro: " + ex, HttpStatus.BAD_REQUEST);
+            S.out("ERRO: " + ex.getMessage(), this);
+            return new ResponseEntity("Erro: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -47,7 +49,7 @@ public class DownloadFTP {
     public ResponseEntity getProfessorPhoto(@RequestHeader("professor") String prof) {
 
         try {
-            System.out.println("GETTING User photo: " + prof);
+            S.out("requesting user PHOTO: " + prof, this);
 
             ftp.connect();
             ftp.getFtp().setSoTimeout(60);
@@ -57,15 +59,16 @@ public class DownloadFTP {
             ftp.disconnect();
 
             if (img == null) {
-                System.out.println("GETTING User photo: getFile returns NULL");
-                return new ResponseEntity("Erro: img do professor " + prof + " não encontrada.", HttpStatus.NOT_FOUND);
+                S.out("ERRO: photo not found", this);
+                return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
             }
 
-            System.out.println("GETTING User photo: SUCCESS!");
+            S.out("user photo served.", this);
             return new ResponseEntity(StreamUtils.copyToByteArray(img), HttpStatus.OK);
         } catch (Exception ex) {
             ftp.disconnect();
-            return new ResponseEntity("Erro: " + ex, HttpStatus.BAD_REQUEST);
+            S.out("ERRO: " + ex.getMessage(), this);
+            return new ResponseEntity("ERRO: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }

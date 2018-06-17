@@ -1,5 +1,6 @@
 package com.mussum.controllers.security;
 
+import com.mussum.util.S;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -10,7 +11,6 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Date;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -28,40 +28,39 @@ public class TokenFilter extends GenericFilterBean {
         HttpServletRequest hReq = (HttpServletRequest) sReq;
         HttpServletResponse hRes = (HttpServletResponse) sRes;
 
-        System.out.println(hReq.getMethod() + " - " + hReq.getRequestURI() + " - " + new Date() + " - ");
-
+        S.out(hReq.getMethod() + " - " + hReq.getRequestURI(), this);
         final String[] GET_BLOQUEADOS = {};
 
         if (hReq.getMethod().equals("GET")) {
             if (!Arrays.asList(GET_BLOQUEADOS).contains(hReq.getRequestURI())) {
-                System.out.println("GET liberado.");
+                S.out("GET: OK", this);
                 fc.doFilter(sReq, sRes);
                 return;
             }
         }
 
         if (hReq.getMethod().equals("OPTIONS")) {
-            System.out.println("OPTIONS liberado.");
+            S.out("OPTIONS: OK", this);
             fc.doFilter(sReq, sRes);
             return;
         }
 
-        System.out.println("Verificando TOKEN da requisição...");
+        S.out("Verifing TOKEN...", this);
 
         String header = hReq.getHeader("Authorization");
 
         if (header == null || !header.startsWith("Bearer ")) {
-            hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
+            hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
         }
 
-        System.out.println("HEADER: " + header);
+        S.out("HEADER: " + header, this);
 
         String token = null;
 
         try {
             token = header.split(" ")[1];
         } catch (Exception e) {
-            hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inexistente ou inválido!");
+            hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
         }
 
         String usuarioToken = null;
@@ -76,17 +75,17 @@ public class TokenFilter extends GenericFilterBean {
                         }
                     });
 
-            System.out.println("Request by " + usuarioToken);
+            S.out("Request made by " + usuarioToken, this);
 
         } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
             if (e instanceof ExpiredJwtException) {
-                System.out.println("Token expirado!" + e);
-                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado!");
+                S.out("Expired TOKEN", this);
+                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired TOKEN!");
             } else {
-                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido!");
+                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid TOKEN!");
             }
         }
-        System.out.println("Usuario autenticado e salvo para a requisição.");
+
         hReq.setAttribute("requestUser", usuarioToken);
 
         fc.doFilter(sReq, sRes);

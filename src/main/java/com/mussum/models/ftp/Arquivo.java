@@ -17,6 +17,8 @@ public class Arquivo extends MussumEntity {
 
     private LocalDate dataCriacao;
 
+    private String link;
+
     public Arquivo() {
     }
 
@@ -26,6 +28,7 @@ public class Arquivo extends MussumEntity {
         this.comentario = "";
         this.dataCriacao = LocalDate.now();
         this.visivel = true;
+        this.link = "";
     }
 
     public String getNome() {
@@ -66,6 +69,14 @@ public class Arquivo extends MussumEntity {
 
     public void setVisivel(boolean visivel) {
         this.visivel = visivel;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
 }

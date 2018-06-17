@@ -2,6 +2,7 @@ package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
 import com.mussum.models.ftp.Arquivo;
+import com.mussum.util.S;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 
@@ -32,31 +33,29 @@ public class Feed extends MussumEntity {
         this.professor = professor;
         this.titulo = aviso.getTitulo();
         this.comentario = aviso.getDescricao();
-        System.out.println("NOVO FEED: AVISO");
+        S.out("new FEED: " + this.tipo, this);
     }
 
     public Feed(Recado recado) {
-        System.out.println("1");
         this.tipo = "recado";
         this.professor = recado.getProfessor().getNome();
-        System.out.println("2");
-        System.out.println(recado.getTitulo());
         this.titulo = recado.getTitulo();
-        System.out.println("3");
-        System.out.println(recado.getDescricao());
         this.comentario = recado.getDescricao();
-        System.out.println("4");
-        System.out.println("NOVO FEED: RECADO");
+        S.out("new FEED: " + this.tipo, this);
     }
 
     public Feed(Arquivo arquivo, String professor) {
-        this.tipo = "upload";
+        if (arquivo.getLink().isEmpty()) {
+            this.tipo = "upload";
+        } else {
+            this.tipo = "link";
+        }
         this.professor = professor;
         this.arquivo = arquivo.getNome();
-        this.link = "google.com";
+        this.link = arquivo.getLink();
         this.dir = arquivo.getDir();
         this.comentario = arquivo.getComentario();
-        System.out.println("NOVO FEED: UPLOAD");
+        S.out("new FEED: " + this.tipo, this);
     }
 
     public String getTipo() {

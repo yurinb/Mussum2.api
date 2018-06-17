@@ -2,6 +2,7 @@ package com.mussum.controllers;
 
 import com.mussum.models.db.Professor;
 import com.mussum.repository.ProfessorRepository;
+import com.mussum.util.S;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,7 +51,7 @@ public class ProfessorController {
             @RequestBody Professor newP,
             @PathVariable Integer id) {
         String user = (String) context.getAttribute("requestUser");
-        System.out.println("PUT REQUEST USER: " + user);
+        S.out("PUT REQ USER: "+user, this);
         Professor prof = profRep.findById(id).get();
         //newProfessor.setId(profRep.findById(id).get().getId());
         if (newP.getDescricao() != null) {

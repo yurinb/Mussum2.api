@@ -6,6 +6,7 @@ import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
+import com.mussum.util.S;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,11 +37,8 @@ public class ToggleVisibleFTP {
             @RequestHeader("fileName") String fileName,
             @RequestHeader("dir") String dir) {
         try {
+            S.out("request toggle visible: " + dir + "/" + fileName, this);
             Professor prof = profRep.findByUsername((String) context.getAttribute("requestUser"));
-            System.out.println("GETTING Toggle ITEM FROM:" + (String) context.getAttribute("requestUser"));
-            System.out.println(prof.getNome());
-            System.out.println("GETTING Toggle ITEM:");
-            System.out.println(prof.getNome() + dir + fileName);
 
             ftp.connect();
             ftp.getFtp().setSoTimeout(3000);
@@ -50,8 +48,8 @@ public class ToggleVisibleFTP {
             ftp.disconnect();
             //file.close();
             if (!fileExist && !dirExists) {
-                System.out.println("FILE NOT FOUND");
-                return new ResponseEntity("Erro: arquivo do " + prof + " não encontrado.", HttpStatus.NOT_FOUND);
+                S.out("ERROR: file not found", this);
+                return new ResponseEntity("ERROR: file not found", HttpStatus.NOT_FOUND);
             }
 
             if (fileExist) {
@@ -61,7 +59,7 @@ public class ToggleVisibleFTP {
                     arquivoRep.save(arquivo);
                     return new ResponseEntity(arquivo.isVisivel(), HttpStatus.OK);
                 } else {
-                    return new ResponseEntity("ARQUIVO NAO MAPEADO", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity("file not mapped", HttpStatus.BAD_REQUEST);
                 }
             }
 
@@ -72,15 +70,15 @@ public class ToggleVisibleFTP {
                     pastaRep.save(pasta);
                     return new ResponseEntity(pasta.isVisivel(), HttpStatus.OK);
                 } else {
-                    return new ResponseEntity("PASTA NAO MAPEADA", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity("folder not mapped", HttpStatus.BAD_REQUEST);
                 }
             }
 
             return new ResponseEntity("Deu ruim", HttpStatus.BAD_REQUEST);
         } catch (Exception ex) {
             ftp.disconnect();
-            System.out.println(ex.getLocalizedMessage());
-            return new ResponseEntity("Erro: " + ex, HttpStatus.BAD_REQUEST);
+            S.out("ERRO: " + ex.getMessage(), this);
+            return new ResponseEntity("ERRO: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }

@@ -1,6 +1,7 @@
 package com.mussum.controllers.ftp;
 
 import com.mussum.models.ftp.Arquivo;
+import com.mussum.util.S;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.net.ftp.FTP;
@@ -24,8 +25,6 @@ public class ControllerFTP {
 
     public void uploadFile(InputStream input, Arquivo arquivo) throws Exception {
         ftp.makeDirectory(arquivo.getDir());
-        System.out.println("DIRRRRRRRRRRRRRRRRRRRR");
-        System.out.println(arquivo.getDir());
         this.ftp.storeFile(arquivo.getDir() + "/" + arquivo.getNome(), input);
         input.close();
     }
@@ -46,10 +45,10 @@ public class ControllerFTP {
                 this.ftp.setFileTransferMode(FTP.BINARY_FILE_TYPE);
 
             } else {
-                System.out.println("ERROR: FTP.LOGIN");
+                S.out("ERROR: FTP.LOGIN", this);
             }
         } catch (IOException e) {
-            System.out.println(e);
+                S.out(e.getMessage(), this);
         }
     }
 
