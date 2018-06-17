@@ -13,13 +13,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TxtWritter {
+
+    private String lastCreatedTmpFile = "";
 
     public InputStream writeNewTxt(String username, String fileName, String content) {
         try {
             //Whatever the file path is.
-            File statText = new File("tmp/" + username + "@@" + fileName + ".txt");
+            this.lastCreatedTmpFile = username + "@@" + fileName + ".txt";
+            File statText = new File("tmp/" + lastCreatedTmpFile);
             if (!statText.exists()) {
                 statText.createNewFile();
             }
@@ -36,6 +42,16 @@ public class TxtWritter {
             System.err.println("Problem writing to the file statsTest.txt");
             System.out.println(e);
             return null;
+        }
+    }
+
+    public void deleteLastCreatedFile() {
+        File tmpFile = new File("tmp/" + lastCreatedTmpFile);
+        try {
+            Files.delete(tmpFile.toPath());
+            S.out("tmp File deleted.", this);
+        } catch (IOException ex) {
+            S.out("ERRO: tmp File not deleted.", this);
         }
     }
 

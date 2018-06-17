@@ -71,11 +71,12 @@ public class UploadFTP {
         if (StringUtils.isEmpty(uploadedFiles)) {
             S.out("uploading a link...", this);
             TxtWritter wr = new TxtWritter();
-            ftp.connect();
             Arquivo arquivo = new Arquivo(reqDir, fileName + ".link");
             InputStream input = wr.writeNewTxt(professor, fileName, link);
+            ftp.connect();
             ftp.uploadFile(input, arquivo);
             ftp.disconnect();
+            wr.deleteLastCreatedFile();
             arquivo.setComentario(comment);
             arquivo.setVisivel(visivel);
             if (!link.startsWith("http://")) {
