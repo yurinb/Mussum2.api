@@ -1,13 +1,18 @@
 package com.mussum.controllers.ftp;
 
 import com.mussum.util.S;
+import com.mussum.util.TxtWritter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Base64;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import sun.misc.IOUtils;
+import sun.nio.ch.IOUtil;
 
 @RestController
 public class DownloadFTP {
@@ -63,8 +68,11 @@ public class DownloadFTP {
                 return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
             }
 
+            String base64 = Base64.getEncoder().encodeToString(StreamUtils.copyToByteArray(img));
+
             S.out("user photo served.", this);
-            return new ResponseEntity(StreamUtils.copyToByteArray(img), HttpStatus.OK);
+            return new ResponseEntity(base64, HttpStatus.OK);
+            
         } catch (Exception ex) {
             ftp.disconnect();
             S.out("ERRO: " + ex.getMessage(), this);

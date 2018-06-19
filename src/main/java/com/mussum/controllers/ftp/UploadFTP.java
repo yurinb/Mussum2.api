@@ -76,6 +76,7 @@ public class UploadFTP {
             ftp.connect();
             ftp.uploadFile(input, arquivo);
             ftp.disconnect();
+            input.close();
             wr.deleteLastCreatedFile();
             arquivo.setComentario(comment);
             arquivo.setVisivel(visivel);
