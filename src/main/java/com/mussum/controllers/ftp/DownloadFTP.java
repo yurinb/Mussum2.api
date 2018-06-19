@@ -1,23 +1,21 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.controllers.ftp.utils.FTPcontrol;
+import com.mussum.controllers.ftp.utils.Convert;
 import com.mussum.util.S;
-import com.mussum.util.TxtWritter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Base64;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
 
 @RestController
 public class DownloadFTP {
 
-    private final ControllerFTP ftp = new ControllerFTP();
+    private final FTPcontrol ftp = new FTPcontrol();
 
     @GetMapping("/api/download")
     public ResponseEntity getFile(
@@ -53,6 +51,9 @@ public class DownloadFTP {
     @GetMapping("/api/photo")
     public ResponseEntity getProfessorPhoto(@RequestHeader("professor") String prof) {
 
+        
+        
+        
         try {
             S.out("requesting user PHOTO: " + prof, this);
 
@@ -60,19 +61,20 @@ public class DownloadFTP {
             ftp.getFtp().setSoTimeout(60);
 
             InputStream img = ftp.getFile("\\_res\\perfil_img\\", prof + ".png");
-            //ftp.getFtp().completePendingCommand();
+            if (img == null) {
+                img = ftp.getFile("\\_res\\perfil_img\\", prof + ".jpg");
+                if (img == null) {
+                    ftp.disconnect();
+                    S.out("ERRO: photo not found", this);
+                    return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
+                }
+            }
             ftp.disconnect();
 
-            if (img == null) {
-                S.out("ERRO: photo not found", this);
-                return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
-            }
-
-            String base64 = Base64.getEncoder().encodeToString(StreamUtils.copyToByteArray(img));
-
+            String base64 = Convert.inputStreamToBASE64(img);
             S.out("user photo served.", this);
             return new ResponseEntity(base64, HttpStatus.OK);
-            
+
         } catch (Exception ex) {
             ftp.disconnect();
             S.out("ERRO: " + ex.getMessage(), this);

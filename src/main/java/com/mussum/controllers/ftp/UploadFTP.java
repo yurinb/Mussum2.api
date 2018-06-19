@@ -1,5 +1,6 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.models.db.Feed;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.repository.ArquivoRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +45,7 @@ public class UploadFTP {
     @Autowired
     private ProfessorRepository profRep;
 
-    private final ControllerFTP ftp = new ControllerFTP();
+    private final FTPcontrol ftp = new FTPcontrol();
 
     //Multiple file upload
     @PostMapping("/api/upload")
@@ -72,22 +74,21 @@ public class UploadFTP {
             S.out("uploading a link...", this);
             TxtWritter wr = new TxtWritter();
             Arquivo arquivo = new Arquivo(reqDir, fileName + ".link");
-            InputStream input = wr.writeNewTxt(professor, fileName, link);
+            InputStream input = wr.getInputStreamOfNewTxtFile(professor, fileName, link);
             ftp.connect();
             ftp.uploadFile(input, arquivo);
             ftp.disconnect();
             input.close();
-            wr.deleteLastCreatedFile();
             arquivo.setComentario(comment);
             arquivo.setVisivel(visivel);
-            
-            boolean http  = link.startsWith("http://");
+
+            boolean http = link.startsWith("http://");
             boolean https = link.startsWith("https://");
             if (http || https) {
             } else {
                 link = "http://" + link;
             }
-            
+
             arquivo.setLink(link);
             arqRep.save(arquivo);
             feedRep.save(new Feed(arquivo, professor));
@@ -168,21 +169,23 @@ public class UploadFTP {
             return new ResponseEntity("ERRO: user not logged/found", HttpStatus.BAD_REQUEST);
         }
 
-        if (file.getOriginalFilename().endsWith(".png")) {
+        if (file.getOriginalFilename().endsWith(".png") || file.getOriginalFilename().endsWith(".jpg")) {
 
             try {
                 ftp.connect();
-                Arquivo arquivo = new Arquivo(professor + ".png", "\\_res\\perfil_img\\");
+                Arquivo arquivo = new Arquivo("\\_res\\perfil_img\\", professor + ".png");
                 ftp.uploadFile(file.getInputStream(), arquivo);
-                ftp.getFtp().completePendingCommand();
+                S.out(ftp.getFtp().getReplyString(), this);
                 ftp.disconnect();
                 return new ResponseEntity("Foto de perfil recebida. ", HttpStatus.CREATED);
             } catch (Exception ex) {
                 ftp.disconnect();
+                S.out("ERROR: " + ex.getMessage(), this);
                 return new ResponseEntity("Erro no upload FTP: " + ex, HttpStatus.BAD_REQUEST);
             }
         } else {
-            return new ResponseEntity("Erro: SOMENTE PNG POR ENQUANTO", HttpStatus.BAD_REQUEST);
+            S.out("ERRO: not .png file", this);
+            return new ResponseEntity("ERRO: SOMENTE PNG e JPEG POR ENQUANTO", HttpStatus.BAD_REQUEST);
         }
     }
 

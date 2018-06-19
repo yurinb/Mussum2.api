@@ -1,4 +1,4 @@
-package com.mussum.controllers.ftp;
+package com.mussum.controllers.ftp.utils;
 
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.util.S;
@@ -7,13 +7,13 @@ import java.io.InputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-public class ControllerFTP {
+public class FTPcontrol {
 
-    private String host = "localhost";
-    private String user = "mussum";
-    private String pass = "pass";
+    private final String host = "localhost";
+    private final String user = "mussum";
+    private final String pass = "pass";
 
-    private FTPClient ftp = new FTPClient();
+    private final FTPClient ftp = new FTPClient();
 
     public String[] getContentFrom(String dir) {
         try {
@@ -29,7 +29,7 @@ public class ControllerFTP {
         input.close();
     }
 
-//    public ControllerFTP() {
+//    public FTPcontrol() {
 //        connect();
 //    }
     public void connect() {
@@ -73,20 +73,12 @@ public class ControllerFTP {
 
     public boolean checkDirectoryExists(String dirPath) throws IOException {
         ftp.changeWorkingDirectory(dirPath);
-        int returnCode = ftp.getReplyCode();
-        if (returnCode == 550) {
-            return false;
-        }
-        return true;
+        return ftp.getReplyCode() != 550;
     }
 
-    boolean checkFileExists(String filePath) throws IOException {
+    public boolean checkFileExists(String filePath) throws IOException {
         InputStream inputStream = ftp.retrieveFileStream(filePath);
-        int returnCode = ftp.getReplyCode();
-        if (inputStream == null || returnCode == 550) {
-            return false;
-        }
-        return true;
+        return !(inputStream == null || ftp.getReplyCode() == 550);
     }
 
 }

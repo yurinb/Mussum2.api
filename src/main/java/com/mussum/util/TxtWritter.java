@@ -14,14 +14,12 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TxtWritter {
 
     private String lastCreatedTmpFile = "";
 
-    public InputStream writeNewTxt(String username, String fileName, String content) {
+    public InputStream getInputStreamOfNewTxtFile(String username, String fileName, String content) {
         try {
             //Whatever the file path is.
             this.lastCreatedTmpFile = username + "@@" + fileName + ".txt";
@@ -37,6 +35,7 @@ public class TxtWritter {
                 w.close();
             }
             InputStream fis = new FileInputStream(statText);
+            deleteLastCreatedFile();
             return fis;
         } catch (IOException e) {
             System.err.println("Problem writing to the file statsTest.txt");

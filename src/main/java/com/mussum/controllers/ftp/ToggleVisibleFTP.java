@@ -1,5 +1,6 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.models.db.Professor;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.models.ftp.Pasta;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @RestController
 public class ToggleVisibleFTP {
 
-    private final ControllerFTP ftp = new ControllerFTP();
+    private final FTPcontrol ftp = new FTPcontrol();
 
     @Autowired
     private HttpServletRequest context;

@@ -1,5 +1,6 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.ArquivoRepository;
@@ -38,7 +39,7 @@ public class RepositoryFTP {
     @Autowired
     private ArquivoRepository arquivoRep;
 
-    private final ControllerFTP ftp = new ControllerFTP();
+    private final FTPcontrol ftp = new FTPcontrol();
 
     @PostMapping()
     @ResponseBody

@@ -13,27 +13,49 @@ import java.time.LocalDateTime;
  */
 public class S {
 
+    private static final String SEPARATOR = "__--> ";
+
     public static void out(String txt, Object emitter) {
-        String espaco = "                                       ";
-        String emm = emitter.getClass().getSimpleName();
-        //String method = emitter.getClass().getEnclosingMethod().toGenericString();
+        String output = "";
 
-        //int metLen = method.length();
-        int emmLen = emm.length();
-        //espaco = emm + "_-_" + method + espaco.substring(emmLen + metLen + 3);
+        String emitterClass = emitter.getClass().getSimpleName();
 
+        output += SEPARATOR + stringWithLength(info_timeLog(), 16);
+        output += SEPARATOR + stringWithLength(emitterClass, 17);
+        
+        System.out.println(output + " :: " + txt);
+    }
+
+    private static String info_timeLog() {
         LocalDateTime time = LocalDateTime.now();
         int day = time.getDayOfMonth();
         int hour = time.getHour();
         int min = time.getMinute();
         int seg = time.getSecond();
-        String timeLog = "D:" + day + "." + hour + "h." + min + "m." + seg + "s.";
+        return "D:" + day + "." + hour + "h." + min + "m." + seg + "s.";
+    }
 
-        int timLen = timeLog.length();
+    private static String buildTxtInsideTxt(String inside, String txt) {
+        return inside + txt.substring(inside.length());
+    }
 
-        espaco = timeLog + "_-_" + emm + espaco.substring(timLen + 3 + emmLen);
+    private static String stringWithLength(String info, int length) {
+        String backgroundTxt = buildStringRepetingTimes(" ", length);
+        boolean fit = info.length() <= length;
 
-        System.out.println(espaco + " : " + txt);
+        if (fit) {
+            return buildTxtInsideTxt(info, backgroundTxt);
+        }
+
+        return null;
+    }
+
+    private static String buildStringRepetingTimes(String txt, int times) {
+        String generatedTxt = "";
+        for (int i = 0; i < times; i++) {
+            generatedTxt += txt;
+        }
+        return generatedTxt;
     }
 
 }
