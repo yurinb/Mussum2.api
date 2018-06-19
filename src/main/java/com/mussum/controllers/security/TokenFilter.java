@@ -51,6 +51,7 @@ public class TokenFilter extends GenericFilterBean {
 
         if (header == null || !header.startsWith("Bearer ")) {
             hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
+            return;
         }
 
         S.out("HEADER: " + header, this);
@@ -61,6 +62,7 @@ public class TokenFilter extends GenericFilterBean {
             token = header.split(" ")[1];
         } catch (Exception e) {
             hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
+            return;
         }
 
         String usuarioToken = null;
@@ -84,6 +86,7 @@ public class TokenFilter extends GenericFilterBean {
             } else {
                 hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid TOKEN!");
             }
+            return;
         }
 
         hReq.setAttribute("requestUser", usuarioToken);

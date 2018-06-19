@@ -79,9 +79,14 @@ public class UploadFTP {
             wr.deleteLastCreatedFile();
             arquivo.setComentario(comment);
             arquivo.setVisivel(visivel);
-            if (!link.startsWith("http://")) {
+            
+            boolean http  = link.startsWith("http://");
+            boolean https = link.startsWith("https://");
+            if (http || https) {
+            } else {
                 link = "http://" + link;
             }
+            
             arquivo.setLink(link);
             arqRep.save(arquivo);
             feedRep.save(new Feed(arquivo, professor));
