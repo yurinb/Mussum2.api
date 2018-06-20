@@ -1,6 +1,7 @@
 package com.mussum.controllers.ftp;
 
 import com.mussum.controllers.ftp.utils.FTPcontrol;
+import com.mussum.controllers.ftp.utils.Strings;
 import com.mussum.models.db.Feed;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.repository.ArquivoRepository;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -160,20 +160,30 @@ public class UploadFTP {
         String professor = (String) context.getAttribute("requestUser");
         S.out("POSTING User photo " + professor, this);
 
-        for (String key : Collections.list(context.getHeaders("Content-Type"))) {
-            S.out(key, this);
-        }
+//        for (String key : Collections.list(context.getHeaders("Content-Type"))) {
+//            S.out(key, this);
+//        }
 
         if (professor == null || professor.equals("")) {
             S.out("ERRO: user not logged/found", this);
             return new ResponseEntity("ERRO: user not logged/found", HttpStatus.BAD_REQUEST);
         }
 
-        if (file.getOriginalFilename().endsWith(".png") || file.getOriginalFilename().endsWith(".jpg")) {
+        String imageExtension = Strings.getExtensionIfExists(file.getOriginalFilename());
+
+        if (imageExtension != null) {
 
             try {
                 ftp.connect();
-                Arquivo arquivo = new Arquivo("\\_res\\perfil_img\\", professor + ".png");
+
+                String[] fotosPerfil = ftp.getContentFrom("\\_res\\perfil_img\\");
+                for (String foto : fotosPerfil) {
+                    if (foto.startsWith(professor)) {
+                        String photoFoundName = foto;
+                        ftp.getFtp().deleteFile("\\_res\\perfil_img\\" + photoFoundName);
+                    }
+                }
+                Arquivo arquivo = new Arquivo("\\_res\\perfil_img\\", professor + imageExtension);
                 ftp.uploadFile(file.getInputStream(), arquivo);
                 S.out(ftp.getFtp().getReplyString(), this);
                 ftp.disconnect();
@@ -184,8 +194,8 @@ public class UploadFTP {
                 return new ResponseEntity("Erro no upload FTP: " + ex, HttpStatus.BAD_REQUEST);
             }
         } else {
-            S.out("ERRO: not .png file", this);
-            return new ResponseEntity("ERRO: SOMENTE PNG e JPEG POR ENQUANTO", HttpStatus.BAD_REQUEST);
+            S.out("ERRO: no extension found in file", this);
+            return new ResponseEntity("ERRO: imagem sem extensão", HttpStatus.BAD_REQUEST);
         }
     }
 

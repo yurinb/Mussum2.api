@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 public class FTPcontrol {
 
@@ -17,7 +18,14 @@ public class FTPcontrol {
 
     public String[] getContentFrom(String dir) {
         try {
-            return this.ftp.listNames(dir);
+            String foundFiles = "";
+            FTPFile[] files = this.ftp.listFiles(dir);
+            for (FTPFile file : files) {
+                if (file.isFile()) {
+                    foundFiles += file.getName() + ",";
+                }
+            }
+            return foundFiles.split(",");
         } catch (IOException e) {
             return null;
         }
@@ -48,7 +56,7 @@ public class FTPcontrol {
                 S.out("ERROR: FTP.LOGIN", this);
             }
         } catch (IOException e) {
-                S.out(e.getMessage(), this);
+            S.out(e.getMessage(), this);
         }
     }
 

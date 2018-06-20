@@ -32,7 +32,6 @@ public class LoginController {
         if (usuario.getUsername() == null || usuario.getPassword() == null) {
 
             S.out("ERROR: user or password are NULL", this);
-            S.out("_______________________________", this);
             S.out("_______________*_______________", this);
             return new ResponseEntity<>("usuario e senha obrigatório!", HttpStatus.UNAUTHORIZED);
 

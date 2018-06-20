@@ -20,7 +20,7 @@ public class S {
 
         String emitterClass = emitter.getClass().getSimpleName();
 
-        output += SEPARATOR + stringWithLength(info_timeLog(), 16);
+        output += SEPARATOR + stringWithLength(info_timeLog(), 17);
         output += SEPARATOR + stringWithLength(emitterClass, 17);
         
         System.out.println(output + " :: " + txt);

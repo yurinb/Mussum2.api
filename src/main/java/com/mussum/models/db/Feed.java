@@ -47,15 +47,16 @@ public class Feed extends MussumEntity {
     public Feed(Arquivo arquivo, String professor) {
         if (arquivo.getLink().isEmpty()) {
             this.tipo = "upload";
+            this.titulo = arquivo.getNome();
         } else {
             this.tipo = "link";
+            this.titulo = arquivo.getNome().substring(0, arquivo.getNome().indexOf(".link"));
         }
         this.professor = professor;
         this.arquivo = arquivo.getNome();
         this.link = arquivo.getLink();
         this.dir = arquivo.getDir();
         this.comentario = arquivo.getComentario();
-        this.titulo = arquivo.getNome().substring(0, arquivo.getNome().indexOf(".link"));
         S.out("new FEED: " + this.tipo, this);
     }
 

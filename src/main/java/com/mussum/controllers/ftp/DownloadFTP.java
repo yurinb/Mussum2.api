@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.InputStream;
-import java.util.Base64;
+import java.util.Arrays;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -50,24 +50,26 @@ public class DownloadFTP {
 
     @GetMapping("/api/photo")
     public ResponseEntity getProfessorPhoto(@RequestHeader("professor") String prof) {
-
-        
-        
-        
         try {
             S.out("requesting user PHOTO: " + prof, this);
 
             ftp.connect();
             ftp.getFtp().setSoTimeout(60);
-
-            InputStream img = ftp.getFile("\\_res\\perfil_img\\", prof + ".png");
-            if (img == null) {
-                img = ftp.getFile("\\_res\\perfil_img\\", prof + ".jpg");
-                if (img == null) {
-                    ftp.disconnect();
-                    S.out("ERRO: photo not found", this);
-                    return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
+            String[] fotosPerfil = ftp.getContentFrom("\\_res\\perfil_img\\");
+            String profPhotoName = null;
+            for (String foto : fotosPerfil) {
+                S.out("FOTO: " + foto, this);
+                if (foto.startsWith(prof)) {
+                    profPhotoName = foto;
+                    break;
                 }
+            }
+
+            InputStream img = ftp.getFile("\\_res\\perfil_img\\", profPhotoName);
+            if (img == null) {
+                ftp.disconnect();
+                S.out("ERRO: photo " + profPhotoName + " not found", this);
+                return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
             }
             ftp.disconnect();
 
