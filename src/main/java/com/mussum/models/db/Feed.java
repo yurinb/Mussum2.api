@@ -25,10 +25,13 @@ public class Feed extends MussumEntity {
 
     private String dir = "";
 
+    private String username = "";
+
     public Feed() {
     }
 
-    public Feed(Aviso aviso, String professor) {
+    public Feed(Aviso aviso, String professor, String username) {
+        this.username = username;
         this.tipo = "aviso";
         this.professor = professor;
         this.titulo = aviso.getTitulo();
@@ -36,7 +39,8 @@ public class Feed extends MussumEntity {
         S.out("new FEED: " + this.tipo, this);
     }
 
-    public Feed(Recado recado) {
+    public Feed(Recado recado, String username) {
+        this.username = username;
         this.tipo = "recado";
         this.professor = recado.getProfessor().getNome();
         this.titulo = recado.getTitulo();
@@ -44,7 +48,8 @@ public class Feed extends MussumEntity {
         S.out("new FEED: " + this.tipo, this);
     }
 
-    public Feed(Arquivo arquivo, String professor) {
+    public Feed(Arquivo arquivo, String professor, String username) {
+        this.username = username;
         if (arquivo.getLink().isEmpty()) {
             this.tipo = "upload";
             this.titulo = arquivo.getNome();
@@ -130,6 +135,14 @@ public class Feed extends MussumEntity {
 
     public void setDataCriacao(String dataCriacao) {
         this.dataCriacao = dataCriacao;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 }

@@ -6,6 +6,7 @@ create table feed (
     titulo VARCHAR(100) NOT NULL,
     comentario VARCHAR(300) NOT NULL,
     arquivo VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
     link VARCHAR(500) NOT NULL,
     dir VARCHAR(500) NOT NULL,
     

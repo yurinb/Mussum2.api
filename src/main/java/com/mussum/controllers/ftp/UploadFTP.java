@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -74,11 +73,13 @@ public class UploadFTP {
             S.out("uploading a link...", this);
             TxtWritter wr = new TxtWritter();
             Arquivo arquivo = new Arquivo(reqDir, fileName + ".link");
-            InputStream input = wr.getInputStreamOfNewTxtFile(professor, fileName, link);
-            ftp.connect();
-            ftp.uploadFile(input, arquivo);
-            ftp.disconnect();
-            input.close();
+            try (InputStream input = wr.getInputStreamOfNewTxtFile(professor, fileName, link)) {
+                ftp.connect();
+                ftp.uploadFile(input, arquivo);
+                ftp.disconnect();
+                input.close();
+                wr.deleteLastCreatedFile();
+            }
             arquivo.setComentario(comment);
             arquivo.setVisivel(visivel);
 
@@ -91,7 +92,7 @@ public class UploadFTP {
 
             arquivo.setLink(link);
             arqRep.save(arquivo);
-            feedRep.save(new Feed(arquivo, professor));
+            feedRep.save(new Feed(arquivo, professor, (String) context.getAttribute("requestUser")));
         } else {
             save(Arrays.asList(uploadfiles), reqDir, fileName, professor, comment, visivel, link);
         }
@@ -145,7 +146,7 @@ public class UploadFTP {
                 ftp.disconnect();
                 S.out("upload file", this);
                 arqRep.save(arquivo);
-                feedRep.save(new Feed(arquivo, professor));
+                feedRep.save(new Feed(arquivo, professor, context.getAttribute("requestUser").toString()));
                 S.out("arquivo salvo.", this);
             } catch (Exception e) {
                 ftp.disconnect();
@@ -163,7 +164,6 @@ public class UploadFTP {
 //        for (String key : Collections.list(context.getHeaders("Content-Type"))) {
 //            S.out(key, this);
 //        }
-
         if (professor == null || professor.equals("")) {
             S.out("ERRO: user not logged/found", this);
             return new ResponseEntity("ERRO: user not logged/found", HttpStatus.BAD_REQUEST);

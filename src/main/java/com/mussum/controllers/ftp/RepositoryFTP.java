@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +47,9 @@ public class RepositoryFTP {
             @RequestHeader("visible") boolean visible) {
 
         String professor = (String) context.getAttribute("requestUser");
-        S.out("User make directory " + professor, this);
-        S.out("Visible directory " + visible, this);
-        S.out("Dir of new directory: " + dir, this);
+        S.out("request new directory user: " + professor, this);
+        S.out("request new directory dir: " + dir, this);
+        S.out("request new directory visible: " + visible, this);
 
         if (professor == null || professor.equals("")) {
             return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
@@ -63,13 +61,13 @@ public class RepositoryFTP {
             ftp.getFtp().makeDirectory(dir + "/" + name + "/");
             ftp.disconnect();
             Pasta pasta = new Pasta(dir, name);
-            S.out("new pasta name: " + name, this);
-            S.out("new pasta dir: " + dir, this);
+            S.out("new folder name: " + name, this);
+            S.out("new folder dir: " + dir, this);
             pasta.setVisivel(visible);
             ftp.connect();
             pastaRep.save(pasta);
 
-            S.out("Diretorio criado", this);
+            S.out("directory created.", this);
             return new ResponseEntity(HttpStatus.CREATED);
         } catch (IOException ex) {
             ftp.disconnect();
@@ -100,7 +98,7 @@ public class RepositoryFTP {
         List<Pasta> pastas = new ArrayList();
         try {
             ftp.connect();
-            S.out("List folders: " + dir, this);
+            S.out("get folders of: " + dir, this);
             FTPFile[] files = ftp.getFtp().listFiles(dir);
             ftp.disconnect();
 
@@ -130,7 +128,7 @@ public class RepositoryFTP {
         List<Arquivo> arquivos = new ArrayList();
         try {
             ftp.connect();
-            S.out("List files: " + dir, this);
+            S.out("get files of: " + dir, this);
             FTPFile[] files = ftp.getFtp().listFiles(dir);
             ftp.disconnect();
 
@@ -161,7 +159,7 @@ public class RepositoryFTP {
             }
         } catch (IOException ex) {
             ftp.disconnect();
-            S.out("ERRO: FTP List Files: "+ex.getMessage(), this);
+            S.out("ERRO: FTP List Files: " + ex.getMessage(), this);
         }
 
         return arquivos;

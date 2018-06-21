@@ -57,7 +57,7 @@ public class RecadoController {
     @ResponseBody
     public Recado postRecado(@RequestBody Recadof recado) {
         Recado newRecado = new Recado(recado.titulo, recado.descricao, profRep.findByUsername((String) context.getAttribute("requestUser")));
-        Feed feed = new Feed(newRecado);
+        Feed feed = new Feed(newRecado, (String) context.getAttribute("requestUser"));
         feedRep.save(feed);
         return recadoRep.save(newRecado);
     }

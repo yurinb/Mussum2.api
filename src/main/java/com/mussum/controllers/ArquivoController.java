@@ -51,7 +51,7 @@ public class ArquivoController {
     @PostMapping()
     @ResponseBody
     public Arquivo postArquivo(@RequestBody @Valid Arquivo arquivo) {
-        Feed feed = new Feed(arquivo, profRe.findByUsername(context.getAttribute("requestUser").toString()).getNome());
+        Feed feed = new Feed(arquivo, profRe.findByUsername(context.getAttribute("requestUser").toString()).getNome(), context.getAttribute("requestUser").toString());
         feedRep.save(feed);
         return arqRep.save(arquivo);
     }

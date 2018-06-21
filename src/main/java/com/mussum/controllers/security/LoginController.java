@@ -43,7 +43,6 @@ public class LoginController {
         if (usuarioEncontrado == null) {
 
             S.out("ERROR: inexistent or invalid user", this);
-            S.out("_______________________________", this);
             S.out("_______________*_______________", this);
             return new ResponseEntity<>("usuario inválido ou inexistente.", HttpStatus.UNAUTHORIZED);
         }
@@ -51,13 +50,11 @@ public class LoginController {
         if (!usuarioEncontrado.getPassword().equals(usuario.getPassword())) {
 
             S.out("ERROR: invalid password", this);
-            S.out("_______________________________", this);
             S.out("_______________*_______________", this);
             return new ResponseEntity<>("senha inválida", HttpStatus.UNAUTHORIZED);
         }
 
         S.out("Authenticated.", this);
-        S.out("_______________________________", this);
         S.out("_______________*_______________", this);
 
         String token = Jwts.builder()
