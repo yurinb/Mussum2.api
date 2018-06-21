@@ -1,9 +1,10 @@
 package com.mussum.controllers;
 
-import com.mussum.models.db.Aviso;
 import com.mussum.models.db.Feed;
 import com.mussum.repository.FeedRepository;
+import com.mussum.util.S;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,41 +22,51 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedController {
 
     @Autowired
+    private HttpServletRequest context;
+
+    @Autowired
     private FeedRepository feedRepo;
 
     @GetMapping()
     @ResponseBody
     //@JsonIgnore
     public List<Feed> getFeeds() {
-	return feedRepo.findAll();
+        return feedRepo.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public Feed getFeed(@PathVariable Integer id) {
-	return feedRepo.findById(id).get();
+        return feedRepo.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
     public Feed postFeed(@RequestBody @Valid Feed aviso) {
-	return feedRepo.save(aviso);
+        return feedRepo.save(aviso);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
     public Feed putFeed(@RequestBody Feed newFeed, @PathVariable Integer id) {
-	newFeed.setId(feedRepo.findById(id).get().getId());
-	feedRepo.save(newFeed);
-	return newFeed;
+        newFeed.setId(feedRepo.findById(id).get().getId());
+        feedRepo.save(newFeed);
+        return newFeed;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public Feed deleteAviso(@PathVariable Integer id) {
-	Feed feed = feedRepo.findById(id).get();
-	feedRepo.delete(feed);
-	return feed;
+        Feed feed = feedRepo.findById(id).get();
+        S.out("DELETE Feed: " + feed.getUsername() + " : " + feed.getTitulo(), this);
+        if (feed.getUsername().equals((String) context.getAttribute("requestUser"))) {
+            feedRepo.delete(feed);
+            S.out("delete Feed: ok", this);
+            return feed;
+
+        }
+        S.out("delete Feed: ERRO 404", this);
+        return null;
     }
 
 }
