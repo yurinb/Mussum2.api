@@ -2,6 +2,7 @@ package com.mussum.models.ftp;
 
 import com.mussum.models.MussumEntity;
 import java.time.LocalDate;
+import java.util.Objects;
 import javax.persistence.Entity;
 
 @Entity
@@ -77,6 +78,23 @@ public class Arquivo extends MussumEntity {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        Arquivo comparing = (Arquivo) obj;
+        return (comparing.getDir() + comparing.getNome()).equals(this.getDir() + this.getNome());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 73 * hash + Objects.hashCode(this.dir);
+        hash = 73 * hash + Objects.hashCode(this.nome);
+        return hash;
     }
 
 }

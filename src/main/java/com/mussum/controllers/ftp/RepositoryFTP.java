@@ -35,7 +35,7 @@ public class RepositoryFTP {
     private PastaRepository pastaRep;
 
     @Autowired
-    private ArquivoRepository arquivoRep;
+    private ArquivoRepository arqRep;
 
     private final FTPcontrol ftp = new FTPcontrol();
 
@@ -44,7 +44,8 @@ public class RepositoryFTP {
     public ResponseEntity postRepository(
             @RequestHeader("dir") String dir,
             @RequestHeader("name") String name,
-            @RequestHeader("visible") boolean visible) {
+            @RequestHeader("visible") boolean visible
+    ) {
 
         String professor = (String) context.getAttribute("requestUser");
         S.out("request new directory user: " + professor, this);
@@ -79,17 +80,56 @@ public class RepositoryFTP {
     @ResponseBody
     public Pasta getRepository(
             @RequestHeader("username") String username,
-            @RequestHeader("dir") String dir) {
+            @RequestHeader("dir") String dir
+    ) {
 
         Pasta requestDirectory = new Pasta(dir, username);
         try {
+            //PEGA OS ARQUIVOS E PASTAS QUE TEM NO FTP E ATUALIZA O BANCO DE DADOS
             ftp.connect();
-            requestDirectory.getArquivos().addAll(getArquivosFromDir(dir));
-            requestDirectory.getPastas().addAll(getPastasFromDir(dir));
+            List<Arquivo> ftpArq = getArquivosFromDir(dir);
+            List<Pasta> ftpPasta = getPastasFromDir(dir);
             ftp.disconnect();
+
+            //AGORA VERIFICA SE ESSES DADOS BATEM COM O QUE TEM NO BANCO DE DADOS
+            List<Arquivo> dbFiles = arqRep.findByDir(dir);
+            List<Pasta> dbFolders = pastaRep.findByDir(dir);
+
+            S.out("SIZE:::::::DB file" + dbFiles.size(), this);
+            S.out("SIZE:::::::FTP file" + ftpArq.size(), this);
+            S.out("SIZE:::::::DB folder " + dbFolders.size(), this);
+            S.out("SIZE:::::::FTP folder" + ftpPasta.size(), this);
+
+            for (int i = 0; i < dbFiles.size(); i++) {
+                Arquivo loopFile = dbFiles.get(i);
+                if (!ftpArq.contains(loopFile)) {
+                    S.out("DB update from FTP: removing file", this);
+                    arqRep.delete(loopFile);
+                    S.out("removed", this);
+                }
+            }
+
+            S.out("VERYFING PASTAS...", this);
+
+            for (int i = 0; i < dbFolders.size(); i++) {
+                Pasta loopFolder = dbFolders.get(i);
+                if (!ftpPasta.contains(loopFolder)) {
+                    S.out("DB update from FTP: removing folder", this);
+                    pastaRep.delete(loopFolder);
+                    S.out("removed", this);
+                }
+            }
+
+            dbFiles = arqRep.findByDir(dir);
+            dbFolders = pastaRep.findByDir(dir);
+
+            S.out("RETURNING UPDATED FTP FILES/FOLDERS", this);
+            requestDirectory.getArquivos().addAll(dbFiles);
+            requestDirectory.getPastas().addAll(dbFolders);
+
         } catch (Exception e) {
             ftp.disconnect();
-            S.out(e.getMessage(), this);
+            S.out(e.getCause().getMessage(), this);
         }
         return requestDirectory;
     }
@@ -136,8 +176,8 @@ public class RepositoryFTP {
                 String fileName = item.getName();
                 if (item.isFile()) { //arquivo
                     Arquivo file = null;
-                    if (arquivoRep.findByDirInAndNomeIn(dir, fileName).size() > 0) {
-                        file = arquivoRep.findByDirInAndNomeIn(dir, fileName).get(0);
+                    if (arqRep.findByDirInAndNomeIn(dir, fileName).size() > 0) {
+                        file = arqRep.findByDirInAndNomeIn(dir, fileName).get(0);
                     } else {
                         file = new Arquivo(dir, fileName);
                         if (fileName.endsWith(".link")) {
@@ -151,10 +191,10 @@ public class RepositoryFTP {
                             }
                             file.setLink(content);
                         }
-                        arquivoRep.save(file);
+                        arqRep.save(file);
                     }
                     arquivos.add(file);
-                    S.out("Retornando arquivo: " + dir, this);
+                    S.out("Retornando arquivo: " + dir + "/" + fileName, this);
                 }
             }
         } catch (IOException ex) {

@@ -13,15 +13,18 @@ import java.time.LocalDateTime;
  */
 public class S {
 
-    private static final String SEPARATOR = "__--> ";
+    private static final String SEPARATOR = "_-> ";
 
     public static void out(String txt, Object emitter) {
         String output = "";
 
-        String emitterClass = emitter.getClass().getSimpleName();
+        String emitterClassLog = emitter.getClass().getSimpleName();
+        String threadLog = "Thread::"+String.valueOf(Thread.currentThread().getId());
+        
 
         output += SEPARATOR + stringWithLength(info_timeLog(), 17);
-        output += SEPARATOR + stringWithLength(emitterClass, 17);
+        output += SEPARATOR + stringWithLength(emitterClassLog, 17);
+        output += SEPARATOR + stringWithLength(threadLog, 17);
         
         System.out.println(output + " :: " + txt);
     }

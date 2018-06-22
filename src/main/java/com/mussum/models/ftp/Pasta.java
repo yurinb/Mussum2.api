@@ -3,6 +3,7 @@ package com.mussum.models.ftp;
 import com.mussum.models.MussumEntity;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -59,6 +60,23 @@ public class Pasta extends MussumEntity {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        Pasta comparing = (Pasta) obj;
+        return (comparing.getDir() + comparing.getNome()).equals(this.getDir() + this.getNome());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.dir);
+        hash = 67 * hash + Objects.hashCode(this.nome);
+        return hash;
     }
 
 }

@@ -42,6 +42,7 @@ public class FTPcontrol {
 //    }
     public void connect() {
         try {
+            this.ftp.setControlEncoding("UTF-8");
             this.ftp.connect(host);
             boolean loginSucess = this.ftp.login(user, pass);
 

@@ -11,4 +11,6 @@ public interface PastaRepository extends JpaRepository<Pasta, Integer> {
     
     List<Pasta> findByDirInAndNomeIn(String dir, String nome);
     
+    List<Pasta> findByDir(String dir);
+    
 }

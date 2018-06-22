@@ -64,10 +64,14 @@ public class RecadoController {
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Recado putRecado(@RequestBody Recado newRecado, @PathVariable Integer id) {
-        newRecado.setId(recadoRep.findById(id).get().getId());
-        recadoRep.save(newRecado);
-        return newRecado;
+    public Recado putRecado(@RequestBody Recadof newRecado, @PathVariable Integer id) {
+        S.out("RECADO-------------> titulo: "+newRecado.getTitulo(), this);
+        S.out("RECADO-------------> descricao: "+newRecado.getDescricao(), this);
+        Recado recado = recadoRep.findById(id).get();
+        recado.setTitulo(newRecado.getTitulo());
+        recado.setDescricao(newRecado.getDescricao());
+        recadoRep.save(recado);
+        return recado;
     }
 
     @DeleteMapping("/{id}")
