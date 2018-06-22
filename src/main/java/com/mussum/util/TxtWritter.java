@@ -20,38 +20,39 @@ public class TxtWritter {
     private String lastCreatedTmpFile = "";
 
     public InputStream getInputStreamOfNewTxtFile(String username, String fileName, String content) {
-        try {
-            //Whatever the file path is.
-            this.lastCreatedTmpFile = username + "@@" + fileName + ".txt";
-            File statText = new File("tmp/" + lastCreatedTmpFile);
-            if (!statText.exists()) {
-                statText.createNewFile();
-            }
-            FileOutputStream is = new FileOutputStream(statText);
-            OutputStreamWriter osw = new OutputStreamWriter(is);
-            try (Writer w = new BufferedWriter(osw)) {
-                w.write(content);
-                w.flush();
-                w.close();
-            }
-            InputStream fis = new FileInputStream(statText);
-            deleteLastCreatedFile();
-            return fis;
-        } catch (IOException e) {
-            System.err.println("Problem writing to the file statsTest.txt");
-            System.out.println(e);
-            return null;
-        }
+	try {
+	    //Whatever the file path is.
+	    this.lastCreatedTmpFile = username + "@@" + fileName + ".txt";
+	    File txtDir = new File("tmp/");
+	    txtDir.mkdir();
+	    File txtFile = new File("tmp/" + lastCreatedTmpFile);
+	    if (!txtFile.exists()) {
+		txtFile.createNewFile();
+	    }
+	    FileOutputStream is = new FileOutputStream(txtFile);
+	    OutputStreamWriter osw = new OutputStreamWriter(is);
+	    try (Writer w = new BufferedWriter(osw)) {
+		w.write(content);
+		w.flush();
+		w.close();
+	    }
+	    InputStream fis = new FileInputStream(txtFile);
+	    deleteLastCreatedFile();
+	    return fis;
+	} catch (IOException e) {
+	    S.out("ERRO: " + e.getMessage(), e);
+	    return null;
+	}
     }
 
     public void deleteLastCreatedFile() {
-        File tmpFile = new File("tmp/" + lastCreatedTmpFile);
-        try {
-            Files.delete(tmpFile.toPath());
-            S.out("tmp File deleted.", this);
-        } catch (IOException ex) {
-            S.out("ERRO: tmp File not deleted.", this);
-        }
+	File tmpFile = new File("tmp/" + lastCreatedTmpFile);
+	try {
+	    Files.delete(tmpFile.toPath());
+	    S.out("tmp File deleted.", this);
+	} catch (IOException ex) {
+	    S.out("ERRO: tmp File not deleted.", this);
+	}
     }
 
 }

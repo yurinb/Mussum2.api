@@ -5,6 +5,7 @@ import com.mussum.models.db.Recado;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.RecadoRepository;
+import com.mussum.util.S;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
