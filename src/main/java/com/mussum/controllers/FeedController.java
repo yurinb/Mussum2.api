@@ -57,6 +57,7 @@ public class FeedController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public Feed deleteAviso(@PathVariable Integer id) {
+	S.out(String.valueOf(id), this);
         Feed feed = feedRepo.findById(id).get();
         S.out("DELETE Feed: " + feed.getUsername() + " : " + feed.getTitulo(), this);
         if (feed.getUsername().equals((String) context.getAttribute("requestUser"))) {

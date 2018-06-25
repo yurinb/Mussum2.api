@@ -238,21 +238,15 @@ public class UploadFTP {
 
 	    dbArquivo.setComentario(payload.get("comment"));
 	    dbArquivo.setLink(payload.get("link"));
-	    S.out("AAAAA " + payload.get("name"), this);
-	    S.out("AAAAA " + payload.get("comment"), this);
-	    //S.out("AAAAA " + payload.get("link"), this);
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(dbArquivo.getDir());
 	    for (FTPFile file : ftpFiles) {
-		S.out("Q", this);
 		if (file.getName().equals(dbArquivo.getNome())) {
-		    S.out("F", this);
 		    ftp.getFtp().changeWorkingDirectory(dbArquivo.getDir());
 		    ftp.getFtp().rename(dbArquivo.getNome(), payload.get("name"));
 		    dbArquivo.setNome(payload.get("name"));
-		    S.out("G", this);
 		    file.setName(payload.get("name"));
-		    S.out("h", this);
+		    break;
 		}
 	    }
 	    ftp.disconnect();

@@ -6,6 +6,7 @@ import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.RecadoRepository;
 import com.mussum.util.S;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,48 +40,50 @@ public class RecadoController {
     @ResponseBody
     //@JsonIgnore
     public ResponseEntity getRecados() {
-        String username = context.getHeader("username");
-        if (username == null) {
-            return ResponseEntity.badRequest().body("Erro: Username não enviado.");
+	String username = context.getHeader("username");
+	if (username == null) {
+	    return ResponseEntity.badRequest().body("Erro: Username não enviado.");
 
-        } else {
-            return ResponseEntity.ok(recadoRep.findByProfessor(profRep.findByUsername(username)));
-        }
+	} else {
+	    return ResponseEntity.ok(recadoRep.findByProfessor(profRep.findByUsername(username)));
+	}
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public Recado getRecado(@PathVariable Integer id) {
-        return recadoRep.findById(id).get();
+	return recadoRep.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
     public Recado postRecado(@RequestBody Recadof recado) {
-        Recado newRecado = new Recado(recado.titulo, recado.descricao, profRep.findByUsername((String) context.getAttribute("requestUser")));
-        Feed feed = new Feed(newRecado, (String) context.getAttribute("requestUser"));
-        feedRep.save(feed);
-        return recadoRep.save(newRecado);
+	Recado newRecado = new Recado(recado.titulo, recado.descricao, profRep.findByUsername((String) context.getAttribute("requestUser")));
+	Feed feed = new Feed(newRecado, (String) context.getAttribute("requestUser"));
+	feedRep.save(feed);
+	return recadoRep.save(newRecado);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public Recado putRecado(@RequestBody Recadof newRecado, @PathVariable Integer id) {
-        S.out("RECADO-------------> titulo: "+newRecado.getTitulo(), this);
-        S.out("RECADO-------------> descricao: "+newRecado.getDescricao(), this);
-        Recado recado = recadoRep.findById(id).get();
-        recado.setTitulo(newRecado.getTitulo());
-        recado.setDescricao(newRecado.getDescricao());
-        recadoRep.save(recado);
-        return recado;
+    public Recado putRecado(
+	    @RequestBody Map<String, String> payload,
+	    @PathVariable Integer id) {
+	S.out("RECADO-------------> titulo:  " +  payload.get("titulo"), this);
+	S.out("RECADO-------------> descricao: " + payload.get("descricao"), this);
+	Recado recado = recadoRep.findById(id).get();
+	recado.setTitulo(payload.get("titulo"));
+	recado.setDescricao(payload.get("descricao"));
+	recadoRep.save(recado);
+	return recado;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public Recado deleteRecado(@PathVariable Integer id) {
-        Recado recado = recadoRep.findById(id).get();
-        recadoRep.delete(recado);
-        return recado;
+	Recado recado = recadoRep.findById(id).get();
+	recadoRep.delete(recado);
+	return recado;
     }
 
 }
@@ -94,24 +97,24 @@ class Recadof {
     }
 
     public Recadof(String titulo, String descricao) {
-        this.titulo = titulo;
-        this.descricao = descricao;
+	this.titulo = titulo;
+	this.descricao = descricao;
     }
 
     public String getTitulo() {
-        return titulo;
+	return titulo;
     }
 
     public void setTitulo(String titulo) {
-        this.titulo = titulo;
+	this.titulo = titulo;
     }
 
     public String getDescricao() {
-        return descricao;
+	return descricao;
     }
 
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+	this.descricao = descricao;
     }
 
 }

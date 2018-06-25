@@ -37,7 +37,7 @@ public class TxtWritter {
 		w.close();
 	    }
 	    InputStream fis = new FileInputStream(txtFile);
-	    deleteLastCreatedFile();
+	    //deleteLastCreatedFile();
 	    return fis;
 	} catch (IOException e) {
 	    S.out("ERRO: " + e.getMessage(), e);
