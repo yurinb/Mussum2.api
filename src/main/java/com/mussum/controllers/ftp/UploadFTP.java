@@ -97,7 +97,7 @@ public class UploadFTP {
 
 	    arquivo.setLink(link);
 	    arqRep.save(arquivo);
-	    if (arquivo.isVisivel()) {
+	    if (visivel) {
 		feedRep.save(new Feed(arquivo, prof));
 	    }
 	} else {
@@ -127,7 +127,9 @@ public class UploadFTP {
 		ftp.disconnect();
 		S.out("upload file", this);
 		arqRep.save(arquivo);
-		feedRep.save(new Feed(arquivo, prof));
+		if (visivel) {
+		    feedRep.save(new Feed(arquivo, prof));
+		}
 		S.out("arquivo salvo.", this);
 	    } catch (Exception e) {
 		ftp.disconnect();

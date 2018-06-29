@@ -14,7 +14,7 @@ public class Feed extends MussumEntity {
 
     private String professor = "";
 
-    private String dataCriacao = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+    private String dataCriacao = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
 
     private String titulo = "";
 
