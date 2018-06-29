@@ -51,7 +51,7 @@ public class AvisoController {
     @PostMapping()
     @ResponseBody
     public Aviso postAviso(@RequestBody @Valid Aviso aviso) {
-        Feed feed = new Feed(aviso, profRe.findByUsername(context.getAttribute("requestUser").toString()).getNome(), context.getAttribute("requestUser").toString());
+        Feed feed = new Feed(aviso, profRe.findByUsername(context.getAttribute("requestUser").toString()));
         feedRep.save(feed);
         return avisoRep.save(aviso);
     }

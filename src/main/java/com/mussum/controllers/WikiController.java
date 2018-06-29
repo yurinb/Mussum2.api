@@ -1,9 +1,12 @@
 package com.mussum.controllers;
 
-import com.mussum.models.db.Aviso;
+import com.mussum.models.db.Feed;
 import com.mussum.models.db.Wiki;
+import com.mussum.repository.FeedRepository;
+import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.WikiRepository;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +25,15 @@ public class WikiController {
 
     @Autowired
     private WikiRepository wikiRep;
+    
+    @Autowired
+    private FeedRepository feedRep;
+    
+    @Autowired
+    private ProfessorRepository profRep;
+    
+    @Autowired
+    private HttpServletRequest request;
 
     @GetMapping()
     @ResponseBody
@@ -39,6 +51,7 @@ public class WikiController {
     @PostMapping()
     @ResponseBody
     public Wiki postWiki(@RequestBody @Valid Wiki wiki) {
+	feedRep.save(new Feed(wiki, profRep.findByUsername(request.getAttribute("requestUser").toString())));
 	return wikiRep.save(wiki);
     }
 

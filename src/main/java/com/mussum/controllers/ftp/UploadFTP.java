@@ -3,6 +3,7 @@ package com.mussum.controllers.ftp;
 import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.controllers.ftp.utils.Strings;
 import com.mussum.models.db.Feed;
+import com.mussum.models.db.Professor;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.FeedRepository;
@@ -58,10 +59,9 @@ public class UploadFTP {
 	    @RequestHeader("visible") Boolean visivel,
 	    @RequestParam("files") MultipartFile[] uploadfiles
     ) throws Exception {
+	Professor prof = profRep.findByUsername((String) context.getAttribute("requestUser"));
 
-	String professor = profRep.findByUsername((String) context.getAttribute("requestUser")).getNome();
-
-	if (professor == null || professor.equals("")) {
+	if (prof == null) {
 	    return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
 	}
 
@@ -76,7 +76,7 @@ public class UploadFTP {
 	    S.out("uploading a link...", this);
 	    TxtWritter wr = new TxtWritter();
 	    Arquivo arquivo = new Arquivo(reqDir, fileName + ".link");
-	    try (InputStream input = wr.getInputStreamOfNewTxtFile(professor, fileName, link)) {
+	    try (InputStream input = wr.getInputStreamOfNewTxtFile(prof.getNome(), fileName, link)) {
 		ftp.connect();
 		ftp.uploadFile(input, arquivo);
 		ftp.disconnect();
@@ -97,41 +97,18 @@ public class UploadFTP {
 
 	    arquivo.setLink(link);
 	    arqRep.save(arquivo);
-	    feedRep.save(new Feed(arquivo, professor, (String) context.getAttribute("requestUser")));
+	    if (arquivo.isVisivel()) {
+		feedRep.save(new Feed(arquivo, prof));
+	    }
 	} else {
-	    save(Arrays.asList(uploadfiles), reqDir, fileName, professor, comment, visivel, link);
+	    save(Arrays.asList(uploadfiles), reqDir, fileName, prof, comment, visivel, link);
 	}
 	S.out("upload complete.", this);
 	return new ResponseEntity("Successfully uploaded - "
 		+ uploadedFiles, HttpStatus.OK);
     }
 
-//    @PutMapping("/api/upload/{id}")
-//    public ResponseEntity putArquivo(
-//            @RequestBody Arquivo arquivo,
-//            @PathVariable Integer id
-//    ) {
-//        Arquivo actual = arqRep.getOne(id);
-//        updateNotNullArquivo(actual, arquivo);
-//        return ResponseEntity.ok(arqRep.save(actual));
-//    }
-//    private Arquivo updateNotNullArquivo(Arquivo old, Arquivo newOne) {
-//        if (newOne.getComentario() != null) {
-//            old.setComentario(newOne.getComentario());
-//        }
-//        if (newOne.getDir() != null) {
-//            old.setDir(newOne.getDir());
-//        }
-//        if (newOne.isVisivel() == false || newOne.isVisivel() == true) {
-//            old.setVisivel(newOne.isVisivel());
-//        }
-//        if (newOne.getNome() != null) {
-//            old.setNome(newOne.getNome());
-//        }
-//        return old;
-//    }
-    //save file
-    private void save(List<MultipartFile> files, String dir, String fileName, String professor, String comment, Boolean visivel, String link) {
+    private void save(List<MultipartFile> files, String dir, String fileName, Professor prof, String comment, Boolean visivel, String link) {
 
 	for (MultipartFile file : files) {
 	    S.out("recebendo arquivo...", this);
@@ -150,7 +127,7 @@ public class UploadFTP {
 		ftp.disconnect();
 		S.out("upload file", this);
 		arqRep.save(arquivo);
-		feedRep.save(new Feed(arquivo, professor, context.getAttribute("requestUser").toString()));
+		feedRep.save(new Feed(arquivo, prof));
 		S.out("arquivo salvo.", this);
 	    } catch (Exception e) {
 		ftp.disconnect();
@@ -167,9 +144,6 @@ public class UploadFTP {
 	String professor = (String) context.getAttribute("requestUser");
 	S.out("POSTING User photo " + professor, this);
 
-//        for (String key : Collections.list(context.getHeaders("Content-Type"))) {
-//            S.out(key, this);
-//        }
 	if (professor == null || professor.equals("")) {
 	    S.out("ERRO: user not logged/found", this);
 	    return new ResponseEntity("ERRO: user not logged/found", HttpStatus.BAD_REQUEST);

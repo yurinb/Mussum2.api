@@ -1,6 +1,7 @@
 package com.mussum.controllers;
 
 import com.mussum.models.db.Feed;
+import com.mussum.models.db.Professor;
 import com.mussum.models.db.Recado;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
@@ -58,8 +59,9 @@ public class RecadoController {
     @PostMapping()
     @ResponseBody
     public Recado postRecado(@RequestBody Recadof recado) {
-	Recado newRecado = new Recado(recado.titulo, recado.descricao, profRep.findByUsername((String) context.getAttribute("requestUser")));
-	Feed feed = new Feed(newRecado, (String) context.getAttribute("requestUser"));
+	Professor prof = profRep.findByUsername((String) context.getAttribute("requestUser"));
+	Recado newRecado = new Recado(recado.titulo, recado.descricao, prof);
+	Feed feed = new Feed(newRecado);
 	feedRep.save(feed);
 	return recadoRep.save(newRecado);
     }
