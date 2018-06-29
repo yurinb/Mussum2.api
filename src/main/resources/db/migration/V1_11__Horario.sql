@@ -7,7 +7,7 @@ create table horario (
   COLLATE 'utf8_general_ci';
 
 
-INSERT INTO link (titulo, url) VALUES ("ADS Manhã", "http://187.7.106.14/horarios/horarios_2017_2_AM.html");
-INSERT INTO link (titulo, url) VALUES ("ADS Noite", "http://187.7.106.14/horarios/horarios_2017_2_AN.html");
-INSERT INTO link (titulo, url) VALUES ("REDES Manhã", "http://187.7.106.14/horarios/horarios_2017_2_RM.html");
-INSERT INTO link (titulo, url) VALUES ("REDES Noite", "http://187.7.106.14/horarios/horarios_2017_2_RN.html");
+INSERT INTO horario (titulo, url) VALUES ("ADS Manhã", "http://187.7.106.14/horarios/horarios_2017_2_AM.html");
+INSERT INTO horario (titulo, url) VALUES ("ADS Noite", "http://187.7.106.14/horarios/horarios_2017_2_AN.html");
+INSERT INTO horario (titulo, url) VALUES ("REDES Manhã", "http://187.7.106.14/horarios/horarios_2017_2_RM.html");
+INSERT INTO horario (titulo, url) VALUES ("REDES Noite", "http://187.7.106.14/horarios/horarios_2017_2_RN.html");

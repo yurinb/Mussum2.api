@@ -1,6 +1,7 @@
 package com.mussum.controllers;
 
 import com.mussum.models.db.AdmLink;
+import com.mussum.models.db.Feed;
 import com.mussum.models.db.Horario;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.HorarioRepository;
@@ -25,13 +26,13 @@ public class HorarioController {
 
     @Autowired
     private HorarioRepository horarioRep;
-    
+
     @Autowired
     private FeedRepository feedRep;
-    
+
     @Autowired
     private ProfessorRepository profRep;
-    
+
     @Autowired
     private HttpServletRequest request;
 
@@ -51,6 +52,7 @@ public class HorarioController {
     @PostMapping()
     @ResponseBody
     public Horario postHorario(@RequestBody @Valid Horario horario) {
+	feedRep.save(new Feed(horario));
 	return horarioRep.save(horario);
     }
 

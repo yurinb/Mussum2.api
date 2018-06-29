@@ -46,6 +46,12 @@ public class Feed extends MussumEntity {
         this.link = wiki.getUrl();
         S.out("new FEED: " + this.tipo, this);
     }
+    public Feed(Horario horario) {
+        this.tipo = "wiki";
+        this.titulo = horario.getTitulo();
+        this.link = horario.getUrl();
+        S.out("new FEED: " + this.tipo, this);
+    }
 
     public Feed(Recado recado) {
         this.username = recado.getProfessor().getUsername();
