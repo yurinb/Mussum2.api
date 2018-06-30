@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/yurinb/Mussum_2.0-API.svg?branch=master)](https://travis-ci.org/yurinb/Mussum_2.0-API)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/yurinb/Mussum_2.0-API/blob/master/LICENSE)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/yurinb/mussum_2.0-api/graphs/commit-activity)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/yurinb/Mussum_2.0-API/blob/master/LICENSE)
+
 ## Mussum 2.0 API
 
 ### Documentação e Rotas
