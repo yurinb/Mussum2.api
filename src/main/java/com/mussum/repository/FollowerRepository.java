@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FollowerRepository extends JpaRepository<Follower, Integer> {
     
-    public List<Follower> findByProfessor(Professor professor);
+    public List<Follower> findAllByProfessor(Professor professor);
 
 }

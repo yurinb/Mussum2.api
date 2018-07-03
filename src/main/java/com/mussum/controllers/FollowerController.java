@@ -40,7 +40,7 @@ public class FollowerController {
 	    return ResponseEntity.badRequest().body("Erro: Username não enviado.");
 
 	} else {
-	    return ResponseEntity.ok(follRep.findByProfessor(profRep.findByUsername(username)));
+	    return ResponseEntity.ok(follRep.findAllByProfessor(profRep.findByUsername(username)));
 	}
     }
 
@@ -54,7 +54,7 @@ public class FollowerController {
     @ResponseBody
     public Follower postFollower(@RequestBody Map<String, String> payload) {
 	Professor prof = profRep.findByUsername(payload.get("username"));
-	Follower newFollower = new Follower(payload.get("email"), payload.get("folderDir"), prof);
+	Follower newFollower = new Follower(payload.get("email"), payload.get("dir"), prof);
 	return follRep.save(newFollower);
     }
 

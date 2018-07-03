@@ -1,5 +1,6 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.controllers.EmailController;
 import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.controllers.ftp.utils.Strings;
 import com.mussum.models.db.Feed;
@@ -7,6 +8,7 @@ import com.mussum.models.db.Professor;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.FeedRepository;
+import com.mussum.repository.FollowerRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.util.S;
 import com.mussum.util.TxtWritter;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.net.ftp.FTPFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -46,6 +49,14 @@ public class UploadFTP {
 
     @Autowired
     private ProfessorRepository profRep;
+    
+    @Autowired
+    private FollowerRepository follRep;
+    
+    @Autowired
+    private JavaMailSender mailSender;
+
+    private EmailController emailController = new EmailController();
 
     private final FTPcontrol ftp = new FTPcontrol();
 
@@ -61,17 +72,19 @@ public class UploadFTP {
     ) throws Exception {
 	Professor prof = profRep.findByUsername((String) context.getAttribute("requestUser"));
 
+	if (uploadfiles.length == 0) {
+	    S.out(":::::::::::::: files lenght == 0", this);
+	}
+
 	if (prof == null) {
-	    return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
+	    S.out("ERRO: Professor não encontrado.", this);
+	    return new ResponseEntity("Erro: Professor não encontrado ", HttpStatus.BAD_REQUEST);
 	}
 
 	//Get file name
 	String uploadedFiles = Arrays.stream(uploadfiles).map(x -> x.getOriginalFilename())
 		.filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
 
-//        if (StringUtils.isEmpty(uploadedFiles)) {
-//            return new ResponseEntity("Nenhum arquivo recebido!", HttpStatus.BAD_REQUEST);
-//        }
 	if (StringUtils.isEmpty(uploadedFiles)) {
 	    S.out("uploading a link...", this);
 	    TxtWritter wr = new TxtWritter();
@@ -100,9 +113,14 @@ public class UploadFTP {
 	    if (visivel) {
 		feedRep.save(new Feed(arquivo, prof));
 	    }
+
+	    S.out("Sending email to followers...", this);
+	    emailController.sendMailToFollowers(reqDir, prof, arquivo.getNome(), follRep, mailSender);
+	    S.out("Email send.", this);
 	} else {
 	    save(Arrays.asList(uploadfiles), reqDir, fileName, prof, comment, visivel, link);
 	}
+
 	S.out("upload complete.", this);
 	return new ResponseEntity("Successfully uploaded - "
 		+ uploadedFiles, HttpStatus.OK);
@@ -113,8 +131,8 @@ public class UploadFTP {
 	for (MultipartFile file : files) {
 	    S.out("recebendo arquivo...", this);
 	    if (file.isEmpty()) {
-		S.out("empty file", this);
-		continue; //next pls
+		S.out("ERRO: Empty file", this);
+		//continue; //next pls
 	    }
 	    try {
 		Arquivo arquivo = new Arquivo(dir, fileName);
@@ -131,9 +149,12 @@ public class UploadFTP {
 		    feedRep.save(new Feed(arquivo, prof));
 		}
 		S.out("arquivo salvo.", this);
+		S.out("Sending email to followers...", this);
+		emailController.sendMailToFollowers(dir, prof, arquivo.getNome(), follRep, mailSender);
+		S.out("Email send.", this);
 	    } catch (Exception e) {
 		ftp.disconnect();
-		S.out(e.getMessage(), this);
+		S.out("ERRO: " + e.getMessage(), this);
 	    }
 	}
 
