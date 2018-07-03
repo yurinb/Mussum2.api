@@ -15,34 +15,52 @@ public class MussumApplication {
 
     @Bean
     public FilterRegistrationBean getFiltroAllowOrigin() {
-        FilterRegistrationBean frb = new FilterRegistrationBean();
-        frb.setFilter(new AllowFilter());
-        frb.addUrlPatterns("/*");
-        return frb;
+	FilterRegistrationBean frb = new FilterRegistrationBean();
+	frb.setFilter(new AllowFilter());
+	frb.addUrlPatterns("/*");
+	return frb;
     }
 
     @Bean
     public FilterRegistrationBean getFiltroJWT() {
-        FilterRegistrationBean frb = new FilterRegistrationBean();
-        frb.setFilter(new TokenFilter());
-        frb.addUrlPatterns("/api/*");
-        return frb;
+	FilterRegistrationBean frb = new FilterRegistrationBean();
+	frb.setFilter(new TokenFilter());
+	frb.addUrlPatterns("/api/*");
+	return frb;
     }
 
     @Bean
     @Profile("test")
     public Flyway flyway(DataSource theDataSource) {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(theDataSource);
-        flyway.setLocations("classpath:db/migration");
-        flyway.clean();
-        flyway.migrate();
+	Flyway flyway = new Flyway();
+	flyway.setDataSource(theDataSource);
+	flyway.setLocations("classpath:db/migration");
+	flyway.clean();
+	flyway.migrate();
 
-        return flyway;
+	return flyway;
     }
 
+//    @Bean
+//    public JavaMailSender getJavaMailSender() {
+//	JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+//	mailSender.setHost("smtp.gmail.com");
+//	mailSender.setPort(465);
+//
+//	mailSender.setUsername("mussum2fatec@gmail.com");
+//	mailSender.setPassword("fatecpel");
+//
+//	Properties props = mailSender.getJavaMailProperties();
+//	props.put("mail.transport.protocol", "smtp");
+//	props.put("mail.smtp.auth", "true");
+//	props.put("mail.smtp.starttls.enable", "true");
+//	props.put("mail.debug", "true");
+//
+//	return mailSender;
+//    }
+
     public static void main(String[] args) {
-        SpringApplication.run(MussumApplication.class, args);
+	SpringApplication.run(MussumApplication.class, args);
     }
 
 }

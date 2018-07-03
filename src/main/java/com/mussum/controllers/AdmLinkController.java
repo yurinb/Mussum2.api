@@ -2,10 +2,7 @@ package com.mussum.controllers;
 
 import com.mussum.models.db.AdmLink;
 import com.mussum.repository.AdmLinkRepository;
-import com.mussum.repository.FeedRepository;
-import com.mussum.repository.ProfessorRepository;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,15 +22,6 @@ public class AdmLinkController {
     @Autowired
     private AdmLinkRepository linkRep;
     
-    @Autowired
-    private FeedRepository feedRep;
-    
-    @Autowired
-    private ProfessorRepository profRep;
-    
-    @Autowired
-    private HttpServletRequest request;
-
     @GetMapping()
     @ResponseBody
     //@JsonIgnore
