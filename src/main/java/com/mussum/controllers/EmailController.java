@@ -42,7 +42,7 @@ public class EmailController {
 	S.out("Followers finded", this);
 	for (Follower follower : followers) {
 	    S.out("Followers: follower X", this);
-	    if (follower.getPastaDir().equals(dir)) {
+	    if (dir.startsWith(follower.getPastaDir())) {
 		sendMail(follower.getEmail(), professorNome
 			+ msg1 + nomePasta + "\n"
 			+ msg2 + fileName + "\n"
