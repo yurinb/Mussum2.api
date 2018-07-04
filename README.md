@@ -10,10 +10,11 @@
 ***
 
 
-### Instalação da api localmente
+### Instalação da API localmente:
 
-1. Descrever a url, usuario e senha de um banco MySQL no application.properties
-2. Descrever o host, usuario e senha do servidor FTP na classe "FtpController"
+1. Descrever o tipo, local, usuario e senha de um banco de dados no "application.properties"
+2. Descrever o local, usuario e senha de um servidor FTP na classe "FtpController"
+3. Descrever o usuario e senha do email sender no "application.properties"
 
 ***
 
