@@ -125,8 +125,8 @@ public class RepositoryFTP {
 	    List<Arquivo> resFiles = new ArrayList();
 	    List<Pasta> resFolders = new ArrayList();
 
-	    if (context.getAttribute("requestUser") == null) {
-		S.out("Usuario anonimo: Retirando items privado do response.", this);
+	    if (context.getAttribute("requestUser") == null || !username.equals((String) context.getAttribute("requestUser"))) {
+		S.out("Usuario anonimo ou não proprietário: Retirando items privado do response.", this);
 		for (Arquivo file : dbFiles) {
 		    if (file.isVisivel()) {
 			resFiles.add(file);
@@ -139,24 +139,9 @@ public class RepositoryFTP {
 		}
 
 	    } else {
-		if (!username.equals((String) context.getAttribute("requestUser"))) {
-		    S.out(username, this);
-		    S.out((String) context.getAttribute("requestUser"), this);
-		    S.out("Retirando items privado do response.", this);
-		    for (Arquivo file : dbFiles) {
-			if (file.isVisivel()) {
-			    resFiles.add(file);
-			}
-		    }
-		    for (Pasta folder : dbFolders) {
-			if (folder.isVisivel()) {
-			    resFolders.add(folder);
-			}
-		    }
-		} else {
-		    resFiles = dbFiles;
-		    resFolders = dbFolders;
-		}
+		S.out("Usuario proprietário: Retornando  items privados e nao privados", this);
+		resFiles = dbFiles;
+		resFolders = dbFolders;
 	    }
 
 	    requestDirectory.getArquivos().addAll(resFiles);

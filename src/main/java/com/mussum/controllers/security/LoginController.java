@@ -60,7 +60,7 @@ public class LoginController {
         String token = Jwts.builder()
                 .setSubject(usuario.getUsername())
                 .signWith(SignatureAlgorithm.HS512, "mussum")
-                .setExpiration(new Date(System.currentTimeMillis() + (30 * 60 * 1000)))
+                .setExpiration(new Date(System.currentTimeMillis() + (9999 * 60 * 1000)))
                 .compact();
 
         String professorName = rep.findByUsername(usuarioEncontrado.getUsername()).getNome();
