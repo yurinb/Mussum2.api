@@ -7,13 +7,13 @@ create table diretorio (
   COLLATE 'utf8_general_ci';
 
 
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio A", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio B", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio C", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio D", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio E", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio F", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio G", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio H", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio I", "google.com");
-INSERT INTO diretorio (titulo, url) VALUES ("Diretorio J", "google.com");
+INSERT INTO diretorio (titulo, url) VALUES ("Anais - Projeto Integrador e TCC", "http://187.7.106.14/anais/");
+INSERT INTO diretorio (titulo, url) VALUES ("Imagens em formato ISO", "http://187.7.106.14/isos");
+INSERT INTO diretorio (titulo, url) VALUES ("FTP - Repositoris", "ftp://192.168.200.6/");
+INSERT INTO diretorio (titulo, url) VALUES ("Material da Cisco", "http://187.7.106.14/cisco");
+INSERT INTO diretorio (titulo, url) VALUES ("Filmes", "http://187.7.106.14/filmes");
+INSERT INTO diretorio (titulo, url) VALUES ("Sistemas Operacionais", "http://187.7.106.14/midias");
+INSERT INTO diretorio (titulo, url) VALUES ("Utilitários", "http://187.7.106.14/software");
+INSERT INTO diretorio (titulo, url) VALUES ("Livros", "http://187.7.106.14/livros");
+INSERT INTO diretorio (titulo, url) VALUES ("Fotos", "http://187.7.106.14/fotos");
+INSERT INTO diretorio (titulo, url) VALUES ("Documentos", "http://187.7.106.14/documentos");

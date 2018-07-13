@@ -81,6 +81,12 @@ public class ProfessorController {
         if (newP.getUsername() != null) {
             prof.setUsername(newP.getUsername());
         }
+        if (newP.getResumo()!= null) {
+            prof.setResumo(newP.getResumo());
+        }
+        if (newP.getFormacao()!= null) {
+            prof.setFormacao(newP.getFormacao());
+        }
         profRep.save(prof);
         return prof;
     }

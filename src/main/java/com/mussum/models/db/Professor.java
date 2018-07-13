@@ -1,7 +1,6 @@
 package com.mussum.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -9,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
-//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Professor extends Usuario {
 
     private String nome;
@@ -22,6 +20,26 @@ public class Professor extends Usuario {
 
     private String descricao;
 
+    private String resumo;
+    
+    private String formacao;
+
+    public String getResumo() {
+	return resumo;
+    }
+
+    public void setResumo(String resumo) {
+	this.resumo = resumo;
+    }
+
+    public String getFormacao() {
+	return formacao;
+    }
+
+    public void setFormacao(String formacao) {
+	this.formacao = formacao;
+    }
+    
     private String fotolink = "http://franquia.globalmedclinica.com.br/wp-content/uploads/2016/01/investidores-img-02-01.png";
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.REMOVE)
