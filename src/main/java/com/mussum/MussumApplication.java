@@ -41,24 +41,6 @@ public class MussumApplication {
 	return flyway;
     }
 
-//    @Bean
-//    public JavaMailSender getJavaMailSender() {
-//	JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-//	mailSender.setHost("smtp.gmail.com");
-//	mailSender.setPort(465);
-//
-//	mailSender.setUsername("mussum2fatec@gmail.com");
-//	mailSender.setPassword("fatecpel");
-//
-//	Properties props = mailSender.getJavaMailProperties();
-//	props.put("mail.transport.protocol", "smtp");
-//	props.put("mail.smtp.auth", "true");
-//	props.put("mail.smtp.starttls.enable", "true");
-//	props.put("mail.debug", "true");
-//
-//	return mailSender;
-//    }
-
     public static void main(String[] args) {
 	SpringApplication.run(MussumApplication.class, args);
     }
