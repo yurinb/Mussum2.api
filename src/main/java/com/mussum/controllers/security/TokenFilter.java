@@ -31,16 +31,16 @@ public class TokenFilter extends GenericFilterBean {
 	hReq = (HttpServletRequest) sReq;
 	hRes = (HttpServletResponse) sRes;
 
+	S.out("::: " + hReq.getMethod() + "::: " + " - " + hReq.getRequestURI(), this);
+	final String[] GET_BLOQUEADOS = {};
+	final String[] POST_LIBERADOS = {"api/followers"};
+	
 	String username = getUser();
 	S.out("REQUEST FILTER USER: " + username, this);
-	
+
 	if (username != null) {
 	    hReq.setAttribute("requestUser", username);
 	}
-
-	S.out(hReq.getMethod() + " - " + hReq.getRequestURI(), this);
-	final String[] GET_BLOQUEADOS = {};
-	final String[] POST_LIBERADOS = {"api/followers"};
 
 	if (hReq.getMethod().equals("GET")) {
 	    if (!Arrays.asList(GET_BLOQUEADOS).contains(hReq.getRequestURI())) {
@@ -71,7 +71,6 @@ public class TokenFilter extends GenericFilterBean {
 	}
 
 	//hReq.setAttribute("requestUser", username);
-
 	fc.doFilter(sReq, sRes);
 
     }

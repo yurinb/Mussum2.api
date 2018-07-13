@@ -6,6 +6,7 @@ import com.mussum.models.db.Recado;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.RecadoRepository;
+import com.mussum.util.S;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class RecadoController {
     //@JsonIgnore
     public ResponseEntity getRecados() {
 	String username = context.getHeader("username");
+	S.out("GET Recados from "+username, this);
 	if (username == null) {
 	    return ResponseEntity.badRequest().body("Erro: Username não enviado.");
 
