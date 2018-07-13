@@ -6,7 +6,6 @@ import com.mussum.models.db.Recado;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.RecadoRepository;
-import com.mussum.util.S;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,8 @@ public class RecadoController {
     @PostMapping()
     @ResponseBody
     public Recado postRecado(@RequestBody Recadof recado) {
-	Professor prof = profRep.findByUsername((String) context.getAttribute("requestUser"));
+	String requestUser = (String) context.getAttribute("requestUser");
+	Professor prof = profRep.findByUsername(requestUser);
 	Recado newRecado = new Recado(recado.titulo, recado.descricao, prof);
 	Feed feed = new Feed(newRecado);
 	feedRep.save(feed);
@@ -71,8 +71,6 @@ public class RecadoController {
     public Recado putRecado(
 	    @RequestBody Map<String, String> payload,
 	    @PathVariable Integer id) {
-	S.out("RECADO-------------> titulo:  " +  payload.get("titulo"), this);
-	S.out("RECADO-------------> descricao: " + payload.get("descricao"), this);
 	Recado recado = recadoRep.findById(id).get();
 	recado.setTitulo(payload.get("titulo"));
 	recado.setDescricao(payload.get("descricao"));

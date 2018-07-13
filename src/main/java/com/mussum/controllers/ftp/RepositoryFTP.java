@@ -99,11 +99,6 @@ public class RepositoryFTP {
 	    List<Arquivo> dbFiles = arqRep.findByDir(dir);
 	    List<Pasta> dbFolders = pastaRep.findByDir(dir);
 
-	    S.out("SIZE:::::::DB file" + dbFiles.size(), this);
-	    S.out("SIZE:::::::FTP file" + ftpArq.size(), this);
-	    S.out("SIZE:::::::DB folder " + dbFolders.size(), this);
-	    S.out("SIZE:::::::FTP folder" + ftpPasta.size(), this);
-
 	    for (int i = 0; i < dbFiles.size(); i++) {
 		Arquivo loopFile = dbFiles.get(i);
 		if (!ftpArq.contains(loopFile)) {
@@ -127,13 +122,50 @@ public class RepositoryFTP {
 	    dbFiles = arqRep.findByDir(dir);
 	    dbFolders = pastaRep.findByDir(dir);
 
-	    S.out("RETURNING UPDATED FTP FILES/FOLDERS", this);
-	    requestDirectory.getArquivos().addAll(dbFiles);
-	    requestDirectory.getPastas().addAll(dbFolders);
+	    List<Arquivo> resFiles = new ArrayList();
+	    List<Pasta> resFolders = new ArrayList();
 
+	    if (context.getAttribute("requestUser") == null) {
+		S.out("Usuario anonimo: Retirando items privado do response.", this);
+		for (Arquivo file : dbFiles) {
+		    if (file.isVisivel()) {
+			resFiles.add(file);
+		    }
+		}
+		for (Pasta folder : dbFolders) {
+		    if (folder.isVisivel()) {
+			resFolders.add(folder);
+		    }
+		}
+
+	    } else {
+		if (!username.equals((String) context.getAttribute("requestUser"))) {
+		    S.out(username, this);
+		    S.out((String) context.getAttribute("requestUser"), this);
+		    S.out("Retirando items privado do response.", this);
+		    for (Arquivo file : dbFiles) {
+			if (file.isVisivel()) {
+			    resFiles.add(file);
+			}
+		    }
+		    for (Pasta folder : dbFolders) {
+			if (folder.isVisivel()) {
+			    resFolders.add(folder);
+			}
+		    }
+		} else {
+		    resFiles = dbFiles;
+		    resFolders = dbFolders;
+		}
+	    }
+
+	    requestDirectory.getArquivos().addAll(resFiles);
+	    requestDirectory.getPastas().addAll(resFolders);
+
+	    S.out("GET repositorys sucess", this);
 	} catch (Exception e) {
 	    ftp.disconnect();
-	    S.out(e.getCause().getMessage(), this);
+	    S.out("ERRO: " + e.getCause().getLocalizedMessage(), this);
 	}
 	return requestDirectory;
     }
@@ -271,7 +303,6 @@ public class RepositoryFTP {
 	    ftp.disconnect();
 
 	    pastaRep.save(pasta);
-	    S.out("=============bombou o put " + pasta.getDir() + "/" + pasta.getNome(), this);
 	    return ResponseEntity.ok("Nome da pasta alterado com sucesso.");
 	} catch (IOException ex) {
 	    S.out("ERRO: " + ex.getMessage(), this);

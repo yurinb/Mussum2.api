@@ -12,7 +12,7 @@ public class Arquivo extends MussumEntity {
 
     private String nome;
 
-    private boolean visivel;
+    private boolean visivel = true;
 
     private String comentario;
 
