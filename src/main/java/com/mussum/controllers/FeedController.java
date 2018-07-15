@@ -27,47 +27,68 @@ public class FeedController {
     @Autowired
     private FeedRepository feedRepo;
 
+    public FeedController() {
+    }
+
+    public FeedController(HttpServletRequest context, FeedRepository feedRepo) {
+	this.context = context;
+	this.feedRepo = feedRepo;
+    }
+
     @GetMapping()
     @ResponseBody
     //@JsonIgnore
     public List<Feed> getFeeds() {
-        return feedRepo.findAll();
+	//changeOldDirByNewDir("angelo/adsss", "funcionou sera");
+	return feedRepo.findAll();
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public Feed getFeed(@PathVariable Integer id) {
-        return feedRepo.findById(id).get();
+	return feedRepo.findById(id).get();
     }
 
     @PostMapping()
     @ResponseBody
     public Feed postFeed(@RequestBody @Valid Feed aviso) {
-        return feedRepo.save(aviso);
+	return feedRepo.save(aviso);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
     public Feed putFeed(@RequestBody Feed newFeed, @PathVariable Integer id) {
-        newFeed.setId(feedRepo.findById(id).get().getId());
-        feedRepo.save(newFeed);
-        return newFeed;
+	newFeed.setId(feedRepo.findById(id).get().getId());
+	feedRepo.save(newFeed);
+	return newFeed;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Feed deleteAviso(@PathVariable Integer id) {
+    public Feed deleteFeed(@PathVariable Integer id) {
 	S.out(String.valueOf(id), this);
-        Feed feed = feedRepo.findById(id).get();
-        S.out("DELETE Feed: " + feed.getUsername() + " : " + feed.getTitulo(), this);
-        if (feed.getUsername().equals((String) context.getAttribute("requestUser"))) {
-            feedRepo.delete(feed);
-            S.out("delete Feed: ok", this);
-            return feed;
+	Feed feed = feedRepo.findById(id).get();
+	S.out("DELETE Feed: " + feed.getUsername() + " : " + feed.getTitulo(), this);
+	if (feed.getUsername().equals((String) context.getAttribute("requestUser"))) {
+	    feedRepo.delete(feed);
+	    S.out("delete Feed: ok", this);
+	    return feed;
 
-        }
-        S.out("delete Feed: ERRO 404", this);
-        return null;
+	}
+	S.out("delete Feed: ERRO 404", this);
+	return null;
+    }
+
+    public void changeOldDirByNewDir(String oldDir, String newDir) {
+	List<Feed> currentFeeds = feedRepo.findAll();
+	currentFeeds.forEach((feed) -> {
+	    if (feed.getDir().startsWith(oldDir)) {
+		int limiter = oldDir.length();
+		String dirAfterLimiter = feed.getDir().substring(limiter);
+		feed.setDir(newDir+dirAfterLimiter);
+		feedRepo.save(feed);
+	    }
+	});
     }
 
 }

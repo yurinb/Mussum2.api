@@ -30,8 +30,9 @@ public class TokenFilter extends GenericFilterBean {
 //        fc.doFilter(sr, sr1); //IGNORANDO TOKEN ((TESTE))
 	hReq = (HttpServletRequest) sReq;
 	hRes = (HttpServletResponse) sRes;
-
-	S.out("::: " + hReq.getMethod() + "::: " + " - " + hReq.getRequestURI(), this);
+	S.out("", this);
+	S.out("[[[ " + hReq.getMethod() + " ]]] " + " - " + hReq.getRequestURI(), this);
+	S.out("", this);
 	final String[] GET_BLOQUEADOS = {};
 	final String[] POST_LIBERADOS = {"api/followers"};
 	

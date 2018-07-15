@@ -1,9 +1,11 @@
 package com.mussum.controllers.ftp;
 
+import com.mussum.controllers.FeedController;
 import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.models.ftp.Arquivo;
 import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.ArquivoRepository;
+import com.mussum.repository.FeedRepository;
 import com.mussum.repository.PastaRepository;
 import com.mussum.util.S;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,9 @@ public class RepositoryFTP {
 
     @Autowired
     private ArquivoRepository arqRep;
+
+    @Autowired
+    private FeedRepository feedRep;
 
     private final FTPcontrol ftp = new FTPcontrol();
 
@@ -269,19 +274,25 @@ public class RepositoryFTP {
     @ResponseBody
     public ResponseEntity putDirectory(
 	    @PathVariable("id") Integer id,
-	    @RequestBody Map<String, String> payload
+	    @RequestBody Map<String, String> body
     ) {
 	try {
 	    Pasta pasta = pastaRep.getOne(id);
+	    String newName = body.get("name");
+
+	    S.out("======================== Alterando FEED...", this);
+	    FeedController feedControl = new FeedController(context, feedRep);
+	    feedControl.changeOldDirByNewDir(pasta.getDir() + "/" + pasta.getNome(), pasta.getDir() + "/" + newName);
+	    S.out("...FEED alterado.", this);
 
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(pasta.getDir());
 	    for (FTPFile file : ftpFiles) {
 		if (file.getName().equals(pasta.getNome())) {
 		    ftp.getFtp().changeWorkingDirectory(pasta.getDir());
-		    ftp.getFtp().rename(pasta.getNome(), payload.get("name"));
-		    pasta.setNome(payload.get("name"));
-		    file.setName(payload.get("name"));
+		    ftp.getFtp().rename(pasta.getNome(), newName);
+		    pasta.setNome(newName);
+		    file.setName(newName);
 		    break;
 		}
 	    }
