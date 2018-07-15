@@ -13,8 +13,12 @@ public class Usuario extends MussumEntity {
     @NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
-    private String role = "professor"; // "professor" ou "admin" if its a super user
+    private String role; // "professor" ou "admin" if its a super user
 
+    public void setDefaultRole() {
+	this.role = "professor";
+    }
+    
     public String getUsername() {
         return username;
     }
@@ -39,25 +43,25 @@ public class Usuario extends MussumEntity {
         this.role = roles;
     }
 
-    public void addRole(String role) {
-        this.role += "," + role;
-    }
+//    public void addRole(String role) {
+//        this.role += "," + role;
+//    }
 
-    public void removeRole(String role) {
-        String[] currentRoles = this.role.split(",");
-        String newRoles = "";
-        int count = 0;
-        for (String rol : currentRoles) {
-            count++;
-            if (!rol.equalsIgnoreCase(role)) {
-                if (count == currentRoles.length) {
-                    newRoles += rol;
-                } else {
-                    newRoles += rol + ",";
-                }
-            }
-        }
-        this.role = newRoles;
-    }
+//    public void removeRole(String role) {
+//        String[] currentRoles = this.role.split(",");
+//        String newRoles = "";
+//        int count = 0;
+//        for (String rol : currentRoles) {
+//            count++;
+//            if (!rol.equalsIgnoreCase(role)) {
+//                if (count == currentRoles.length) {
+//                    newRoles += rol;
+//                } else {
+//                    newRoles += rol + ",";
+//                }
+//            }
+//        }
+//        this.role = newRoles;
+//    }
 
 }

@@ -43,6 +43,7 @@ public class ProfessorController {
     @PostMapping()
     @ResponseBody
     public Professor postProfessor(@RequestBody @Valid Professor prof) {
+	prof.setDefaultRole();
 	Social social = new Social();
 	social.setProfessor(prof);
 	return profRep.save(prof);
