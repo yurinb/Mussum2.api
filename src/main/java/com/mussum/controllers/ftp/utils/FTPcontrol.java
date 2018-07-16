@@ -57,15 +57,15 @@ public class FTPcontrol {
 
 	    } else {
 		S.out("ERROR: FTP.LOGIN", this);
+		S.out(" ... trying to connect again in 1seg...", this);
+		try {
+		    Thread.sleep(1000);
+		    connect();
+		} catch (InterruptedException ex) {
+		    S.out("fail to wait 1seg...", this);
+		}
 	    }
 	} catch (IOException e) {
-	    try {
-		S.out(e.getMessage() + " ... trying to connect again in 1seg...", this);
-		Thread.sleep(1000);
-	    } catch (InterruptedException ex) {
-		Logger.getLogger(FTPcontrol.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-		connect();
 	}
     }
 
