@@ -35,7 +35,7 @@ public class TokenFilter extends GenericFilterBean {
 	S.out("", this);
 	final String[] GET_BLOQUEADOS = {};
 	final String[] POST_LIBERADOS = {"api/followers"};
-	
+
 	String username = getUser();
 	S.out("REQUEST FILTER USER: " + username, this);
 
@@ -76,7 +76,7 @@ public class TokenFilter extends GenericFilterBean {
 
     }
 
-    private String getUser() throws IOException {
+    private String getUser() {
 	S.out("Verifing TOKEN...", this);
 
 	String header = hReq.getHeader("Authorization");

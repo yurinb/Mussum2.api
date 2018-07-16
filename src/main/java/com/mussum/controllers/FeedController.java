@@ -96,14 +96,26 @@ public class FeedController {
 	currentFeed.setArquivo(newName);
 	feedRepo.save(currentFeed);
     }
-    
-    public void deleteByDir(String dir) {
+
+    public void deleteAllByDir(String dir) {
 	List<Feed> currentFeeds = feedRepo.findAll();
 	currentFeeds.forEach((feed) -> {
 	    if (feed.getDir().startsWith(dir)) {
 		feedRepo.delete(feed);
 	    }
 	});
+    }
+
+    public void deleteByDirAndName(String dir, String name) {
+	List<Feed> currentFeed = feedRepo.findAll();
+	for (Feed feed : currentFeed) {
+	    if (feed.getDir().equals(dir)) {
+		if (feed.getArquivo().startsWith(name)) {
+		    feedRepo.delete(feed);
+		    break;
+		}
+	    }
+	}
     }
 
 }

@@ -235,14 +235,15 @@ public class RepositoryFTP {
     public ResponseEntity deleteRepo(
 	    @RequestHeader("dir") String dir,
 	    @RequestHeader("name") String name) {
+	String repo = dir + "/" + name;
 	try {
 	    ftp.connect();
-	    clean(dir + "/" + name);
-	    boolean removeu = ftp.getFtp().removeDirectory(dir + "/" + name);
+	    clean(repo);
+	    boolean removeu = ftp.getFtp().removeDirectory(repo);
 	    ftp.disconnect();
 	    if (removeu) {
 		 FeedController feedControl = new FeedController(context, feedRep);
-		 feedControl.deleteByDir(dir);
+		 feedControl.deleteAllByDir(repo);
 	    }
 	    return ResponseEntity.ok(dir + " removeu? " + removeu);
 	} catch (IOException ex) {

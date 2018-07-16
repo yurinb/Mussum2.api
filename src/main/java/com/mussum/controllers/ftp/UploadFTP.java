@@ -216,15 +216,19 @@ public class UploadFTP {
 	    @RequestHeader("name") String name
     ) {
 	try {
-	    ftp.connect();
 	    S.out("DELETE", this);
 	    S.out(dir, this);
 	    S.out(name, this);
-	    Arquivo dbFile = arqRep.findByDirInAndNomeIn(dir, name).get(0);
-	    arqRep.delete(dbFile);
+	    ftp.connect();
 	    boolean removeu = ftp.getFtp().deleteFile(dir + "/" + name);
 	    ftp.disconnect();
-	    return ResponseEntity.ok(dir + " removeu? " + removeu);
+	    if (removeu) {
+	    Arquivo dbFile = arqRep.findByDirInAndNomeIn(dir, name).get(0);
+		arqRep.delete(dbFile);
+		FeedController feedControl = new FeedController(context, feedRep);
+		 feedControl.deleteByDirAndName(dir, name);
+	    }
+	    return ResponseEntity.ok(dir + " removido > " + removeu);
 	} catch (IOException ex) {
 	    return ResponseEntity.badRequest().body(" falha ao remover diretorio: " + dir);
 	}
@@ -240,19 +244,28 @@ public class UploadFTP {
 	    S.out("PUT:", this);
 	    Arquivo dbArquivo = arqRep.findById(id).get();
 	    S.out("PUT arquivo/link: " + dbArquivo.getNome(), this);
+	    FeedController feedControl = new FeedController(context, feedRep);
 
-	    dbArquivo.setComentario(payload.get("comment"));
-	    dbArquivo.setLink(payload.get("link"));
+	    String newName = payload.get("name");
+	    String newLink = payload.get("comment");
+	    String newComment = payload.get("link");
+	    
+	    if (newName != null) {
+		dbArquivo.setNome(newName);
+	    }
+	    if (newLink != null) {
+		dbArquivo.setLink(newLink);
+	    }
+	    if (newComment != null) {
+		dbArquivo.setComentario(newComment);
+	    }
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(dbArquivo.getDir());
-	    FeedController feedControl = new FeedController(context, feedRep);
-	    String newName = payload.get("name");
 	    for (FTPFile file : ftpFiles) {
 		if (file.getName().equals(dbArquivo.getNome())) {
 		    ftp.getFtp().changeWorkingDirectory(dbArquivo.getDir());
 		    ftp.getFtp().rename(dbArquivo.getNome(), newName);
 		    feedControl.changeOldFileNameByNewFileName(dbArquivo.getNome(), newName);
-		    dbArquivo.setNome(newName);
 		    file.setName(newName);
 		    break;
 		}
