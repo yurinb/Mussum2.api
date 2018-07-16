@@ -1,6 +1,7 @@
 package com.mussum.controllers.ftp;
 
 import com.mussum.controllers.EmailController;
+import com.mussum.controllers.FeedController;
 import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.controllers.ftp.utils.Strings;
 import com.mussum.models.db.Feed;
@@ -49,16 +50,23 @@ public class UploadFTP {
 
     @Autowired
     private ProfessorRepository profRep;
-    
+
     @Autowired
     private FollowerRepository follRep;
-    
+
     @Autowired
     private JavaMailSender mailSender;
 
-    private EmailController emailController = new EmailController();
+    private final EmailController emailController = new EmailController();
 
     private final FTPcontrol ftp = new FTPcontrol();
+
+    public UploadFTP() {
+    }
+
+    public UploadFTP(ArquivoRepository arqRep) {
+	this.arqRep = arqRep;
+    }
 
     //Multiple file upload
     @PostMapping("/api/upload")
@@ -237,12 +245,15 @@ public class UploadFTP {
 	    dbArquivo.setLink(payload.get("link"));
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(dbArquivo.getDir());
+	    FeedController feedControl = new FeedController(context, feedRep);
+	    String newName = payload.get("name");
 	    for (FTPFile file : ftpFiles) {
 		if (file.getName().equals(dbArquivo.getNome())) {
 		    ftp.getFtp().changeWorkingDirectory(dbArquivo.getDir());
-		    ftp.getFtp().rename(dbArquivo.getNome(), payload.get("name"));
-		    dbArquivo.setNome(payload.get("name"));
-		    file.setName(payload.get("name"));
+		    ftp.getFtp().rename(dbArquivo.getNome(), newName);
+		    feedControl.changeOldFileNameByNewFileName(dbArquivo.getNome(), newName);
+		    dbArquivo.setNome(newName);
+		    file.setName(newName);
 		    break;
 		}
 	    }
@@ -255,6 +266,18 @@ public class UploadFTP {
 	    return ResponseEntity.noContent().build();
 	}
 
+    }
+
+    public void changeOldDirByNewDir(String oldDir, String newDir) {
+	List<Arquivo> currentFiles = arqRep.findAll();
+	currentFiles.forEach((file) -> {
+	    if (file.getDir().startsWith(oldDir)) {
+		int limiter = oldDir.length();
+		String dirAfterLimiter = file.getDir().substring(limiter);
+		file.setDir(newDir + dirAfterLimiter);
+		arqRep.save(file);
+	    }
+	});
     }
 
 }

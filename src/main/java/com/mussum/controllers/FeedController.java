@@ -85,8 +85,23 @@ public class FeedController {
 	    if (feed.getDir().startsWith(oldDir)) {
 		int limiter = oldDir.length();
 		String dirAfterLimiter = feed.getDir().substring(limiter);
-		feed.setDir(newDir+dirAfterLimiter);
+		feed.setDir(newDir + dirAfterLimiter);
 		feedRepo.save(feed);
+	    }
+	});
+    }
+
+    public void changeOldFileNameByNewFileName(String oldName, String newName) {
+	Feed currentFeed = feedRepo.findByArquivo(oldName);
+	currentFeed.setArquivo(newName);
+	feedRepo.save(currentFeed);
+    }
+    
+    public void deleteByDir(String dir) {
+	List<Feed> currentFeeds = feedRepo.findAll();
+	currentFeeds.forEach((feed) -> {
+	    if (feed.getDir().startsWith(dir)) {
+		feedRepo.delete(feed);
 	    }
 	});
     }

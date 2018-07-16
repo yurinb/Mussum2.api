@@ -240,6 +240,10 @@ public class RepositoryFTP {
 	    clean(dir + "/" + name);
 	    boolean removeu = ftp.getFtp().removeDirectory(dir + "/" + name);
 	    ftp.disconnect();
+	    if (removeu) {
+		 FeedController feedControl = new FeedController(context, feedRep);
+		 feedControl.deleteByDir(dir);
+	    }
 	    return ResponseEntity.ok(dir + " removeu? " + removeu);
 	} catch (IOException ex) {
 	    return ResponseEntity.badRequest().body(" falha ao remover diretorio: " + dir);
@@ -280,14 +284,14 @@ public class RepositoryFTP {
 	    Pasta pasta = pastaRep.getOne(id);
 	    String newName = body.get("name");
 
-	    S.out("======================== Alterando FEED...", this);
 	    FeedController feedControl = new FeedController(context, feedRep);
-	    feedControl.changeOldDirByNewDir(pasta.getDir() + "/" + pasta.getNome(), pasta.getDir() + "/" + newName);
-	    S.out("...FEED alterado.", this);
-
+	    UploadFTP uploadControl = new UploadFTP(arqRep);
+	    
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(pasta.getDir());
 	    for (FTPFile file : ftpFiles) {
+		feedControl.changeOldDirByNewDir(pasta.getDir() + "/" + pasta.getNome(), pasta.getDir() + "/" + newName);
+		uploadControl.changeOldDirByNewDir(pasta.getDir() + "/" + pasta.getNome(), pasta.getDir() + "/" + newName);
 		if (file.getName().equals(pasta.getNome())) {
 		    ftp.getFtp().changeWorkingDirectory(pasta.getDir());
 		    ftp.getFtp().rename(pasta.getNome(), newName);
