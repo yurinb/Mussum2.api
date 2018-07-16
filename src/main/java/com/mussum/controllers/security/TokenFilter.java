@@ -36,6 +36,17 @@ public class TokenFilter extends GenericFilterBean {
 	final String[] GET_BLOQUEADOS = {};
 	final String[] POST_LIBERADOS = {"api/followers"};
 
+	if (hReq.getMethod() == null) {
+	    S.out("metodo null? wtf aqui nao", this);
+	    return;
+	}
+
+	if (hReq.getMethod().equals("OPTIONS")) {
+	    S.out("OPTIONS: OK", this);
+	    fc.doFilter(sReq, sRes);
+	    return;
+	}
+
 	String username = getUser();
 	S.out("REQUEST FILTER USER: " + username, this);
 
@@ -58,12 +69,6 @@ public class TokenFilter extends GenericFilterBean {
 		fc.doFilter(sReq, sRes);
 		return;
 	    }
-	}
-
-	if (hReq.getMethod().equals("OPTIONS")) {
-	    S.out("OPTIONS: OK", this);
-	    fc.doFilter(sReq, sRes);
-	    return;
 	}
 
 	if (username == null) {

@@ -43,6 +43,11 @@ public class EmailController {
 	Follower foll = follRep.getOne(1);
 	S.out(foll.getEmail(), this);
 	List<Follower> followers = follRep.findAllByProfessor(professor);
+	
+	if (followers.isEmpty()) {
+	    return;
+	}
+	
 	S.out("Followers finded", this);
 	for (Follower follower : followers) {
 	    S.out("Followers: follower X", this);

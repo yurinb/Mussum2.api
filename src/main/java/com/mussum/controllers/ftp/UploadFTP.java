@@ -223,10 +223,10 @@ public class UploadFTP {
 	    boolean removeu = ftp.getFtp().deleteFile(dir + "/" + name);
 	    ftp.disconnect();
 	    if (removeu) {
-	    Arquivo dbFile = arqRep.findByDirInAndNomeIn(dir, name).get(0);
+		Arquivo dbFile = arqRep.findByDirInAndNomeIn(dir, name).get(0);
 		arqRep.delete(dbFile);
 		FeedController feedControl = new FeedController(context, feedRep);
-		 feedControl.deleteByDirAndName(dir, name);
+		feedControl.deleteByDirAndName(dir, name);
 	    }
 	    return ResponseEntity.ok(dir + " removido > " + removeu);
 	} catch (IOException ex) {
@@ -245,27 +245,37 @@ public class UploadFTP {
 	    Arquivo dbArquivo = arqRep.findById(id).get();
 	    S.out("PUT arquivo/link: " + dbArquivo.getNome(), this);
 	    FeedController feedControl = new FeedController(context, feedRep);
-
-	    String newName = payload.get("name");
-	    String newLink = payload.get("comment");
-	    String newComment = payload.get("link");
-	    
-	    if (newName != null) {
-		dbArquivo.setNome(newName);
+	    int extensionIndex = dbArquivo.getNome().lastIndexOf(".");
+	    String extension = "";
+	    if (extensionIndex > 0) {
+		extension = dbArquivo.getNome().substring(extensionIndex);
 	    }
+	    String newName = payload.get("name");
+	    if (!newName.endsWith(extension)) {
+		newName += extension;
+	    }
+	    String newLink = payload.get("link");
+	    String newComment = payload.get("comment");
+
+	    Feed feed = feedRep.findByDirInAndArquivoIn(dbArquivo.getDir(), dbArquivo.getNome());
+
 	    if (newLink != null) {
 		dbArquivo.setLink(newLink);
+		feed.setLink(newLink);
 	    }
 	    if (newComment != null) {
 		dbArquivo.setComentario(newComment);
+		feed.setComentario(newComment);
 	    }
+	    feedRep.save(feed);
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(dbArquivo.getDir());
 	    for (FTPFile file : ftpFiles) {
 		if (file.getName().equals(dbArquivo.getNome())) {
 		    ftp.getFtp().changeWorkingDirectory(dbArquivo.getDir());
 		    ftp.getFtp().rename(dbArquivo.getNome(), newName);
-		    feedControl.changeOldFileNameByNewFileName(dbArquivo.getNome(), newName);
+		    feedControl.changeOldFileNameByNewFileName(dbArquivo.getDir(), dbArquivo.getNome(), newName);
+		    dbArquivo.setNome(newName);
 		    file.setName(newName);
 		    break;
 		}
@@ -274,7 +284,7 @@ public class UploadFTP {
 	    arqRep.save(dbArquivo);
 	    S.out("PUT arquivo: OK", this);
 	    return ResponseEntity.ok(dbArquivo);
-	} catch (Exception e) {
+	} catch (IOException e) {
 	    S.out("ERRO: " + e.getMessage(), this);
 	    return ResponseEntity.noContent().build();
 	}

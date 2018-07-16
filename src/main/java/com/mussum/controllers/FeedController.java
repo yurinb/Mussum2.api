@@ -91,8 +91,8 @@ public class FeedController {
 	});
     }
 
-    public void changeOldFileNameByNewFileName(String oldName, String newName) {
-	Feed currentFeed = feedRepo.findByArquivo(oldName);
+    public void changeOldFileNameByNewFileName(String dir, String oldName, String newName) {
+	Feed currentFeed = feedRepo.findByDirInAndArquivoIn(dir, oldName);
 	currentFeed.setArquivo(newName);
 	feedRepo.save(currentFeed);
     }
