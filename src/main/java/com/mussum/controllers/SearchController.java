@@ -58,6 +58,7 @@ public class SearchController {
 		    continue;
 		}
 		obj.setProfessor(professorName);
+		obj.setUsername(profUsername);
 
 		objsFound.add(obj);
 	    }
@@ -80,6 +81,7 @@ public class SearchController {
 		    continue;
 		}
 		obj.setProfessor(professorName);
+		obj.setUsername(profUsername);
 
 		objsFound.add(obj);
 	    }
@@ -92,6 +94,7 @@ public class SearchController {
 	String name;
 	String dir;
 	String professor;
+	String username;
 	String date;
 	String type;
 
@@ -101,6 +104,14 @@ public class SearchController {
 
 	public void setName(String name) {
 	    this.name = name;
+	}
+
+	public String getUsername() {
+	    return username;
+	}
+
+	public void setUsername(String username) {
+	    this.username = username;
 	}
 
 	public String getDir() {
