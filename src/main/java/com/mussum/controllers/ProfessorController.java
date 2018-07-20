@@ -81,7 +81,7 @@ public class ProfessorController {
 	if (newP.getPassword() != null) {
 	    prof.setPassword(newP.getPassword());
 	}
-	if (newP.getRole() != null) {
+	if (newP.getRole() != null || !newP.getRole().isEmpty()) {
 	    prof.setRole(newP.getRole());
 	}
 	if (newP.getSobre() != null) {
@@ -107,6 +107,8 @@ public class ProfessorController {
     @ResponseBody
     public Professor deleteProfessor(@PathVariable Integer id) {
 	Professor prof = profRep.findById(id).get();
+	Social social = socRep.findByProfessor(prof);
+	socRep.delete(social);
 	profRep.delete(prof);
 	return prof;
     }

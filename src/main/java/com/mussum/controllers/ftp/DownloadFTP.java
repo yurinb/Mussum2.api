@@ -53,8 +53,9 @@ public class DownloadFTP {
 	    S.out("requesting user PHOTO: " + prof, this);
 
 	    ftp.connect();
-	    ftp.getFtp().setSoTimeout(60);
 	    String[] fotosPerfil = ftp.getContentFrom("\\_res\\perfil_img\\");
+	    ftp.disconnect();
+
 	    String profPhotoName = null;
 	    for (String foto : fotosPerfil) {
 		S.out("FOTO: " + foto, this);
@@ -63,14 +64,14 @@ public class DownloadFTP {
 		    break;
 		}
 	    }
-
+	    ftp.connect();
 	    InputStream img = ftp.getFile("\\_res\\perfil_img\\", profPhotoName);
+	    ftp.disconnect();
+	    
 	    if (img == null) {
-		ftp.disconnect();
 		S.out("ERRO: photo " + profPhotoName + " not found", this);
 		return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);
 	    }
-	    ftp.disconnect();
 
 	    String base64 = Convert.inputStreamToBASE64(img);
 	    S.out("user photo served.", this);
