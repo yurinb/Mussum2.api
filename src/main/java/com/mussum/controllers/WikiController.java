@@ -5,6 +5,7 @@ import com.mussum.models.db.Wiki;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.WikiRepository;
+import com.mussum.util.S;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -25,13 +26,13 @@ public class WikiController {
 
     @Autowired
     private WikiRepository wikiRep;
-    
+
     @Autowired
     private FeedRepository feedRep;
-    
+
     @Autowired
     private ProfessorRepository profRep;
-    
+
     @Autowired
     private HttpServletRequest request;
 
@@ -58,17 +59,38 @@ public class WikiController {
     @PutMapping("/{id}")
     @ResponseBody
     public Wiki putWiki(@RequestBody Wiki newWiki, @PathVariable Integer id) {
-	newWiki.setId(wikiRep.findById(id).get().getId());
+	Wiki old = wikiRep.findById(id).get();
+	newWiki.setId(old.getId());
 	wikiRep.save(newWiki);
+
+	try {
+	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("wiki", old.getTitulo());
+	    Feed oldFeed = oldFeeds.get(0);
+	    Feed update = new Feed(newWiki, profRep.findByUsername(oldFeed.getUsername()));
+	    update.setId(oldFeed.getId());
+	    feedRep.save(update);
+	} catch (Exception e) {
+	    // S.out("Feed nao econtrado", this);
+	}
+
 	return newWiki;
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
     public Wiki deleteWiki(@PathVariable Integer id) {
-	Wiki aviso = wikiRep.findById(id).get();
-	wikiRep.delete(aviso);
-	return aviso;
+	Wiki wiki = wikiRep.findById(id).get();
+	wikiRep.delete(wiki);
+
+	try {
+	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("wiki", wiki.getTitulo());
+	    Feed oldFeed = oldFeeds.get(0);
+	    feedRep.delete(oldFeed);
+	} catch (Exception e) {
+	    // S.out("Feed nao econtrado", this);
+	}
+
+	return wiki;
     }
 
 }

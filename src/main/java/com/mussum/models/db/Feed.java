@@ -51,7 +51,7 @@ public class Feed extends MussumEntity {
         S.out("new FEED: " + this.tipo, this);
     }
     public Feed(Horario horario) {
-        this.tipo = "wiki";
+        this.tipo = "horario";
         this.titulo = horario.getTitulo();
         this.link = horario.getUrl();
         S.out("new FEED: " + this.tipo, this);
@@ -102,6 +102,8 @@ public class Feed extends MussumEntity {
     public String getTitulo() {
         return titulo;
     }
+    
+    
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;

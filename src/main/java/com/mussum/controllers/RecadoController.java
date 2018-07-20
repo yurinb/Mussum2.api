@@ -7,6 +7,7 @@ import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.RecadoRepository;
 import com.mussum.util.S;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class RecadoController {
     //@JsonIgnore
     public ResponseEntity getRecados() {
 	String username = context.getHeader("username");
-	S.out("GET Recados from "+username, this);
+	S.out("GET Recados from " + username, this);
 	if (username == null) {
 	    return ResponseEntity.badRequest().body("Erro: Username não enviado.");
 
@@ -74,9 +75,20 @@ public class RecadoController {
 	    @RequestBody Map<String, String> payload,
 	    @PathVariable Integer id) {
 	Recado recado = recadoRep.findById(id).get();
+	String oldTitulo = recado.getTitulo();
 	recado.setTitulo(payload.get("titulo"));
 	recado.setDescricao(payload.get("descricao"));
 	recadoRep.save(recado);
+	try {
+	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("recado", oldTitulo);
+	    Feed oldFeed = oldFeeds.get(0);
+	    Feed update = new Feed(recado);
+	    update.setId(oldFeed.getId());
+	    feedRep.save(update);
+	} catch (Exception e) {
+	    // S.out("Feed nao econtrado", this);
+	}
+
 	return recado;
     }
 
@@ -85,6 +97,15 @@ public class RecadoController {
     public Recado deleteRecado(@PathVariable Integer id) {
 	Recado recado = recadoRep.findById(id).get();
 	recadoRep.delete(recado);
+	
+	try {
+	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("recado", recado.getTitulo());
+	    Feed feed = oldFeeds.get(0);
+	    feedRep.delete(feed);
+	} catch (Exception e) {
+	    // S.out("Feed nao econtrado", this);
+	}
+	
 	return recado;
     }
 
