@@ -1,6 +1,7 @@
 package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,13 +14,28 @@ public class Social extends MussumEntity {
     @JoinColumn(name = "professor_id")
     private Professor professor;
 
+    @Column(columnDefinition = "TEXT")
     private String site;
+
+    @Column(columnDefinition = "TEXT")
     private String github;
+
+    @Column(columnDefinition = "TEXT")
     private String facebook;
+
+    @Column(columnDefinition = "TEXT")
     private String twitter;
+
+    @Column(columnDefinition = "TEXT")
     private String whatsapp;
+
+    @Column(columnDefinition = "TEXT")
     private String linkedin;
+
+    @Column(columnDefinition = "TEXT")
     private String google;
+
+    @Column(columnDefinition = "TEXT")
     private String youtube;
 
     public Professor getProfessor() {
@@ -93,5 +109,5 @@ public class Social extends MussumEntity {
     public void setYoutube(String youtube) {
 	this.youtube = youtube;
     }
-    
+
 }

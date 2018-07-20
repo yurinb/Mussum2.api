@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -16,14 +17,21 @@ public class Professor extends Usuario {
 
     private String email;
 
+    @Column(columnDefinition = "TEXT")
     private String sobre;
 
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
+    @Column(columnDefinition = "TEXT")
     private String resumo;
     
+    @Column(columnDefinition = "TEXT")
     private String formacao;
 
+    @Column(columnDefinition = "TEXT")
+    private String fotolink = "http://franquia.globalmedclinica.com.br/wp-content/uploads/2016/01/investidores-img-02-01.png";
+    
     public String getResumo() {
 	return resumo;
     }
@@ -40,7 +48,6 @@ public class Professor extends Usuario {
 	this.formacao = formacao;
     }
     
-    private String fotolink = "http://franquia.globalmedclinica.com.br/wp-content/uploads/2016/01/investidores-img-02-01.png";
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.REMOVE)
     private Set<Recado> recados;

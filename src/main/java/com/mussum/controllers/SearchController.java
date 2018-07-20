@@ -101,11 +101,7 @@ public class SearchController {
 	    return false;
 	}
 	String dir = file.getDir();
-	if (checkPublicDir(dir)) {
-	    return false;
-	}
-
-	return true;
+	return checkPublicDir(dir) != false;
     }
 
     private boolean isPublic(Pasta folder) {
@@ -113,11 +109,7 @@ public class SearchController {
 	    return false;
 	}
 	String dir = folder.getDir();
-	if (checkPublicDir(dir)) {
-	    return false;
-	}
-
-	return true;
+	return checkPublicDir(dir) != false;
     }
 
     private boolean checkPublicDir(String dir) {
@@ -125,21 +117,15 @@ public class SearchController {
 	    try {
 		String[] dirs = dir.split("/");
 		String folderName = dirs[dirs.length - 1];
-		S.out("FOLDER NAME:::::::::::::::::::::::" + folderName, this);
 		String folderDir = dir.substring(0, dir.length() - folderName.length() - 1);
-		S.out("FOLDER DIR:::::::::::::::::::::::" + folderDir, this);
 		List<Pasta> pastas = this.foldersRep.findByDirInAndNomeIn(folderDir, folderName);
 		for (Pasta pasta : pastas) {
-		    S.out("PASTA FOUND " + pasta.getNome(), this);
 		    if (pasta.isVisivel() == false) {
-			S.out("NOT VISIBLE", this);
 			return false;
 		    }
-		    S.out("VISIBLE", this);
 		}
 		dir = folderDir;
 	    } catch (Exception e) {
-		S.out("BREAK CHECK PUBLIC", this);
 		break;
 	    }
 	}

@@ -1,7 +1,7 @@
 create table follower (
     id INTEGER AUTO_INCREMENT,
     email VARCHAR(100) NOT NULL,
-    pasta_dir VARCHAR(300) NOT NULL,
+    pasta_dir VARCHAR(500) NOT NULL,
     professor_id   INTEGER,
     primary key(id),
     foreign key(professor_id) REFERENCES professor(id)

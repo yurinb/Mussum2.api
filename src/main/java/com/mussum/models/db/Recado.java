@@ -2,6 +2,7 @@ package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -15,6 +16,7 @@ public class Recado extends MussumEntity {
     @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;
 
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     private String data = LocalDateTime.now().toString();

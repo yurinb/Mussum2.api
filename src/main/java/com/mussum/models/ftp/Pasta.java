@@ -4,12 +4,14 @@ import com.mussum.models.MussumEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Pasta extends MussumEntity {
 
+    @Column(columnDefinition = "TEXT")
     private String dir;
 
     private String nome;
@@ -26,57 +28,57 @@ public class Pasta extends MussumEntity {
     }
 
     public Pasta(String dir, String nome) {
-        this.dir = dir;
-        this.nome = nome;
+	this.dir = dir;
+	this.nome = nome;
     }
 
     public String getDir() {
-        return dir;
+	return dir;
     }
 
     public void setDir(String dir) {
-        this.dir = dir;
+	this.dir = dir;
     }
 
     public List<Arquivo> getArquivos() {
-        return files;
+	return files;
     }
 
     public List<Pasta> getPastas() {
-        return folders;
+	return folders;
     }
 
     public boolean isVisivel() {
-        return visivel;
+	return visivel;
     }
 
     public void setVisivel(boolean visivel) {
-        this.visivel = visivel;
+	this.visivel = visivel;
     }
 
     public String getNome() {
-        return nome;
+	return nome;
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+	this.nome = nome;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        Pasta comparing = (Pasta) obj;
-        return (comparing.getDir() + comparing.getNome()).equals(this.getDir() + this.getNome());
+	if (obj == null) {
+	    return false;
+	}
+	Pasta comparing = (Pasta) obj;
+	return (comparing.getDir() + comparing.getNome()).equals(this.getDir() + this.getNome());
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.dir);
-        hash = 67 * hash + Objects.hashCode(this.nome);
-        return hash;
+	int hash = 3;
+	hash = 67 * hash + Objects.hashCode(this.dir);
+	hash = 67 * hash + Objects.hashCode(this.nome);
+	return hash;
     }
 
 }

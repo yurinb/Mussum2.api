@@ -1,6 +1,7 @@
 package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
@@ -10,6 +11,7 @@ public class Horario extends MussumEntity {
     @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;
 
+    @Column(columnDefinition = "TEXT")
     @NotBlank(message = "O campo url não pode ser nulo")
     private String url;
 

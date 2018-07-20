@@ -2,6 +2,7 @@ package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotBlank;
 
@@ -11,10 +12,12 @@ public class Aviso extends MussumEntity {
     @NotBlank(message = "O campo titulo não pode ser nulo")
     private String titulo;
 
+    @Column(columnDefinition = "TEXT")
     private String descricao;
 
     private String data = LocalDateTime.now().toString();
 
+    @Column(columnDefinition = "TEXT")
     private String url;
 
     public String getTitulo() {

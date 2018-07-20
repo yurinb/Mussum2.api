@@ -1,6 +1,6 @@
 create table pasta (
     id INTEGER AUTO_INCREMENT,
-    dir VARCHAR(500) NOT NULL,
+    dir TEXT NOT NULL,
     nome VARCHAR(300) NOT NULL,
     visivel BOOLEAN DEFAULT 0,
     primary key(id)

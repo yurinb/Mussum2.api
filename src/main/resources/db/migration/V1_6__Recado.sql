@@ -1,8 +1,8 @@
 create table recado (
     id INTEGER AUTO_INCREMENT,
     titulo VARCHAR(100) NOT NULL,
-    descricao VARCHAR(300),
-    data VARCHAR(100),
+    descricao TEXT,
+    data VARCHAR(50),
     professor_id INTEGER,
     primary key(id),
     foreign key(professor_id) REFERENCES professor(id)

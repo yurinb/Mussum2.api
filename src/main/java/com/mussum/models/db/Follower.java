@@ -1,17 +1,19 @@
 package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-public class Follower extends MussumEntity{
+public class Follower extends MussumEntity {
 
     @NotBlank(message = "O campo email não pode ser nulo")
     private String email;
 
+    @Column(columnDefinition = "TEXT")
     private String pastaDir;
 
     @ManyToOne()
@@ -27,7 +29,7 @@ public class Follower extends MussumEntity{
 	this.pastaDir = pastaDir;
 	this.professor = professor;
     }
-    
+
     public Professor getProfessor() {
 	return professor;
     }

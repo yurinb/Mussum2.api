@@ -5,6 +5,7 @@ import com.mussum.models.ftp.Arquivo;
 import com.mussum.util.S;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
@@ -18,12 +19,15 @@ public class Feed extends MussumEntity {
 
     private String titulo = "";
 
+    @Column(columnDefinition = "TEXT")
     private String comentario = "";
 
     private String arquivo = "";
 
+    @Column(columnDefinition = "TEXT")
     private String link = "";
 
+    @Column(columnDefinition = "TEXT")
     private String dir = "";
 
     private String username = "";

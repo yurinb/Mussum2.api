@@ -6,11 +6,11 @@ create table professor (
     nome VARCHAR(100) NOT NULL,
     sobrenome VARCHAR(100) NOT NULL,
     email VARCHAR(100),
-    sobre VARCHAR(250),
-    descricao VARCHAR(250),
-    resumo VARCHAR(250),
-    formacao VARCHAR(250),
-    fotolink VARCHAR(500),
+    sobre TEXT,
+    descricao TEXT,
+    resumo TEXT,
+    formacao TEXT,
+    fotolink TEXT,
     primary key(id)
 ) CHARACTER SET 'utf8' 
   COLLATE 'utf8_general_ci';
