@@ -265,11 +265,19 @@ public class RepositoryFTP {
 		for (FTPFile f : files) {
 		    if (f.isDirectory()) {
 			boolean empty = ftp.getFtp().removeDirectory(dir + "/" + f.getName());
+			try {
+			    pastaRep.delete(pastaRep.findByDirInAndNomeIn(dir, f.getName()).get(0));
+			} catch (Exception e) {
+			}
 			if (!empty) {
 			    clean(dir + "/" + f.getName());
 			}
 		    } else {
 			ftp.getFtp().deleteFile(dir + "/" + f.getName());
+			try {
+			    arqRep.delete(arqRep.findByDirInAndNomeIn(dir, f.getName()).get(0));
+			} catch (Exception e) {
+			}
 		    }
 		}
 	    }
