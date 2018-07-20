@@ -47,13 +47,14 @@ public class ProfessorController {
     @PostMapping()
     @ResponseBody
     public Professor postProfessor(@RequestBody @Valid Professor prof) {
-	if (prof.getRole() == null) {
+	if (prof.getRole() == null || prof.getRole().isEmpty()) {
 	    prof.setDefaultRole();
 	}
 	Social social = new Social();
 	social.setProfessor(prof);
+	profRep.save(prof);
 	socRep.save(social);
-	return profRep.save(prof);
+	return prof;
     }
 
     @PutMapping("/{id}")
