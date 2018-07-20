@@ -34,7 +34,7 @@ public class TokenFilter extends GenericFilterBean {
 	S.out("[[[ " + hReq.getMethod() + " ]]] " + " - " + hReq.getRequestURI(), this);
 	S.out("", this);
 	final String[] GET_BLOQUEADOS = {};
-	final String[] POST_LIBERADOS = {"api/followers"};
+	final String[] POST_LIBERADOS = {"/api/followers"};
 
 	if (hReq.getMethod() == null) {
 	    S.out("metodo null? wtf aqui nao", this);

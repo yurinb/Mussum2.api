@@ -3,6 +3,7 @@ package com.mussum.controllers;
 import com.mussum.models.db.Professor;
 import com.mussum.models.db.Social;
 import com.mussum.repository.ProfessorRepository;
+import com.mussum.repository.SocialRepository;
 import com.mussum.util.S;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,9 @@ public class ProfessorController {
 
     @Autowired
     private ProfessorRepository profRep;
+    
+    @Autowired
+    private SocialRepository socRep;
 
     @GetMapping()
     @ResponseBody
@@ -48,6 +52,7 @@ public class ProfessorController {
 	}
 	Social social = new Social();
 	social.setProfessor(prof);
+	socRep.save(social);
 	return profRep.save(prof);
     }
 

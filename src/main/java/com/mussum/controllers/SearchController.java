@@ -5,6 +5,7 @@ import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
+import com.mussum.util.S;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +43,13 @@ public class SearchController {
 	    if (file.getDir().equals("_res")) {
 		continue;
 	    }
+	    if (isPublic(file) == false) {
+		continue;
+	    }
 	    if (file.getNome().toLowerCase().startsWith(txt.toLowerCase())) {
 		SearchObj obj = new SearchObj();
 
 		obj.setName(file.getNome());
-		obj.setDir(file.getDir());
 		obj.setDate(file.getDataCriacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 		obj.setType("file");
 		String profUsername;
@@ -57,6 +60,7 @@ public class SearchController {
 		} catch (Exception e) {
 		    continue;
 		}
+		obj.setDir(file.getDir().substring(profUsername.length()));
 		obj.setProfessor(professorName);
 		obj.setUsername(profUsername);
 
@@ -65,11 +69,13 @@ public class SearchController {
 	}
 	List<Pasta> folders = foldersRep.findAll();
 	for (Pasta folder : folders) {
+	    if (isPublic(folder) == false) {
+		continue;
+	    }
 	    if (folder.getNome().toLowerCase().startsWith(txt.toLowerCase())) {
 		SearchObj obj = new SearchObj();
 
 		obj.setName(folder.getNome());
-		obj.setDir(folder.getDir());
 		obj.setDate("");
 		obj.setType("folder");
 		String profUsername;
@@ -80,6 +86,7 @@ public class SearchController {
 		} catch (Exception e) {
 		    continue;
 		}
+		obj.setDir(folder.getDir().substring(profUsername.length()));
 		obj.setProfessor(professorName);
 		obj.setUsername(profUsername);
 
@@ -87,6 +94,56 @@ public class SearchController {
 	    }
 	}
 	return objsFound;
+    }
+
+    private boolean isPublic(Arquivo file) {
+	if (file.isVisivel() == false) {
+	    return false;
+	}
+	String dir = file.getDir();
+	if (checkPublicDir(dir)) {
+	    return false;
+	}
+
+	return true;
+    }
+
+    private boolean isPublic(Pasta folder) {
+	if (folder.isVisivel() == false) {
+	    return false;
+	}
+	String dir = folder.getDir();
+	if (checkPublicDir(dir)) {
+	    return false;
+	}
+
+	return true;
+    }
+
+    private boolean checkPublicDir(String dir) {
+	while (dir.length() > 0) {
+	    try {
+		String[] dirs = dir.split("/");
+		String folderName = dirs[dirs.length - 1];
+		S.out("FOLDER NAME:::::::::::::::::::::::" + folderName, this);
+		String folderDir = dir.substring(0, dir.length() - folderName.length() - 1);
+		S.out("FOLDER DIR:::::::::::::::::::::::" + folderDir, this);
+		List<Pasta> pastas = this.foldersRep.findByDirInAndNomeIn(folderDir, folderName);
+		for (Pasta pasta : pastas) {
+		    S.out("PASTA FOUND " + pasta.getNome(), this);
+		    if (pasta.isVisivel() == false) {
+			S.out("NOT VISIBLE", this);
+			return false;
+		    }
+		    S.out("VISIBLE", this);
+		}
+		dir = folderDir;
+	    } catch (Exception e) {
+		S.out("BREAK CHECK PUBLIC", this);
+		break;
+	    }
+	}
+	return true;
     }
 
     private class SearchObj {
