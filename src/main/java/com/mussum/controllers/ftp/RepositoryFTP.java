@@ -240,11 +240,16 @@ public class RepositoryFTP {
 	    ftp.connect();
 	    clean(repo);
 	    boolean removeu = ftp.getFtp().removeDirectory(repo);
+	    while (removeu == false) {
+		clean(repo);
+		removeu = ftp.getFtp().removeDirectory(repo);
+	    }
 	    ftp.disconnect();
 	    if (removeu) {
-		 FeedController feedControl = new FeedController(context, feedRep);
-		 feedControl.deleteAllByDir(repo);
+		FeedController feedControl = new FeedController(context, feedRep);
+		feedControl.deleteAllByDir(repo);
 	    }
+	    S.out("REMOVEU?" + removeu, this);
 	    return ResponseEntity.ok(dir + " removeu? " + removeu);
 	} catch (IOException ex) {
 	    return ResponseEntity.badRequest().body(" falha ao remover diretorio: " + dir);
@@ -287,7 +292,7 @@ public class RepositoryFTP {
 
 	    FeedController feedControl = new FeedController(context, feedRep);
 	    UploadFTP uploadControl = new UploadFTP(arqRep);
-	    
+
 	    ftp.connect();
 	    FTPFile[] ftpFiles = ftp.getFtp().listFiles(pasta.getDir());
 	    for (FTPFile file : ftpFiles) {
