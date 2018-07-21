@@ -1,7 +1,9 @@
 package com.mussum.controllers;
 
+import com.mussum.models.db.Feed;
 import com.mussum.models.db.Professor;
 import com.mussum.models.db.Social;
+import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.SocialRepository;
 import com.mussum.util.S;
@@ -28,9 +30,12 @@ public class ProfessorController {
 
     @Autowired
     private ProfessorRepository profRep;
-    
+
     @Autowired
     private SocialRepository socRep;
+
+    @Autowired
+    private FeedRepository feedRep;
 
     @GetMapping()
     @ResponseBody
@@ -81,7 +86,7 @@ public class ProfessorController {
 	if (newP.getPassword() != null) {
 	    prof.setPassword(newP.getPassword());
 	}
-	if (newP.getRole() != null || !newP.getRole().isEmpty()) {
+	if (newP.getRole() != null && !newP.getRole().isEmpty()) {
 	    prof.setRole(newP.getRole());
 	}
 	if (newP.getSobre() != null) {
@@ -100,6 +105,11 @@ public class ProfessorController {
 	    prof.setFormacao(newP.getFormacao());
 	}
 	profRep.save(prof);
+	List<Feed> feeds = feedRep.findAllByUsername(prof.getUsername());
+	for (Feed feed : feeds) {
+	    feed.setProfessor(prof.getNome() + " " + prof.getSobrenome());
+	    feedRep.save(feed);
+	}
 	return prof;
     }
 
@@ -110,6 +120,10 @@ public class ProfessorController {
 	Social social = socRep.findByProfessor(prof);
 	socRep.delete(social);
 	profRep.delete(prof);
+	List<Feed> feeds = feedRep.findAllByUsername(prof.getUsername());
+	for (Feed feed : feeds) {
+	    feedRep.delete(feed);
+	}
 	return prof;
     }
 

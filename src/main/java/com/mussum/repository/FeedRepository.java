@@ -11,5 +11,7 @@ public interface FeedRepository extends JpaRepository<Feed, Integer> {
     public Feed findByTipoInAndTituloInAndUsernameIn(String tipo, String titulo, String username);
     
     public List<Feed> findAllByTipoInAndTituloIn(String tipo, String titulo);
+    
+    public List<Feed> findAllByUsername(String username);
 
 }
