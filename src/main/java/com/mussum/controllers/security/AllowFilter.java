@@ -20,7 +20,7 @@ public class AllowFilter extends GenericFilterBean {
 	HttpServletResponse httpResp = (HttpServletResponse) sr1;
 
 	httpResp.setHeader("Access-Control-Allow-Origin", "*");
-	httpResp.setHeader("Access-Control-Allow-Headers", "*");
+	httpResp.setHeader("Access-Control-Allow-Headers", httpReq.getHeader("Access-Control-Request-Headers"));
 	httpResp.setHeader("Access-Control-Allow-Methods", "*");
 
 	fc.doFilter(sr, sr1);

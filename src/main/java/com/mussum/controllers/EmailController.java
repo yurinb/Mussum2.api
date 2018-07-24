@@ -28,7 +28,7 @@ public class EmailController {
 	String msg2 = "Arquivo: ";
 	String msg3 = "Segue o link do repositório para acessar: ";
 
-	String msg4 = "\n\n\n\nNão deseja receber mais notificações dessa pasta? chóris. ";
+	String msg4 = "\n\n\n\nNão deseja receber mais notificações dessa pasta? linkEmBreve.com ";
 
 	String novaLinha = "\n";
 
@@ -55,7 +55,7 @@ public class EmailController {
 		sendMail(follower.getEmail(), professorNome
 			+ msg1 + nomePasta + novaLinha
 			+ msg2 + fileName + novaLinha
-			+ msg3 + "tuamae.com" + novaLinha
+			+ msg3 + "linkEmBreve.com" + novaLinha
 			+ msg4,
 			"Novo Arquivis!!");
 	    }
@@ -69,7 +69,7 @@ public class EmailController {
 
 	message.setText(msg);
 	message.setTo(email);
-	message.setFrom("fatec.mussum@gmail.com");
+	message.setFrom("mussum.fatec@gmail.com");
 	message.setSubject(titulo);
 	new Thread(new Runnable() {
 	    @Override
