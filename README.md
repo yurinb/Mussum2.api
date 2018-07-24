@@ -52,6 +52,10 @@
 </table>
 
 ***
+### Contribuição
+Veja o [CONTRIBUTING.md](https://github.com/yurinb/Mussum_2.0-API/blob/master/CONTRIBUTING.md)
+
+***
 ### Licença 
 
 Este projeto está licenciado sob a [licença MIT](https://github.com/yurinb/Mussum_2.0-API/blob/master/LICENSE) - veja o arquivo LICENSE.md para obter detalhes
