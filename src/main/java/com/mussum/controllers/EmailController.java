@@ -10,6 +10,7 @@ import com.mussum.models.db.Professor;
 import com.mussum.repository.FollowerRepository;
 import com.mussum.util.S;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,27 +40,28 @@ public class EmailController {
 	    S.out(nomePasta, this);
 	}
 
-	S.out("Followers: get by professor...", this);
 	Follower foll = follRep.getOne(1);
 	S.out(foll.getEmail(), this);
 	List<Follower> followers = follRep.findAllByProfessor(professor);
-	
+
 	if (followers.isEmpty()) {
 	    return;
 	}
-	
-	S.out("Followers finded", this);
-	for (Follower follower : followers) {
-	    S.out("Followers: follower X", this);
-	    if (dir.startsWith(follower.getPastaDir())) {
-		sendMail(follower.getEmail(), professorNome
-			+ msg1 + nomePasta + novaLinha
-			+ msg2 + fileName + novaLinha
-			+ msg3 + "linkEmBreve.com" + novaLinha
-			+ msg4,
-			"Novo Arquivis!!");
-	    }
+	try {
+	    String linkRepoDir = dir.substring(dir.lastIndexOf(dir.split("/")[0]));
+	    for (Follower follower : followers) {
+		if (dir.startsWith(follower.getPastaDir())) {
+		    sendMail(follower.getEmail(), professorNome
+			    + msg1 + nomePasta + novaLinha
+			    + msg2 + fileName + novaLinha
+			    + msg3 + "www.mussum.ddns.net/professor/" + professor.getUsername() + "/diretorios/" + linkRepoDir
+			    + msg4,
+			    "Novo Arquivis!!");
+		}
 
+	    }
+	} catch (Exception e) {
+	    S.out("ERRO: "+e.getLocalizedMessage(), this);
 	}
 
     }
@@ -82,6 +84,10 @@ public class EmailController {
 		}
 	    }
 	}).start();
+    }
+    
+    public ResponseEntity removeEmail() {
+	return null;
     }
 
 }
