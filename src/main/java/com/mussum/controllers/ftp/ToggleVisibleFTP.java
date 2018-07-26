@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @RestController
 public class ToggleVisibleFTP {
 
-    private final FTPcontrol ftp = new FTPcontrol();
-
     @Autowired
     private HttpServletRequest context;
 
@@ -42,6 +40,7 @@ public class ToggleVisibleFTP {
     public ResponseEntity toggleVisible(
 	    @RequestHeader("fileName") String fileName,
 	    @RequestHeader("dir") String dir) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    S.out("request toggle visible: " + dir + "/" + fileName, this);
 	    Professor prof = profRep.findByUsername((String) context.getAttribute("requestUser"));

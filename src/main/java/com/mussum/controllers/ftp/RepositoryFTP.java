@@ -46,8 +46,6 @@ public class RepositoryFTP {
     @Autowired
     private FeedRepository feedRep;
 
-    private final FTPcontrol ftp = new FTPcontrol();
-
     @PostMapping()
     @ResponseBody
     public ResponseEntity postRepository(
@@ -65,8 +63,8 @@ public class RepositoryFTP {
 	    return new ResponseEntity("Erro. Cade o professor?? ", HttpStatus.BAD_REQUEST);
 	}
 
+	FTPcontrol ftp = new FTPcontrol();
 	try {
-
 	    ftp.connect();
 	    ftp.getFtp().makeDirectory(dir + "/" + name + "/");
 	    ftp.disconnect();
@@ -91,7 +89,7 @@ public class RepositoryFTP {
 	    @RequestHeader("username") String username,
 	    @RequestHeader("dir") String dir
     ) {
-
+	FTPcontrol ftp = new FTPcontrol();
 	Pasta requestDirectory = new Pasta(dir, username);
 	try {
 	    //PEGA OS ARQUIVOS E PASTAS QUE TEM NO FTP E ATUALIZA O BANCO DE DADOS
@@ -161,6 +159,7 @@ public class RepositoryFTP {
     }
 
     private List<Pasta> getPastasFromDir(String dir) {
+	FTPcontrol ftp = new FTPcontrol();
 	List<Pasta> pastas = new ArrayList();
 	try {
 	    ftp.connect();
@@ -191,6 +190,7 @@ public class RepositoryFTP {
     }
 
     private List<Arquivo> getArquivosFromDir(String dir) {
+	FTPcontrol ftp = new FTPcontrol();
 	List<Arquivo> arquivos = new ArrayList();
 	try {
 	    ftp.connect();
@@ -236,6 +236,7 @@ public class RepositoryFTP {
 	    @RequestHeader("dir") String dir,
 	    @RequestHeader("name") String name) {
 	String repo = dir + "/" + name;
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    ftp.connect();
 	    clean(repo);
@@ -258,6 +259,7 @@ public class RepositoryFTP {
     }
 
     public void clean(String dir) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    FTPFile[] files = ftp.getFtp().listFiles(dir);
 
@@ -294,6 +296,7 @@ public class RepositoryFTP {
 	    @PathVariable("id") Integer id,
 	    @RequestBody Map<String, String> body
     ) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    Pasta pasta = pastaRep.getOne(id);
 	    String newName = body.get("name");

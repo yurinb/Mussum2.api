@@ -14,17 +14,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @RestController
 public class DownloadFTP {
 
-    private final FTPcontrol ftp = new FTPcontrol();
-
     @GetMapping("/api/download")
     public ResponseEntity getFile(
 	    @RequestHeader("professor") String prof,
 	    @RequestHeader("dir") String dir,
 	    @RequestHeader("fileName") String fileName) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 
 	    S.out("requesting FILE: " + dir + "/" + fileName, this);
-
 	    ftp.connect();
 	    ftp.getFtp().setSoTimeout(3000);
 	    InputStream file = ftp.getFile(dir + "/", fileName);
@@ -49,6 +47,7 @@ public class DownloadFTP {
 
     @GetMapping("/api/photo")
     public ResponseEntity getProfessorPhoto(@RequestHeader("professor") String prof) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    S.out("requesting user PHOTO: " + prof, this);
 
@@ -67,7 +66,7 @@ public class DownloadFTP {
 	    ftp.connect();
 	    InputStream img = ftp.getFile("\\_res\\perfil_img\\", profPhotoName);
 	    ftp.disconnect();
-	    
+
 	    if (img == null) {
 		S.out("ERRO: photo " + profPhotoName + " not found", this);
 		return new ResponseEntity("ERRO: photo not found", HttpStatus.NOT_FOUND);

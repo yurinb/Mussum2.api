@@ -59,8 +59,6 @@ public class UploadFTP {
 
     private final EmailController emailController = new EmailController();
 
-    private final FTPcontrol ftp = new FTPcontrol();
-
     public UploadFTP() {
     }
 
@@ -97,6 +95,7 @@ public class UploadFTP {
 	    S.out("uploading a link...", this);
 	    TxtWritter wr = new TxtWritter();
 	    Arquivo arquivo = new Arquivo(reqDir, fileName + ".link");
+	    FTPcontrol ftp = new FTPcontrol();
 	    try (InputStream input = wr.getInputStreamOfNewTxtFile(prof.getNome(), fileName, link)) {
 		ftp.connect();
 		ftp.uploadFile(input, arquivo);
@@ -142,6 +141,7 @@ public class UploadFTP {
 		S.out("ERRO: Empty file", this);
 		//continue; //next pls
 	    }
+	    FTPcontrol ftp = new FTPcontrol();
 	    try {
 		Arquivo arquivo = new Arquivo(dir, fileName);
 		S.out("new arquivo...", this);
@@ -183,7 +183,7 @@ public class UploadFTP {
 	String imageExtension = Strings.getExtensionIfExists(file.getOriginalFilename());
 
 	if (imageExtension != null) {
-
+	    FTPcontrol ftp = new FTPcontrol();
 	    try {
 		ftp.connect();
 
@@ -215,6 +215,7 @@ public class UploadFTP {
 	    @RequestHeader("dir") String dir,
 	    @RequestHeader("name") String name
     ) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    S.out("DELETE", this);
 	    S.out(dir, this);
@@ -240,6 +241,7 @@ public class UploadFTP {
 	    @PathVariable("id") Integer id,
 	    @RequestBody Map<String, String> payload
     ) {
+	FTPcontrol ftp = new FTPcontrol();
 	try {
 	    S.out("PUT:", this);
 	    Arquivo dbArquivo = arqRep.findById(id).get();
