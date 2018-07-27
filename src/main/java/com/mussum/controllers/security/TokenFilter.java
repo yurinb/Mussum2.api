@@ -91,7 +91,7 @@ public class TokenFilter extends GenericFilterBean {
 	    return null;
 	}
 
-	S.out("HEADER: " + header, this);
+	//S.out("HEADER: " + header, this);
 
 	String token = null;
 

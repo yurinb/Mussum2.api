@@ -26,11 +26,11 @@ public class DownloadFTP {
 	    ftp.connect();
 	    ftp.getFtp().setSoTimeout(3000);
 	    InputStream file = ftp.getFile(dir + "/", fileName);
-	    //ftp.getFtp().completePendingCommand();
+	    ftp.getFtp().completePendingCommand();
 	    ftp.disconnect();
 	    byte[] bytes = StreamUtils.copyToByteArray(file);
 	    if (file == null) {
-		S.out("ERRO: File not found", this);
+		//S.out("ERRO: File not found", this);
 		return new ResponseEntity("ERRO: File not found", HttpStatus.NOT_FOUND);
 	    }
 	    file.close();

@@ -1,6 +1,7 @@
 package com.mussum.models.db;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mussum.models.MussumEntity;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ public class Usuario extends MussumEntity {
     @NotNull(message = "O campo nome não pode ser nulo")
     private String username;
 
+    @JsonIgnore
     @NotNull(message = "O campo senha não pode ser nulo")
     private String password;
 
@@ -33,6 +35,7 @@ public class Usuario extends MussumEntity {
 	return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
 	this.password = password;
     }

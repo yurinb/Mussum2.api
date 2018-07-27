@@ -47,7 +47,7 @@ public class LoginController {
 	    return new ResponseEntity<>("usuario inválido ou inexistente.", HttpStatus.UNAUTHORIZED);
 	}
 
-	if (!usuarioEncontrado.getPassword().equals(user.get("password"))) {
+	if (!BCryptUtil.checkPassword(user.get("password"), usuarioEncontrado.getPassword())) {
 
 	    S.out("ERROR: invalid password", this);
 	    S.out("_______________*_______________", this);

@@ -63,7 +63,6 @@ public class FeedController {
 	for (int i = 0; i < feeds.size(); i++) {
 	    if (feeds.get(i).getTipo().equals("recado") && feeds.get(i).getPriority() > 0) {
 		recados.add(feeds.get(i));
-		System.out.println("+1 recado fixado: " + feeds.get(i).getPriority());
 	    }
 	}
 
@@ -73,7 +72,6 @@ public class FeedController {
 	for (int i = 0; i < feeds.size(); i++) {
 	    if (feeds.get(i).getTipo().equals("aviso") && feeds.get(i).getPriority() > 0) {
 		avisos.add(feeds.get(i));
-		System.out.println("+1 aviso fixado: " + feeds.get(i).getPriority());
 	    }
 	}
 

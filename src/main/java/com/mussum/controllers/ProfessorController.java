@@ -1,12 +1,12 @@
 package com.mussum.controllers;
 
+import com.mussum.controllers.security.BCryptUtil;
 import com.mussum.models.db.Feed;
 import com.mussum.models.db.Professor;
 import com.mussum.models.db.Social;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.SocialRepository;
-import com.mussum.util.S;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -55,6 +55,7 @@ public class ProfessorController {
 	if (prof.getRole() == null || prof.getRole().isEmpty()) {
 	    prof.setDefaultRole();
 	}
+	prof.setPassword(BCryptUtil.hashPassword(prof.getPassword()));
 	Social social = new Social();
 	social.setProfessor(prof);
 	profRep.save(prof);
@@ -67,10 +68,7 @@ public class ProfessorController {
     public Professor putProfessor(
 	    @RequestBody Professor newP,
 	    @PathVariable Integer id) {
-	String user = (String) context.getAttribute("requestUser");
-	S.out("PUT REQ USER: " + user, this);
 	Professor prof = profRep.findById(id).get();
-	//newProfessor.setId(profRep.findById(id).get().getId());
 	if (newP.getDescricao() != null) {
 	    prof.setDescricao(newP.getDescricao());
 	}
@@ -84,7 +82,8 @@ public class ProfessorController {
 	    prof.setNome(newP.getNome());
 	}
 	if (newP.getPassword() != null) {
-	    prof.setPassword(newP.getPassword());
+	    String criptPass = BCryptUtil.hashPassword(newP.getPassword());
+	    prof.setPassword(criptPass);
 	}
 	if (newP.getRole() != null && !newP.getRole().isEmpty()) {
 	    prof.setRole(newP.getRole());
