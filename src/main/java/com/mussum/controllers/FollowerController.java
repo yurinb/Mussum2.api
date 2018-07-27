@@ -2,11 +2,15 @@ package com.mussum.controllers;
 
 import com.mussum.models.db.Follower;
 import com.mussum.models.db.Professor;
+import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.FollowerRepository;
+import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.HTML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +35,11 @@ public class FollowerController {
     @Autowired
     private ProfessorRepository profRep;
 
+    @Autowired
+    private PastaRepository pastaRep;
+
     @GetMapping()
     @ResponseBody
-    //@JsonIgnore
     public ResponseEntity getFollowers() {
 	String username = context.getHeader("username");
 	if (username == null) {
@@ -42,6 +48,19 @@ public class FollowerController {
 	} else {
 	    return ResponseEntity.ok(follRep.findAllByProfessor(profRep.findByUsername(username)));
 	}
+    }
+
+    @GetMapping("/removenotify/{followerId}/{folderId}")
+    public ResponseEntity removeEmail(
+	    @PathVariable int followerId,
+	    @PathVariable int folderId) {
+	Follower foundFollower = follRep.findById(followerId).get();
+	Pasta foundFolder = pastaRep.findById(folderId).get();
+	if (foundFollower.getPastaDir().equals(foundFolder.getDir() + "/" + foundFolder.getNome())) {
+	    follRep.delete(foundFollower);
+	    return new ResponseEntity("<h1>O email " + foundFollower.getEmail() + " não recebera mais notificações da pasta '" + pastaRep.getOne(folderId).getNome() + "'.</h1>", HttpStatus.OK);
+	}
+	return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/{id}")

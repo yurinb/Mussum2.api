@@ -127,8 +127,25 @@ public class UploadFTP {
 	    }
 
 	    S.out("Sending email to followers...", this);
-	    emailController.sendMailToFollowers(reqDir, prof, arquivo.getNome(), follRep, mailSender);
-	    S.out("Email send.", this);
+	    String folderName;
+	    try {
+		folderName = arquivo.getDir().substring(arquivo.getDir().lastIndexOf("/") + 1);
+	    } catch (Exception e) {
+		folderName = arquivo.getDir();
+	    }
+	    String folderDir;
+	    try {
+		folderDir = arquivo.getDir().substring(0, arquivo.getDir().lastIndexOf("/"));
+	    } catch (Exception e) {
+		folderDir = "";
+	    }
+	    try {
+		int pastaId = pastaRep.findByDirInAndNomeIn(folderDir, folderName).get(0).getId();
+		emailController.sendMailToFollowers(reqDir, prof, arquivo.getNome(), follRep, mailSender, pastaId);
+		S.out("Email send.", this);
+	    } catch (Exception e) {
+		S.out("Email fail: " + e.getMessage(), this);
+	    }
 	} else {
 	    save(Arrays.asList(uploadfiles), reqDir, fileName, prof, comment, visivel, link);
 	}
@@ -163,8 +180,26 @@ public class UploadFTP {
 		}
 		S.out("arquivo salvo.", this);
 		S.out("Sending email to followers...", this);
-		emailController.sendMailToFollowers(dir, prof, arquivo.getNome(), follRep, mailSender);
-		S.out("Email send.", this);
+
+		String folderName;
+		try {
+		    folderName = arquivo.getDir().substring(arquivo.getDir().lastIndexOf("/") + 1);
+		} catch (Exception e) {
+		    folderName = arquivo.getDir();
+		}
+		String folderDir;
+		try {
+		    folderDir = arquivo.getDir().substring(0, arquivo.getDir().lastIndexOf("/"));
+		} catch (Exception e) {
+		    folderDir = "";
+		}
+		try {
+		    int pastaId = pastaRep.findByDirInAndNomeIn(folderDir, folderName).get(0).getId();
+		    emailController.sendMailToFollowers(dir, prof, arquivo.getNome(), follRep, mailSender, pastaId);
+		    S.out("Email send.", this);
+		} catch (Exception e) {
+		    S.out("Email fail: " + e.getMessage(), this);
+		}
 	    } catch (Exception e) {
 		ftp.disconnect();
 		S.out("ERRO: " + e.getMessage(), this);

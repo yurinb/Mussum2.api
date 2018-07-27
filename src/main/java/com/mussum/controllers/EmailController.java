@@ -10,7 +10,6 @@ import com.mussum.models.db.Professor;
 import com.mussum.repository.FollowerRepository;
 import com.mussum.util.S;
 import java.util.List;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,7 +20,7 @@ public class EmailController {
 
     private JavaMailSender mailSender;
 
-    public void sendMailToFollowers(String dir, Professor professor, String fileName, FollowerRepository follRep, JavaMailSender mailSender) {
+    public void sendMailToFollowers(String dir, Professor professor, String fileName, FollowerRepository follRep, JavaMailSender mailSender, int pastaId) {
 	this.mailSender = mailSender;
 	String professorNome = professor.getNome() + " " + professor.getSobrenome();
 
@@ -29,7 +28,7 @@ public class EmailController {
 	String msg2 = "Arquivo: ";
 	String msg3 = "Segue o link do repositóris para acessar: ";
 
-	String msg4 = "\n\n\n\nNão deseja receber mais notificações dessa pasta? linkEmBreve.com ";
+	String msg4 = "\n\n\n\nNão deseja receber mais notificações dessa pasta? ";
 
 	String novaLinha = "\n";
 
@@ -53,8 +52,8 @@ public class EmailController {
 		    sendMail(follower.getEmail(), professorNome
 			    + msg1 + nomePasta + novaLinha
 			    + msg2 + fileName + novaLinha
-			    + msg3 + "mussum.ddns.net/professor/" + professor.getUsername() + "/diretorios/" + linkRepoDir
-			    + msg4,
+			    + msg3 + "http://mussum.ddns.net/professor/" + professor.getUsername() + "/diretorios/" + linkRepoDir
+			    + msg4 + "http://mussum.ddns.net:8009/api/followers/removenotify/" + follower.getId() + "/" + pastaId,
 			    "Novo Arquivis!!");
 		}
 
@@ -85,8 +84,5 @@ public class EmailController {
 	}).start();
     }
 
-    public ResponseEntity removeEmail() {
-	return null;
-    }
-
+    
 }
