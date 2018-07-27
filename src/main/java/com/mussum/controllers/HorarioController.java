@@ -59,7 +59,19 @@ public class HorarioController {
     @PutMapping("/{id}")
     @ResponseBody
     public Horario putHorario(@RequestBody Horario horario, @PathVariable Integer id) {
-	horario.setId(horarioRep.findById(id).get().getId());
+	Horario oldHorario = horarioRep.findById(id).get();
+	horario.setId(oldHorario.getId());
+
+	try {
+	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("horario", oldHorario.getTitulo());
+	    Feed oldFeed = oldFeeds.get(0);
+	    Feed update = new Feed(horario);
+	    update.setId(oldFeed.getId());
+	    feedRep.save(update);
+	} catch (Exception e) {
+	    //S.out("Feed nao econtrado" + e.getLocalizedMessage(), this);
+	}
+
 	horarioRep.save(horario);
 	return horario;
     }
@@ -69,6 +81,15 @@ public class HorarioController {
     public Horario deleteHorario(@PathVariable Integer id) {
 	Horario horario = horarioRep.findById(id).get();
 	horarioRep.delete(horario);
+
+	try {
+	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("horario", horario.getTitulo());
+	    Feed oldFeed = oldFeeds.get(0);
+	    feedRep.delete(oldFeed);
+	} catch (Exception e) {
+	    // S.out("Feed nao econtrado", this);
+	}
+
 	return horario;
     }
 

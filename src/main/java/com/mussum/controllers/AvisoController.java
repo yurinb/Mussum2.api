@@ -64,7 +64,6 @@ public class AvisoController {
 	newAviso.setId(oldAviso.getId());
 
 	try {
-	    S.out("procurando feed" + oldAviso.getTitulo(), this);
 	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("aviso", oldAviso.getTitulo());
 	    Feed oldFeed = oldFeeds.get(0);
 	    Feed update = new Feed(newAviso, profRep.findByUsername(oldFeed.getUsername()));

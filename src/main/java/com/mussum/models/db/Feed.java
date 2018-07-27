@@ -54,6 +54,14 @@ public class Feed extends MussumEntity {
 	S.out("new FEED: " + this.tipo, this);
     }
 
+    public Feed(Diretorio diretorio, String username) {
+	this.username = username;
+	this.tipo = "diretorio";
+	this.titulo = diretorio.getTitulo();
+	this.link = diretorio.getUrl();
+	S.out("new FEED: " + this.tipo, this);
+    }
+
     public Feed(Horario horario) {
 	this.tipo = "horario";
 	this.titulo = horario.getTitulo();
