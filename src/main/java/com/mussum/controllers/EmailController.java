@@ -23,7 +23,7 @@ public class EmailController {
 
     public void sendMailToFollowers(String dir, Professor professor, String fileName, FollowerRepository follRep, JavaMailSender mailSender) {
 	this.mailSender = mailSender;
-	String professorNome = professor.getNome() + professor.getSobrenome();
+	String professorNome = professor.getNome() + " " + professor.getSobrenome();
 
 	String msg1 = " adicionou novo arquivis na pasta que você seguis: ";
 	String msg2 = "Arquivo: ";
@@ -44,12 +44,10 @@ public class EmailController {
 	if (followers.isEmpty()) {
 	    return;
 	}
-	
+
 	try {
-	    System.out.println(dir);
-	    String linkRepoDir = dir.substring(professor.getUsername().length()+1);
+	    String linkRepoDir = dir.substring(professor.getUsername().length() + 1);
 	    linkRepoDir = linkRepoDir.replace(" ", "%20");
-	    System.out.println(linkRepoDir);
 	    for (Follower follower : followers) {
 		if (dir.startsWith(follower.getPastaDir())) {
 		    sendMail(follower.getEmail(), professorNome
@@ -62,7 +60,7 @@ public class EmailController {
 
 	    }
 	} catch (Exception e) {
-	    S.out("ERRO: "+e.getLocalizedMessage(), this);
+	    S.out("ERRO: " + e.getLocalizedMessage(), this);
 	}
 
     }
@@ -86,7 +84,7 @@ public class EmailController {
 	    }
 	}).start();
     }
-    
+
     public ResponseEntity removeEmail() {
 	return null;
     }

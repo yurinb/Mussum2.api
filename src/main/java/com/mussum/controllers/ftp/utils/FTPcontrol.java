@@ -4,6 +4,7 @@ import com.mussum.models.ftp.Arquivo;
 import com.mussum.util.S;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -31,15 +32,44 @@ public class FTPcontrol {
 	}
     }
 
-    public void uploadFile(InputStream input, Arquivo arquivo) throws Exception {
+    public String uploadFile(InputStream input, Arquivo arquivo, boolean override) throws Exception {
 	ftp.makeDirectory(arquivo.getDir());
+
+	if (!override) {
+	    uniqueName(arquivo, getContentFrom(arquivo.getDir()));
+	}
+
 	this.ftp.storeFile(arquivo.getDir() + "/" + arquivo.getNome(), input);
 	input.close();
+	return arquivo.getNome();
     }
 
-//    public FTPcontrol() {
-//        connect();
-//    }
+    private void uniqueName(Arquivo arquivo, String[] list) {
+	if (Arrays.asList(list).contains(arquivo.getNome())) {
+	    arquivo.setNome(renameCopy(arquivo.getNome()));
+	    uniqueName(arquivo, list);
+	}
+    }
+
+    private String renameCopy(String str) {
+	try {
+	    String extension = str.substring(str.lastIndexOf("."));
+	    String name = str.replace(extension, "");
+	    String inte = name.substring(name.lastIndexOf(" ") + 1);
+	    int copyNum = Integer.parseInt(inte);
+	    copyNum++;
+	    name = name.replace(inte, String.valueOf(copyNum));
+	    name += extension;
+	    return name;
+	} catch (NumberFormatException e) {
+	    S.out(e.getMessage(), this);
+	    String extension = str.substring(str.lastIndexOf("."));
+	    str = str.replace(extension, "");
+	    str = str + " 2" + extension;
+	    return str;
+	}
+    }
+
     public void connect() {
 	try {
 	    this.ftp.setControlEncoding("UTF-8");
@@ -91,8 +121,12 @@ public class FTPcontrol {
     }
 
     public boolean checkFileExists(String filePath) throws IOException {
-	InputStream inputStream = ftp.retrieveFileStream(filePath);
-	return !(inputStream == null || ftp.getReplyCode() == 550);
+	try (InputStream inputStream = ftp.retrieveFileStream(filePath)) {
+	    if (inputStream == null) {
+		return false;
+	    }
+	}
+	return true;
     }
 
 }

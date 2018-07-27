@@ -98,7 +98,7 @@ public class UploadFTP {
 	    FTPcontrol ftp = new FTPcontrol();
 	    try (InputStream input = wr.getInputStreamOfNewTxtFile(prof.getNome(), fileName, link)) {
 		ftp.connect();
-		ftp.uploadFile(input, arquivo);
+		arquivo.setNome(ftp.uploadFile(input, arquivo, false));
 		ftp.disconnect();
 		input.close();
 		wr.deleteLastCreatedFile();
@@ -149,7 +149,7 @@ public class UploadFTP {
 		arquivo.setVisivel(visivel);
 		arquivo.setLink(link);
 		ftp.connect();
-		ftp.uploadFile(file.getInputStream(), arquivo);
+		arquivo.setNome(ftp.uploadFile(file.getInputStream(), arquivo, false));
 		ftp.disconnect();
 		S.out("upload file", this);
 		arqRep.save(arquivo);
@@ -195,7 +195,7 @@ public class UploadFTP {
 		    }
 		}
 		Arquivo arquivo = new Arquivo("\\_res\\perfil_img\\", professor + imageExtension);
-		ftp.uploadFile(file.getInputStream(), arquivo);
+		ftp.uploadFile(file.getInputStream(), arquivo, true);
 		S.out(ftp.getFtp().getReplyString(), this);
 		ftp.disconnect();
 		return new ResponseEntity("Foto de perfil recebida. ", HttpStatus.CREATED);
