@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/feed")
 public class FeedController {
 
+    private final int PAG_MULTIPLER = 15;
+
     @Autowired
     private HttpServletRequest context;
 
@@ -44,7 +46,7 @@ public class FeedController {
 	return getAllFeeds(0);
     }
 
-    @GetMapping("/{page}")
+    @GetMapping("/page/{page}")
     public List<Feed> getFeedsPage(@PathVariable Integer page) {
 	return getAllFeeds(page);
     }
@@ -52,6 +54,9 @@ public class FeedController {
     private List<Feed> getAllFeeds(int page) {
 
 	List<Feed> feeds = feedRepo.findAll();
+	if (feeds.size() < page * PAG_MULTIPLER - PAG_MULTIPLER) {
+	    return null;
+	}
 	Collections.reverse(feeds);
 
 	List<Feed> recados = new ArrayList<>();
@@ -99,8 +104,11 @@ public class FeedController {
 	if (page == 0) {
 	    return avisos;
 	} else {
-	    int start = page * 15;
-	    int ends = page * 15 + 15;
+	    int start = page * PAG_MULTIPLER - PAG_MULTIPLER;
+	    int ends = page * PAG_MULTIPLER;
+	    if (avisos.size() < ends) {
+		ends = avisos.size();
+	    }
 	    return avisos.subList(start, ends);
 	}
     }
