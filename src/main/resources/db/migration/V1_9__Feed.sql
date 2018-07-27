@@ -9,6 +9,7 @@ create table feed (
     username VARCHAR(100) NOT NULL,
     link TEXT NOT NULL,
     dir TEXT NOT NULL,
+    priority INTEGER,
     
     primary key(id)
 ) CHARACTER SET 'utf8' 

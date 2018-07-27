@@ -23,11 +23,11 @@ public class EmailController {
 
     public void sendMailToFollowers(String dir, Professor professor, String fileName, FollowerRepository follRep, JavaMailSender mailSender) {
 	this.mailSender = mailSender;
-	String professorNome = professor.getNome();
+	String professorNome = professor.getNome() + professor.getSobrenome();
 
-	String msg1 = " adicionou novo arquivo na pasta que você seguis: ";
+	String msg1 = " adicionou novo arquivis na pasta que você seguis: ";
 	String msg2 = "Arquivo: ";
-	String msg3 = "Segue o link do repositório para acessar: ";
+	String msg3 = "Segue o link do repositóris para acessar: ";
 
 	String msg4 = "\n\n\n\nNão deseja receber mais notificações dessa pasta? linkEmBreve.com ";
 
@@ -37,24 +37,25 @@ public class EmailController {
 	String nomePasta = "";
 	if (numDiretorios > 0) {
 	    nomePasta = dir.split("/")[numDiretorios - 1];
-	    S.out(nomePasta, this);
 	}
 
-	Follower foll = follRep.getOne(1);
-	S.out(foll.getEmail(), this);
 	List<Follower> followers = follRep.findAllByProfessor(professor);
 
 	if (followers.isEmpty()) {
 	    return;
 	}
+	
 	try {
-	    String linkRepoDir = dir.substring(dir.lastIndexOf(dir.split("/")[0]));
+	    System.out.println(dir);
+	    String linkRepoDir = dir.substring(professor.getUsername().length()+1);
+	    linkRepoDir = linkRepoDir.replace(" ", "%20");
+	    System.out.println(linkRepoDir);
 	    for (Follower follower : followers) {
 		if (dir.startsWith(follower.getPastaDir())) {
 		    sendMail(follower.getEmail(), professorNome
 			    + msg1 + nomePasta + novaLinha
 			    + msg2 + fileName + novaLinha
-			    + msg3 + "www.mussum.ddns.net/professor/" + professor.getUsername() + "/diretorios/" + linkRepoDir
+			    + msg3 + "mussum.ddns.net/professor/" + professor.getUsername() + "/diretorios/" + linkRepoDir
 			    + msg4,
 			    "Novo Arquivis!!");
 		}
@@ -71,7 +72,7 @@ public class EmailController {
 
 	message.setText(msg);
 	message.setTo(email);
-	message.setFrom("mussum.fatec@gmail.com");
+	message.setFrom("Mussum2.0");
 	message.setSubject(titulo);
 	new Thread(new Runnable() {
 	    @Override

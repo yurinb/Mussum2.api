@@ -3,10 +3,14 @@ package com.mussum.controllers;
 import com.mussum.models.db.Feed;
 import com.mussum.repository.FeedRepository;
 import com.mussum.util.S;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,11 +40,95 @@ public class FeedController {
     }
 
     @GetMapping()
-    @ResponseBody
-    //@JsonIgnore
     public List<Feed> getFeeds() {
-	//changeOldDirByNewDir("angelo/adsss", "funcionou sera");
-	return feedRepo.findAll();
+	return getAllFeeds(0);
+    }
+
+    @GetMapping("/{page}")
+    public List<Feed> getFeedsPage(@PathVariable Integer page) {
+	return getAllFeeds(page);
+    }
+
+    private List<Feed> getAllFeeds(int page) {
+
+	List<Feed> feeds = feedRepo.findAll();
+	Collections.reverse(feeds);
+
+	List<Feed> recados = new ArrayList<>();
+	for (int i = 0; i < feeds.size(); i++) {
+	    if (feeds.get(i).getTipo().equals("recado") && feeds.get(i).getPriority() > 0) {
+		recados.add(feeds.get(i));
+		System.out.println("+1 recado fixado: " + feeds.get(i).getPriority());
+	    }
+	}
+
+	feeds.removeAll(recados);
+
+	List<Feed> avisos = new ArrayList<>();
+	for (int i = 0; i < feeds.size(); i++) {
+	    if (feeds.get(i).getTipo().equals("aviso") && feeds.get(i).getPriority() > 0) {
+		avisos.add(feeds.get(i));
+		System.out.println("+1 aviso fixado: " + feeds.get(i).getPriority());
+	    }
+	}
+
+	feeds.removeAll(avisos);
+
+	avisos.sort((Feed o1, Feed o2) -> {
+	    if (o1.getPriority() > o2.getPriority()) {
+		return 1;
+	    }
+	    if (o1.getPriority() < o2.getPriority()) {
+		return -1;
+	    }
+	    return 0;
+	});
+	recados.sort((Feed o1, Feed o2) -> {
+	    if (o1.getPriority() > o2.getPriority()) {
+		return 1;
+	    }
+	    if (o1.getPriority() < o2.getPriority()) {
+		return -1;
+	    }
+	    return 0;
+	});
+	// Empilhando na ordem Aviso > Recado > Outros
+	avisos.addAll(recados);
+	avisos.addAll(feeds);
+
+	if (page == 0) {
+	    return avisos;
+	} else {
+	    int start = page * 15;
+	    int ends = page * 15 + 15;
+	    return avisos.subList(start, ends);
+	}
+    }
+
+    @PutMapping("/togglefixed/{id}")
+    public ResponseEntity toggleFixed(@PathVariable Integer id) {
+	try {
+	    Feed reqFeed = feedRepo.findById(id).get();
+	    if (reqFeed.getPriority() > 0) {
+		reqFeed.setPriority(0);
+		feedRepo.save(reqFeed);
+	    } else {
+		int newPriority = 1;
+		List<Feed> allFeeds = feedRepo.findAll();
+		for (Feed feed : allFeeds) {
+		    if (feed.getTipo().equals(reqFeed.getTipo())) {
+			if (feed.getPriority() >= newPriority) {
+			    newPriority = feed.getPriority() + 1;
+			}
+		    }
+		}
+		reqFeed.setPriority(newPriority);
+		feedRepo.save(reqFeed);
+	    }
+	    return new ResponseEntity(HttpStatus.OK);
+	} catch (Exception e) {
+	    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+	}
     }
 
     @GetMapping("/{id}")

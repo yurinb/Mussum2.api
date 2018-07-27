@@ -29,12 +29,11 @@ public class DownloadFTP {
 	    //ftp.getFtp().completePendingCommand();
 	    ftp.disconnect();
 	    byte[] bytes = StreamUtils.copyToByteArray(file);
-	    //file.close();
 	    if (file == null) {
 		S.out("ERRO: File not found", this);
 		return new ResponseEntity("ERRO: File not found", HttpStatus.NOT_FOUND);
 	    }
-
+	    file.close();
 	    S.out("file served.", this);
 	    return new ResponseEntity(bytes, HttpStatus.OK);
 	} catch (Exception ex) {
@@ -73,6 +72,7 @@ public class DownloadFTP {
 	    }
 
 	    String base64 = Convert.inputStreamToBASE64(img);
+	    img.close();
 	    S.out("user photo served.", this);
 	    return new ResponseEntity(base64, HttpStatus.OK);
 

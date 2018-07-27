@@ -40,7 +40,6 @@ public class RecadoController {
 
     @GetMapping()
     @ResponseBody
-    //@JsonIgnore
     public ResponseEntity getRecados() {
 	String username = context.getHeader("username");
 	S.out("GET Recados from " + username, this);
@@ -97,7 +96,7 @@ public class RecadoController {
     public Recado deleteRecado(@PathVariable Integer id) {
 	Recado recado = recadoRep.findById(id).get();
 	recadoRep.delete(recado);
-	
+
 	try {
 	    List<Feed> oldFeeds = feedRep.findAllByTipoInAndTituloIn("recado", recado.getTitulo());
 	    Feed feed = oldFeeds.get(0);
@@ -105,7 +104,7 @@ public class RecadoController {
 	} catch (Exception e) {
 	    // S.out("Feed nao econtrado", this);
 	}
-	
+
 	return recado;
     }
 
