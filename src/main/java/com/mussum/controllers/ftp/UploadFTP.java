@@ -2,6 +2,7 @@ package com.mussum.controllers.ftp;
 
 import com.mussum.controllers.EmailController;
 import com.mussum.controllers.FeedController;
+import com.mussum.controllers.SearchController;
 import com.mussum.controllers.ftp.utils.FTPcontrol;
 import com.mussum.controllers.ftp.utils.Strings;
 import com.mussum.models.db.Feed;
@@ -10,6 +11,7 @@ import com.mussum.models.ftp.Arquivo;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.FollowerRepository;
+import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.util.S;
 import com.mussum.util.TxtWritter;
@@ -56,6 +58,9 @@ public class UploadFTP {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private PastaRepository pastaRep;
 
     private final EmailController emailController = new EmailController();
 
@@ -117,7 +122,7 @@ public class UploadFTP {
 
 	    arquivo.setLink(link);
 	    arqRep.save(arquivo);
-	    if (visivel) {
+	    if (visivel && visibleDir(arquivo.getDir())) {
 		feedRep.save(new Feed(arquivo, prof));
 	    }
 
@@ -153,7 +158,7 @@ public class UploadFTP {
 		ftp.disconnect();
 		S.out("upload file", this);
 		arqRep.save(arquivo);
-		if (visivel) {
+		if (visivel && visibleDir(arquivo.getDir())) {
 		    feedRep.save(new Feed(arquivo, prof));
 		}
 		S.out("arquivo salvo.", this);
@@ -303,6 +308,11 @@ public class UploadFTP {
 		arqRep.save(file);
 	    }
 	});
+    }
+
+    private Boolean visibleDir(String dir) {
+	SearchController sc = new SearchController();
+	return sc.checkPublicDir(dir);
     }
 
 }

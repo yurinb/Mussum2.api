@@ -5,7 +5,6 @@ import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
-import com.mussum.util.S;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +111,7 @@ public class SearchController {
 	return checkPublicDir(dir) != false;
     }
 
-    private boolean checkPublicDir(String dir) {
+    public boolean checkPublicDir(String dir) {
 	while (dir.length() > 0) {
 	    try {
 		String[] dirs = dir.split("/");
