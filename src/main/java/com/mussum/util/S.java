@@ -16,7 +16,8 @@ public class S {
 
     private static final String SEPARATOR = "_-> ";
 
-    private static final String[] CLASS_FILTER = {"LoginController", "TokenFilter"};
+    //private static final String[] CLASS_FILTER = {"LoginController", "TokenFilter"};
+    private static final String[] CLASS_FILTER = {};
 
     public static void out(String txt, Object emitter) {
 	String emitterClassLog = emitter.getClass().getSimpleName();

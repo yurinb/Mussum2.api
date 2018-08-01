@@ -22,18 +22,22 @@ public class DownloadFTP {
 	FTPcontrol ftp = new FTPcontrol();
 	try {
 
-	    S.out("requesting FILE: " + dir + "/" + fileName, this);
+	    S.out("requesting FILE 1: " + dir + "/" + fileName, this);
+	   //ftp.getFtp().setSoTimeout(3000);
 	    ftp.connect();
-	    ftp.getFtp().setSoTimeout(3000);
+	    S.out("requesting FILE 2: " + dir + "/" + fileName, this);
 	    InputStream file = ftp.getFile(dir + "/", fileName);
-	    ftp.getFtp().completePendingCommand();
-	    ftp.disconnect();
+	    S.out("requesting FILE 3: " + dir + "/" + fileName, this);
+	    //ftp.getFtp().completePendingCommand();
+	    S.out("requesting FILE 4: " + dir + "/" + fileName, this);
 	    byte[] bytes = StreamUtils.copyToByteArray(file);
+	    ftp.disconnect();
+	    S.out("requesting FILE 5: " + dir + "/" + fileName, this);
 	    if (file == null) {
 		//S.out("ERRO: File not found", this);
 		return new ResponseEntity("ERRO: File not found", HttpStatus.NOT_FOUND);
 	    }
-	    file.close();
+	    //file.close();
 	    S.out("file served.", this);
 	    return new ResponseEntity(bytes, HttpStatus.OK);
 	} catch (Exception ex) {
