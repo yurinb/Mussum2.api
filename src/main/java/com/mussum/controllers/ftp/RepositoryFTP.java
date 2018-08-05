@@ -7,7 +7,7 @@ import com.mussum.models.ftp.Pasta;
 import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.PastaRepository;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -72,9 +72,7 @@ public class RepositoryFTP {
 	    S.out("new folder name: " + name, this);
 	    S.out("new folder dir: " + dir, this);
 	    pasta.setVisivel(visible);
-	    ftp.connect();
 	    pastaRep.save(pasta);
-
 	    S.out("directory created.", this);
 	    return new ResponseEntity(HttpStatus.CREATED);
 	} catch (IOException ex) {
@@ -261,8 +259,8 @@ public class RepositoryFTP {
     public void clean(String dir) {
 	FTPcontrol ftp = new FTPcontrol();
 	try {
+            ftp.connect();
 	    FTPFile[] files = ftp.getFtp().listFiles(dir);
-
 	    if (files != null) {
 		for (FTPFile f : files) {
 		    if (f.isDirectory()) {
@@ -283,8 +281,9 @@ public class RepositoryFTP {
 		    }
 		}
 	    }
-
+            ftp.disconnect();
 	} catch (IOException ex) {
+            ftp.disconnect();
 	    S.out(ex.getMessage(), this);
 	}
 

@@ -2,7 +2,7 @@ package com.mussum.controllers.security;
 
 import com.mussum.models.db.Professor;
 import com.mussum.repository.ProfessorRepository;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;

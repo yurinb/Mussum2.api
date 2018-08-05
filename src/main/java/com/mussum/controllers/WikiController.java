@@ -5,7 +5,7 @@ import com.mussum.models.db.Wiki;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.ProfessorRepository;
 import com.mussum.repository.WikiRepository;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

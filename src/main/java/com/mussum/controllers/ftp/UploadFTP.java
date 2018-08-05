@@ -13,8 +13,8 @@ import com.mussum.repository.FeedRepository;
 import com.mussum.repository.FollowerRepository;
 import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
-import com.mussum.util.S;
-import com.mussum.util.TxtWritter;
+import com.mussum.controllers.ftp.utils.S;
+import com.mussum.controllers.ftp.utils.TxtWritter;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.http.HttpStatus;
@@ -227,7 +227,7 @@ public class UploadFTP {
 	    try {
 		ftp.connect();
 
-		String[] fotosPerfil = ftp.getContentFrom("\\_res\\perfil_img\\");
+		String[] fotosPerfil = ftp.listFiles("\\_res\\perfil_img\\");
 		for (String foto : fotosPerfil) {
 		    if (foto.startsWith(professor)) {
 			String photoFoundName = foto;

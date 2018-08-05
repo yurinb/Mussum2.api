@@ -8,7 +8,7 @@ package com.mussum.controllers;
 import com.mussum.models.db.Follower;
 import com.mussum.models.db.Professor;
 import com.mussum.repository.FollowerRepository;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import java.util.List;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;

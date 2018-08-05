@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.mussum.util;
+package com.mussum.controllers.ftp.utils;
 
 import java.io.BufferedWriter;
 import java.io.File;

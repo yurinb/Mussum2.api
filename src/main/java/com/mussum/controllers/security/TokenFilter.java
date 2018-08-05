@@ -1,6 +1,6 @@
 package com.mussum.controllers.security;
 
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;

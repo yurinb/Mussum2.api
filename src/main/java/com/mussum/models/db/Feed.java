@@ -2,7 +2,7 @@ package com.mussum.models.db;
 
 import com.mussum.models.MussumEntity;
 import com.mussum.models.ftp.Arquivo;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.persistence.Column;

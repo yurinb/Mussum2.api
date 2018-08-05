@@ -12,18 +12,21 @@ import org.springframework.web.filter.GenericFilterBean;
 public class AllowFilter extends GenericFilterBean {
 
     @Override
-    public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
-	//System.out.println("Liberando acesso da API ...");
+    public void doFilter(ServletRequest sreq, ServletResponse sres, FilterChain fc) throws IOException, ServletException {
+        try {
 
-	HttpServletRequest httpReq = (HttpServletRequest) sr;
-	
-	HttpServletResponse httpResp = (HttpServletResponse) sr1;
+            //System.out.println("Liberando acesso da API ...");
+            HttpServletRequest httpReq = (HttpServletRequest) sreq;
 
-	httpResp.setHeader("Access-Control-Allow-Origin", "*");
-	httpResp.setHeader("Access-Control-Allow-Headers", httpReq.getHeader("Access-Control-Request-Headers"));
-	httpResp.setHeader("Access-Control-Allow-Methods", "*");
+            HttpServletResponse httpResp = (HttpServletResponse) sres;
 
-	fc.doFilter(sr, sr1);
+            httpResp.setHeader("Access-Control-Allow-Origin", "*");
+            httpResp.setHeader("Access-Control-Allow-Headers", httpReq.getHeader("Access-Control-Request-Headers"));
+            httpResp.setHeader("Access-Control-Allow-Methods", "*");
+        } catch (Exception e) {
+        }
+
+        fc.doFilter(sreq, sres);
 
     }
 

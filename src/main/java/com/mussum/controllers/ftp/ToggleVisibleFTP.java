@@ -9,7 +9,7 @@ import com.mussum.repository.ArquivoRepository;
 import com.mussum.repository.FeedRepository;
 import com.mussum.repository.PastaRepository;
 import com.mussum.repository.ProfessorRepository;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

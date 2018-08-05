@@ -2,7 +2,7 @@ package com.mussum.controllers;
 
 import com.mussum.models.db.Feed;
 import com.mussum.repository.FeedRepository;
-import com.mussum.util.S;
+import com.mussum.controllers.ftp.utils.S;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
