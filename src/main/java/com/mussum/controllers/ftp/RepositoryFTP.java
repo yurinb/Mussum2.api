@@ -64,21 +64,16 @@ public class RepositoryFTP {
 	}
 
 	FTPcontrol ftp = new FTPcontrol();
-	try {
-	    ftp.connect();
-	    ftp.getFtp().makeDirectory(dir + "/" + name + "/");
-	    ftp.disconnect();
-	    Pasta pasta = new Pasta(dir, name);
-	    S.out("new folder name: " + name, this);
-	    S.out("new folder dir: " + dir, this);
-	    pasta.setVisivel(visible);
-	    pastaRep.save(pasta);
-	    S.out("directory created.", this);
-	    return new ResponseEntity(HttpStatus.CREATED);
-	} catch (IOException ex) {
-	    ftp.disconnect();
-	    return new ResponseEntity(ex, HttpStatus.BAD_REQUEST);
-	}
+        ftp.connect();
+        ftp.makeDirectoryOneByOne(dir + "/" + name + "/");
+        ftp.disconnect();
+        Pasta pasta = new Pasta(dir, name);
+        S.out("new folder name: " + name, this);
+        S.out("new folder dir: " + dir, this);
+        pasta.setVisivel(visible);
+        pastaRep.save(pasta);
+        S.out("directory created.(or not)", this);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @GetMapping()
@@ -193,7 +188,8 @@ public class RepositoryFTP {
 	try {
 	    ftp.connect();
 	    S.out("get files of: " + dir, this);
-	    FTPFile[] files = ftp.getFtp().listFiles(dir);
+            ftp.goToNoMatterWhat(dir);
+	    FTPFile[] files = ftp.getFtp().listFiles();
 	    ftp.disconnect();
 
 	    for (FTPFile item : files) {
@@ -206,7 +202,7 @@ public class RepositoryFTP {
 			file = new Arquivo(dir, fileName);
 			if (fileName.endsWith(".link")) {
 			    ftp.connect();
-			    InputStream linkFile = ftp.getFtp().retrieveFileStream(dir + "/" + fileName);
+			    InputStream linkFile = ftp.getFtp().retrieveFileStream(fileName);
 			    ftp.disconnect();
 			    byte[] bytes = StreamUtils.copyToByteArray(linkFile);
 			    String content = new String(bytes);

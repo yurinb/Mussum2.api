@@ -1,5 +1,6 @@
 package com.mussum.controllers.security;
 
+import com.mussum.controllers.ftp.utils.S;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,8 +23,9 @@ public class AllowFilter extends GenericFilterBean {
 
             httpResp.setHeader("Access-Control-Allow-Origin", "*");
             httpResp.setHeader("Access-Control-Allow-Headers", httpReq.getHeader("Access-Control-Request-Headers"));
-            httpResp.setHeader("Access-Control-Allow-Methods", "*");
+            httpResp.setHeader("Access-Control-Allow-Methods", httpReq.getHeader("Access-Control-Request-Method"));
         } catch (Exception e) {
+            S.out("ERRO: " + e.getMessage(), this);
         }
 
         fc.doFilter(sreq, sres);

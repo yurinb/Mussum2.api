@@ -75,7 +75,7 @@ public class DownloadFTP {
             S.out("requesting user PHOTO: " + prof, this);
 
             ftp.connect();
-            String[] fotosPerfil = ftp.listFiles("\\_res\\perfil_img\\");
+            String[] fotosPerfil = ftp.listPhotos();
             ftp.disconnect();
 
             String profPhotoName = null;
@@ -87,7 +87,7 @@ public class DownloadFTP {
                 }
             }
             ftp.connect();
-            InputStream img = ftp.getFile("\\_res\\perfil_img\\", profPhotoName);
+            InputStream img = ftp.getFile("_res/perfil_img", profPhotoName);
 
             if (img == null) {
                 img.close();

@@ -21,112 +21,117 @@ import org.springframework.web.filter.GenericFilterBean;
 
 public class TokenFilter extends GenericFilterBean {
 
-    private HttpServletRequest hReq = null;
-    private HttpServletResponse hRes = null;
-
     @Override
     public void doFilter(ServletRequest sReq, ServletResponse sRes, FilterChain fc) throws IOException, ServletException {
 
 //        fc.doFilter(sr, sr1); //IGNORANDO TOKEN ((TESTE))
-	hReq = (HttpServletRequest) sReq;
-	hRes = (HttpServletResponse) sRes;
-	S.out("", this);
-	S.out("[[[ " + hReq.getMethod() + " ]]] " + " - " + hReq.getRequestURI(), this);
-	S.out("", this);
-	final String[] GET_BLOQUEADOS = {};
-	final String[] POST_LIBERADOS = {"/api/followers"};
+        try {
 
-	if (hReq.getMethod() == null) {
-	    S.out("metodo null? wtf aqui nao", this);
-	    return;
-	}
+            HttpServletRequest hReq = (HttpServletRequest) sReq;
+            HttpServletResponse hRes = (HttpServletResponse) sRes;
+            S.out("", this);
+            S.out("", this);
+            S.out("           ___ [ [ [ " + hReq.getMethod() + " ] ] ] ___ " + " - " + hReq.getRequestURI(), this);
+            S.out("", this);
+            S.out("", this);
 
-	if (hReq.getMethod().equals("OPTIONS")) {
-	    S.out("OPTIONS: OK", this);
-	    fc.doFilter(sReq, sRes);
-	    return;
-	}
+            final String[] GET_BLOQUEADOS = {};
+            final String[] POST_LIBERADOS = {"/api/followers"};
 
-	String username = getUser();
-	S.out("REQUEST FILTER USER: " + username, this);
+            if (hReq.getMethod() == null) {
+                S.out("metodo null? wtf", this);
+                return;
+            }
 
-	if (username != null) {
-	    hReq.setAttribute("requestUser", username);
-	}
+            if (hReq.getMethod().equals("OPTIONS")) {
+                S.out("OPTIONS: OK", this);
+                fc.doFilter(sReq, sRes);
+                return;
+            }
 
-	if (hReq.getMethod().equals("GET")) {
-	    if (!Arrays.asList(GET_BLOQUEADOS).contains(hReq.getRequestURI())) {
-		S.out("GET: OK", this);
-		hReq.setAttribute("requestUser", username);
-		fc.doFilter(sReq, sRes);
-		return;
-	    }
-	}
+            String username = getUser(hReq, hRes);
+            S.out("REQUEST FILTER USER: " + username, this);
 
-	if (hReq.getMethod().equals("POST")) {
-	    if (Arrays.asList(POST_LIBERADOS).contains(hReq.getRequestURI())) {
-		S.out("POST: OK", this);
-		fc.doFilter(sReq, sRes);
-		return;
-	    }
-	}
+            if (username != null) {
+                hReq.setAttribute("requestUser", username);
+            }
 
-	if (username == null) {
-	    hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "NÃO AUTORIZADO");
-	    return;
-	}
+            if (hReq.getMethod().equals("GET")) {
+                if (!Arrays.asList(GET_BLOQUEADOS).contains(hReq.getRequestURI())) {
+                    S.out("GET: OK", this);
+                    hReq.setAttribute("requestUser", username);
+                    fc.doFilter(sReq, sRes);
+                    return;
+                }
+            }
 
-	//hReq.setAttribute("requestUser", username);
-	fc.doFilter(sReq, sRes);
+            if (hReq.getMethod().equals("POST")) {
+                if (Arrays.asList(POST_LIBERADOS).contains(hReq.getRequestURI())) {
+                    S.out("POST: OK", this);
+                    fc.doFilter(sReq, sRes);
+                    return;
+                }
+            }
+
+            if (username == null) {
+                hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "NÃO AUTORIZADO");
+                return;
+            }
+
+            //hReq.setAttribute("requestUser", username);
+        } catch (Exception e) {
+            S.out("ERRO: " + e.getLocalizedMessage(), this);
+            return;
+        }
+        fc.doFilter(sReq, sRes);
 
     }
 
-    private String getUser() {
-	S.out("Verifing TOKEN...", this);
+    private String getUser(HttpServletRequest hReq, HttpServletResponse hRes) {
+        S.out("Verifing TOKEN...", this);
 
-	String header = hReq.getHeader("Authorization");
+        String header = hReq.getHeader("Authorization");
 
-	if (header == null || !header.startsWith("Bearer ")) {
-	    //hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
-	    return null;
-	}
+        if (header == null || !header.startsWith("Bearer ")) {
+            //hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
+            return null;
+        }
 
-	//S.out("HEADER: " + header, this);
+        //S.out("HEADER: " + header, this);
+        String token = null;
 
-	String token = null;
+        try {
+            token = header.split(" ")[1];
+        } catch (Exception e) {
+            //hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
+            return null;
+        }
 
-	try {
-	    token = header.split(" ")[1];
-	} catch (Exception e) {
-	    //hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Inexistent or invalid TOKEN!");
-	    return null;
-	}
+        String usuarioToken = null;
 
-	String usuarioToken = null;
+        try {
+            Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
+            usuarioToken = Jwts.parser().setSigningKey("mussm")
+                    .parse(token, new JwtHandlerAdapter<String>() {
+                        @Override
+                        public String onClaimsJws(Jws<Claims> jws) {
+                            return jws.getBody().getSubject();
+                        }
+                    });
 
-	try {
-	    Jwts.parser().setSigningKey("mussum").parseClaimsJws(token);
-	    usuarioToken = Jwts.parser().setSigningKey("mussm")
-		    .parse(token, new JwtHandlerAdapter<String>() {
-			@Override
-			public String onClaimsJws(Jws<Claims> jws) {
-			    return jws.getBody().getSubject();
-			}
-		    });
+            S.out("Request made by " + usuarioToken, this);
+            return usuarioToken;
 
-	    S.out("Request made by " + usuarioToken, this);
-	    return usuarioToken;
-
-	} catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
-	    if (e instanceof ExpiredJwtException) {
-		S.out("Expired TOKEN", this);
-		//hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired TOKEN!");
-	    } else {
-		S.out("Invalid TOKEN", this);
-		//hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid TOKEN!");
-	    }
-	    return null;
-	}
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException | UnsupportedJwtException | IllegalArgumentException e) {
+            if (e instanceof ExpiredJwtException) {
+                S.out("Expired TOKEN", this);
+                //hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired TOKEN!");
+            } else {
+                S.out("Invalid TOKEN", this);
+                //hRes.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid TOKEN!");
+            }
+            return null;
+        }
     }
 
 }

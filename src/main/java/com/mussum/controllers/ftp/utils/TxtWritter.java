@@ -16,6 +16,8 @@ import java.io.Writer;
 import java.nio.file.Files;
 
 public class TxtWritter {
+    
+    private final String tempFolder = "/home/mussum2temp/";
 
     private String lastCreatedTmpFile = "";
 
@@ -23,9 +25,9 @@ public class TxtWritter {
 	try {
 	    //Whatever the file path is.
 	    this.lastCreatedTmpFile = username + "@@" + fileName + ".txt";
-	    File txtDir = new File("tmp/");
+	    File txtDir = new File(tempFolder);
 	    txtDir.mkdir();
-	    File txtFile = new File("tmp/" + lastCreatedTmpFile);
+	    File txtFile = new File(tempFolder + lastCreatedTmpFile);
 	    if (!txtFile.exists()) {
 		txtFile.createNewFile();
 	    }
@@ -46,7 +48,7 @@ public class TxtWritter {
     }
 
     public void deleteLastCreatedFile() {
-	File tmpFile = new File("tmp/" + lastCreatedTmpFile);
+	File tmpFile = new File(tempFolder + lastCreatedTmpFile);
 	try {
 	    Files.delete(tmpFile.toPath());
 	    S.out("tmp File deleted.", this);
